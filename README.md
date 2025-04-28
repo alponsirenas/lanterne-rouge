@@ -49,14 +49,14 @@ Follow these steps to set up Lanterne Rouge:
 5. **Run your agent daily:**
 
    ```bash
-   python tour_coach.py
+   python run_tour_coach.py
    ```
 
    Each day, Lanterne Rouge will:
    - Analyze your recovery and fitness data.
    - Adjust your training plan based on your progress.
-   - Generate a coaching report (`tour_coach_update.txt`).
-   - Log readiness scores for future analysis.
+   - Generate a coaching report (`output/tour_coach_update.txt`).
+   - Log readiness scores for future analysis (`output/readiness_score_log.csv`).
 
 6. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
@@ -69,7 +69,7 @@ This system is designed to fit into your routine, helping you build consistency 
 
 With version **v0.2.1**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
 
-In the upcoming **v0.3.0**, expect:
+In future versions expect:
 - Deeper trend analysis.
 - Smarter plan adaptations.
 - Enhanced personalization to support your endurance journey.
