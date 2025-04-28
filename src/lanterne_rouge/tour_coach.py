@@ -4,10 +4,10 @@
 
 from dotenv import load_dotenv
 import sys
-from monitor import get_oura_readiness, get_ctl_atl_tsb
-from reasoner import decide_adjustment
-from plan_generator import generate_14_day_plan
-from peloton_matcher import match_peloton_class
+from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
+from lanterne_rouge.reasoner import decide_adjustment
+from lanterne_rouge.plan_generator import generate_14_day_plan
+from lanterne_rouge.peloton_matcher import match_peloton_class
 from datetime import datetime
 
 load_dotenv()
@@ -50,7 +50,7 @@ version = get_version()
 # 6. Write the daily update
 today_display_date = datetime.now().strftime("%A, %B %d, %Y")
 
-with open("tour_coach_update.txt", "w") as f:
+with open("output/tour_coach_update.txt", "w") as f:
     f.write(f"Date: {today_display_date}\n\n")
     f.write("Planned Workout:\n")
     f.write(f"- {today_workout_type} ({today_workout_details})\n\n")
@@ -85,5 +85,5 @@ with open("tour_coach_update.txt", "w") as f:
 
 print(
     f"✅ Tour Coach Agent v{version} daily update generated: "
-    "tour_coach_update.txt"
+    "output/tour_coach_update.txt"
 )

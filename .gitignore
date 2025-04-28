@@ -1,14 +1,14 @@
 # Python cache files
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # Secrets
 .env
 .venv
 
 # Output artifacts
-tour_coach_update.txt
-readiness_score_log.csv
+/output/
 
 # MacOS system files
 .DS_Store

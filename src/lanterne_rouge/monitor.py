@@ -6,7 +6,7 @@ import json
 import csv
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from strava_api import strava_get
+from lanterne_rouge.strava_api import strava_get
 
 
 # Load environment variables
@@ -21,7 +21,7 @@ def record_readiness_contributors(day_entry):
     """
     Save Oura readiness score and HRV balance to a CSV file for future analysis.
     """
-    filename = "readiness_score_log.csv"
+    filename = "output/readiness_score_log.csv"
     fieldnames = ["day", "readiness_score", "hrv_balance"]
 
     contributors = day_entry.get('contributors', {})
