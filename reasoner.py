@@ -1,26 +1,31 @@
 # reasoner.py
 
-def decide_adjustment(readiness_score, hrv_today, hrv_avg, tss_weekly):
+def decide_adjustment(readiness_score, ctl, atl, tsb):
     """
-    Apply basic agentic reasoning to decide if today's workout needs adjustment.
+    Decide if today's workout should be adjusted based on readiness, CTL, ATL, and TSB.
     """
-    adjustments = []
+    recommendations = []
 
-    # 1. Check readiness score
-    if readiness_score is not None and readiness_score < 70:
-        adjustments.append("⚠️ Readiness low. Recommend replacing today's workout with a Zone 2 Endurance ride.")
+    # 1. Basic Readiness Checks
+    if readiness_score is not None and readiness_score < 60:
+        recommendations.append("⚠️ Readiness is low (<60). Consider reducing workout intensity or volume today.")
 
-    # 2. Check HRV drop
-    if hrv_today < 0.85 * hrv_avg:
-        adjustments.append("⚠️ HRV significantly lower than 7-day average. Suggest lower intensity today.")
+    # 2. TSB (Form) Checks
+    if tsb < -20:
+        recommendations.append("🚨 Form is very negative (TSB < -20). Strongly recommend easier or recovery day.")
+    elif tsb < -10:
+        recommendations.append("⚠️ Form is moderately negative (TSB < -10). Training OK but monitor fatigue.")
+    elif tsb > 10:
+        recommendations.append("✅ Form is highly positive (TSB > 10). Excellent day for intensity or longer ride.")
 
-    # 3. Check weekly TSS overage
-    planned_weekly_tss = 500  # Example: assume your planned weekly TSS
-    if tss_weekly is not None and tss_weekly > 1.2 * planned_weekly_tss:
-        adjustments.append("⚠️ Weekly TSS high. Consider reducing next intensity workout.")
+    # 3. CTL Trend (Optional Extension Later)
+    if ctl < 30:
+        recommendations.append("⚠️ Chronic fitness level (CTL) is relatively low (<30). Gradually build volume.")
+    elif ctl > 70:
+        recommendations.append("✅ Chronic fitness (CTL > 70) is excellent. Maintain consistency.")
 
-    # 4. No issues — proceed normally
-    if not adjustments:
-        adjustments.append("✅ Proceed with today's planned workout.")
+    # Default recommendation
+    if not recommendations:
+        recommendations.append("✅ All metrics look good. Proceed with planned workout.")
 
-    return adjustments
+    return recommendations

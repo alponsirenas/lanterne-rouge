@@ -1,39 +1,51 @@
-# tour_coach.py
+# This script generates a daily update for the Tour Coach program, including workout plans,
+# readiness scores, and recommendations based on the user's data from Oura and Strava.
 
-from monitor import get_oura_readiness, get_weekly_tss, get_mock_hrv_data
+from dotenv import load_dotenv
+load_dotenv()
+
+from monitor import get_oura_readiness, get_ctl_atl_tsb
 from reasoner import decide_adjustment
-from datetime import datetime
+from plan_generator import generate_14_day_plan
 from peloton_matcher import match_peloton_class
+from datetime import datetime
 
 # 1. Pull today's data
-readiness = get_oura_readiness()
-tss_week = get_weekly_tss()
-today_hrv, rolling_hrv = get_mock_hrv_data()
+readiness_score, hrv_balance, readiness_day = get_oura_readiness ()
+ctl, atl, tsb = get_ctl_atl_tsb ()
 
 # 2. Decide if we need to adjust today's plan
-recommendations = decide_adjustment(readiness, today_hrv, rolling_hrv, tss_week)
+recommendations = decide_adjustment(readiness_score, ctl, atl, tsb)
 
-# 3. Define today's planned workout
-# (Later we could pull from Intervals.icu Calendar, for now we hardcode for simplicity)
-today_workout_type = "Threshold Intervals"
-today_workout_details = "3x10min @ 95–98% FTP"
+# 3. Get today's planned workout from plan_generator
+plan = generate_14_day_plan()
+today_date = datetime.now().strftime("%Y-%m-%d")
+today_workout = next((w for w in plan if w["date"] == today_date), None)
+
+if not today_workout:
+    print("⚠️ No workout found for today. Exiting.")
+    exit()
+
+today_workout_type = today_workout["name"]
+today_workout_details = today_workout["description"]
 
 # 4. Match to Peloton class
 peloton_class = match_peloton_class(today_workout_type)
 
 # 5. Write the daily update
-today_date = datetime.now().strftime("%A, %B %d, %Y")
+today_display_date = datetime.now().strftime("%A, %B %d, %Y")
 
 with open("tour_coach_update.txt", "w") as f:
-    f.write(f"Date: {today_date}\n\n")
+    f.write(f"Date: {today_display_date}\n\n")
     f.write("Planned Workout:\n")
     f.write(f"- {today_workout_type} ({today_workout_details})\n\n")
 
     f.write("Readiness and Recovery:\n")
-    f.write(f"- Readiness Score: {readiness if readiness else 'Unavailable'}\n")
-    f.write(f"- HRV Today: {today_hrv}\n")
-    f.write(f"- 7-day Avg HRV: {rolling_hrv}\n")
-    f.write(f"- Weekly TSS: {tss_week if tss_week else 'Unavailable'}\n\n")
+    f.write(f"- Readiness Score: {readiness_score if readiness_score else 'Unavailable'}\n")
+    f.write(f"- Readiness Day: {readiness_day if readiness_day else 'Unavailable'}\n")
+    f.write(f"- CTL (Fitness): {ctl if ctl else 'Unavailable'}\n")
+    f.write(f"- ATL (Fatigue): {atl if atl else 'Unavailable'}\n")
+    f.write(f"- TSB (Form): {tsb if tsb else 'Unavailable'}\n\n")
 
     f.write("Recommendation:\n")
     for rec in recommendations:
