@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 
 # Secrets
-/.env
+.env
 
 # Output artifacts
 tour_coach_update.txt
