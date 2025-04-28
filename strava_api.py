@@ -22,9 +22,11 @@ if os.path.exists("tokens.json"):
     STRAVA_ACCESS_TOKEN = tokens["access_token"]
     STRAVA_REFRESH_TOKEN = tokens["refresh_token"]
 
+
 def refresh_strava_token():
     """
-    Refresh the Strava Access Token using the Refresh Token and save to tokens.json.
+    Refresh the Strava Access Token using the Refresh Token and save to
+    tokens.json.
     """
     global STRAVA_ACCESS_TOKEN
     global STRAVA_REFRESH_TOKEN
@@ -35,7 +37,7 @@ def refresh_strava_token():
         "client_id": STRAVA_CLIENT_ID,
         "client_secret": STRAVA_CLIENT_SECRET,
         "grant_type": "refresh_token",
-        "refresh_token": STRAVA_REFRESH_TOKEN
+        "refresh_token": STRAVA_REFRESH_TOKEN,
     }
     response = requests.post(token_url, data=payload)
     if response.status_code == 200:
@@ -44,7 +46,9 @@ def refresh_strava_token():
         STRAVA_REFRESH_TOKEN = tokens['refresh_token']
         expires_at = tokens['expires_at']
 
-        print(f"✅ Refreshed! New Access Token Expires At: {expires_at}")
+        print(
+            f"✅ Refreshed! New Access Token Expires At: {expires_at}"
+        )
 
         # Save updated tokens to tokens.json
         with open("tokens.json", "w") as f:
@@ -54,6 +58,7 @@ def refresh_strava_token():
     else:
         print(f"❌ Failed to refresh token: {response.text}")
         return None
+
 
 def strava_get(endpoint):
     """
@@ -74,6 +79,7 @@ def strava_get(endpoint):
         response = requests.get(url, headers=headers)
 
     return response.json()
+
 
 def strava_post(endpoint, payload):
     """

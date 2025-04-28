@@ -8,11 +8,14 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from strava_api import strava_get
 
+
 # Load environment variables
 load_dotenv()
 
 OURA_TOKEN = os.getenv("OURA_TOKEN")
-USER_FTP = int(os.getenv("USER_FTP", 250))  # Optional for future use
+# Optional for future use
+USER_FTP = int(os.getenv("USER_FTP", 250))
+
 
 def record_readiness_contributors(day_entry):
     """
@@ -39,6 +42,7 @@ def record_readiness_contributors(day_entry):
 
     print(f"✅ Saved readiness and HRV balance for {row['day']}.")
 
+
 def get_oura_readiness():
     """
     Pull today's Readiness Score and HRV Balance Score from Oura API.
@@ -59,7 +63,13 @@ def get_oura_readiness():
 
         if response.status_code == 200:
             full_response = response.json()
-            print("🧠 Raw Oura API Response:", json.dumps(full_response, indent=2))  # Debugging
+            print(
+                "🧠 Raw Oura API Response:",
+                json.dumps(
+                    full_response,
+                    indent=2
+                )
+            )  # Debugging
 
             data = full_response.get('data', [])
 
@@ -78,7 +88,7 @@ def get_oura_readiness():
                 if readiness_score is not None:
                     print(f"✅ Using readiness score from {day_entry['day']}")
                     record_readiness_contributors(day_entry)
-                    return readiness_score, hrv_balance, day_entry.get('day')  # <-- 3 values returned!
+                    return readiness_score, hrv_balance, day_entry.get('day')
 
             print("❌ No valid readiness and HRV balance data found in past 7 days.")
             return None, None, None
@@ -90,12 +100,15 @@ def get_oura_readiness():
             except Exception:
                 error_message = response.text
 
-            print(f"❌ Oura API error {response.status_code}: {error_message}")
+            print(
+                f"❌ Oura API error {response.status_code}: {error_message}"
+            )
             return None, None, None
 
     except Exception as e:
         print(f"Error fetching readiness and HRV balance from Oura: {e}")
         return None, None, None
+
 
 def get_ctl_atl_tsb():
     """
@@ -103,7 +116,9 @@ def get_ctl_atl_tsb():
     """
     print("🔍 Pulling activities from Strava for CTL/ATL/TSB calculation...")
 
-    activities = strava_get("athlete/activities?per_page=200")
+    activities = strava_get(
+        "athlete/activities?per_page=200"
+    )
 
     today = datetime.now()
     days = 45
@@ -115,12 +130,19 @@ def get_ctl_atl_tsb():
         if not isinstance(activity, dict):
             continue
 
-        activity_date = datetime.strptime(activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+        activity_date = datetime.strptime(
+            activity["start_date_local"],
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
         if activity_date < start_day:
             continue
 
         date_key = activity_date.strftime("%Y-%m-%d")
-        effort_score = activity.get("relative_effort") or activity.get("suffer_score") or 0
+        effort_score = (
+            activity.get("relative_effort")
+            or activity.get("suffer_score")
+            or 0
+        )
 
         if date_key in daily_tss:
             daily_tss[date_key] += effort_score

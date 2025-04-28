@@ -4,9 +4,11 @@ __pycache__/
 
 # Secrets
 .env
+.venv
 
 # Output artifacts
 tour_coach_update.txt
+readiness_score_log.csv
 
 # MacOS system files
 .DS_Store
