@@ -32,7 +32,7 @@ today_workout = next((w for w in plan if w["date"] == today_date), None)
 
 if not today_workout:
     print("⚠️ No workout found for today. Exiting.")
-    exit()
+    sys.exit(1)
 
 today_workout_type = today_workout["name"]
 today_workout_details = today_workout["description"]
