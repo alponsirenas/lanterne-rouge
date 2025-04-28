@@ -67,15 +67,12 @@ This system is designed to fit into your routine, helping you build consistency 
 
 ## Looking Ahead
 
-With version **v0.2.0**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
+With version **v0.2.1**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
 
 In the upcoming **v0.3.0**, expect:
 - Deeper trend analysis.
 - Smarter plan adaptations.
 - Enhanced personalization to support your endurance journey.
-
-Stay tuned for updates as we continue to improve this unique training companion.
-
 
 ## License
 
