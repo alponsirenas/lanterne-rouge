@@ -1,96 +1,85 @@
 # Lanterne Rouge — Agentic AI for Every Athlete
 
-> **Finish Every Stage. Win Your Own Race.**
+Named after the iconic "lanterne rouge" — the rider who finishes last at the Tour de France — this project embodies resilience, consistency, and intelligent endurance. It’s not about being first; it’s about finishing your own race, every stage, every day.
 
----
+Lanterne Rouge is your AI-powered training partner, designed to observe your recovery, reason about your readiness, plan your next steps, and adapt dynamically to your life and training.
 
-## Why Lanterne Rouge?
+## How It Works
 
-In early 2025, a simple but bold idea was born:
+Lanterne Rouge integrates data from your Oura Ring and Strava to understand your fitness, fatigue, and recovery. Each day, it analyzes this information to generate a personalized coaching report and update your training schedule on Intervals.icu. This ensures your plan adapts to your progress and needs.
 
-**Create an indoor cycling event running parallel to the Tour de France** —  
-riding every day for three weeks, simulating the endurance of the pros but adapted for real life.
+By seamlessly integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, Lanterne Rouge adapts to keep you moving forward.
 
-From the very beginning, it wasn’t just about riding.  
-It was about **envisioning the full experience**:
+## Getting Started
 
-- A structured, progressive **training plan** to build endurance and resilience.
-- A personalized **nutrition plan** to support recovery and adaptation.
-- A simulation that honored the true spirit of the Tour de France —  
-  **consistency over flash**, **grit over spectacle**.
+Follow these steps to set up Lanterne Rouge:
 
-We worked together to build this vision — creating the simulation event, designing the training phases, crafting the nutrition around it.  
-But soon we realized:
+### Setup Instructions
 
-> **How do we adapt daily to the real-world variables of fatigue, recovery, and life?**
+1. **Clone the repository:**
 
-Thus, **Lanterne Rouge** was born —  
-an agentic AI training partner that observes, reasons, plans, acts, and adapts to help you finish every stage.
+   ```bash
+   git clone https://github.com/your-username/lanterne-rouge.git
+   cd lanterne-rouge
+   ```
 
----
+2. **Create and activate your Python environment:**
 
-## What is Lanterne Rouge?
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
 
-Lanterne Rouge is not just an application.  
-It’s a **living, thinking AI agent**:
+3. **Install dependencies:**
 
-- **Observes** your readiness, fatigue, and training load.
-- **Reasons** about whether to continue, modify, or adjust your training plan.
-- **Plans** your next 14 days dynamically, always two weeks ahead.
-- **Acts** autonomously on your Intervals.icu calendar to keep training aligned.
-- **Reflects** on its decisions, building transparency and trust.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Inspired by the true Lanterne Rouge of the Tour de France —  
-this AI embodies **perseverance, resilience, and intelligent endurance**.
+4. **Configure your `.env` file with your API credentials:**
 
----
+   ```env
+   OURA_TOKEN=your_oura_personal_access_token
+   STRAVA_CLIENT_ID=your_strava_client_id
+   STRAVA_CLIENT_SECRET=your_strava_client_secret
+   STRAVA_ACCESS_TOKEN=your_strava_access_token
+   STRAVA_REFRESH_TOKEN=your_strava_refresh_token
+   ```
 
-## Core Features
+5. **Run your agent daily:**
 
-- 🛡️ Dynamic two-week rolling training plan generation  
-- 🔍 Daily agentic reasoning based on Oura readiness and Intervals.icu training load  
-- 🛠️ Automatic workout uploads and plan adjustments  
-- 🚴‍♂️ Peloton class matching for accessible indoor training  
-- 🧠 Transparent decision logging for future refinement  
+   ```bash
+   python tour_coach.py
+   ```
 
----
+   Each day, Lanterne Rouge will:
+   - Analyze your recovery and fitness data.
+   - Adjust your training plan based on your progress.
+   - Generate a coaching report (`tour_coach_update.txt`).
+   - Log readiness scores for future analysis.
 
-## Vision
+6. **Review your coaching report:**
+   - Check the daily coaching report to understand your readiness and training focus.
+   - Ride, recover, and let the AI adapt your plan as you progress.
 
-**Lanterne Rouge** is about more than finishing workouts.  
-It’s about building consistency, resilience, and smart adaptation — no matter where you are on your fitness journey.
+This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-You don’t need to be racing at the front.  
-You don’t need perfect training weeks.  
-You don’t need to hit every interval flawlessly.
 
-**You just need to show up.  
-Adapt.  
-Recover.  
-And finish your own race.**
+## Looking Ahead
 
-Lanterne Rouge is built to support that journey —  
-for the beginner starting out, the rider rebuilding, and the seasoned athlete fine-tuning for the next challenge.
+With version **v0.2.0**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
 
-**Finishing every stage.  
-Winning your own race.  
-That is the true victory.**
+In the upcoming **v0.3.0**, expect:
+- Deeper trend analysis.
+- Smarter plan adaptations.
+- Enhanced personalization to support your endurance journey.
 
----
+Stay tuned for updates as we continue to improve this unique training companion.
 
-## What's Next
-
-We'll soon share more about the journey behind Lanterne Rouge —  
-how the simulation event was envisioned, how the training and nutrition plans were created,  
-and how a simple idea evolved into a real agentic AI system for endurance athletes.
-
-*(Stay tuned for our upcoming blog series.)*
-
----
 
 ## License
 
 Lanterne Rouge is licensed under the [Apache License 2.0](LICENSE).
 
-You are free to use, modify, and distribute this project,  
-subject to the terms and conditions outlined in the license.
+You are welcome to use, modify, and share this project under the terms of the license.  
+Your journey, your race, your victory.
