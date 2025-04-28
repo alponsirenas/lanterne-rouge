@@ -1,0 +1,12 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Output artifacts
+tour_coach_update.txt
+
+# MacOS system files
+.DS_Store
