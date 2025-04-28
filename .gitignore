@@ -6,6 +6,7 @@ __pycache__/
 # Secrets
 .env
 .venv
+tokens.json
 
 # Output artifacts
 /output/
