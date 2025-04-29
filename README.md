@@ -74,6 +74,8 @@ In future versions expect:
 - Smarter plan adaptations.
 - Enhanced personalization to support your endurance journey.
 
+You can track upcoming features and roadmap progress on the [Lanterne Rouge Project Board](https://github.com/users/alponsirenas/projects/1).
+
 ## License
 
 Lanterne Rouge is licensed under the [Apache License 2.0](LICENSE).
