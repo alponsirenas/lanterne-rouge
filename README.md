@@ -2,13 +2,15 @@
 
 Named after the iconic "lanterne rouge" — the rider who finishes last at the Tour de France — this project embodies resilience, consistency, and intelligent endurance. It’s not about being first; it’s about finishing your own race, every stage, every day.
 
-Lanterne Rouge is your AI-powered training partner, designed to observe your recovery, reason about your readiness, plan your next steps, and adapt dynamically to your life and training.
+Lanterne Rouge started with the idea of [using AI to train](/docs/training_strategy.md) for an AI generated indoor [simulation of the Tour de France 2025](/docs/simulation_event.md).
+
+Designed to observe your recovery, reason about your daily readiness, and adapt dynamically to your life and training, Lanterne Rouge plans your next steps without loosing sight of your long-term goals.
 
 ## How It Works
 
-Lanterne Rouge integrates data from your Oura Ring and Strava to understand your fitness, fatigue, and recovery. Each day, it analyzes this information to generate a personalized coaching report and update your training schedule on Intervals.icu. This ensures your plan adapts to your progress and needs.
+Lanterne Rouge integrates data from your Oura Ring and Strava to understand your fitness, fatigue, and recovery. Each day, it analyzes this information to generate a personalized coaching report and update your training schedule. This ensures your plan adapts to your progress and needs.
 
-By seamlessly integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, Lanterne Rouge adapts to keep you moving forward.
+By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
 
 ## Getting Started
 
