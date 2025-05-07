@@ -57,10 +57,10 @@ def refresh_strava_token():
             with open("tokens.json", "w") as f:
                 json.dump(tokens, f, indent=2)
 
-        return STRAVA_ACCESS_TOKEN
+        return STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN
     else:
         print(f"❌ Failed to refresh token: {response.text}")
-        return None
+        return None, None
 
 
 def strava_get(endpoint):
@@ -77,7 +77,7 @@ def strava_get(endpoint):
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
-        STRAVA_ACCESS_TOKEN = refresh_strava_token()
+        STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
         response = requests.get(url, headers=headers)
 
@@ -99,7 +99,7 @@ def strava_post(endpoint, payload):
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
-        STRAVA_ACCESS_TOKEN = refresh_strava_token()
+        STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
         response = requests.post(url, headers=headers, json=payload)
 

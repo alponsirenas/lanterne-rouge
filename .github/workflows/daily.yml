@@ -2,7 +2,7 @@ name: Daily Coach Run
 
 on:
   schedule:
-    - cron: '0 13 * * *'  # 6AM PT = 13:00 UTC
+    - cron: '0 15 * * *'  # 7AM PT = 15:00 UTC
   workflow_dispatch:
 
 jobs:
