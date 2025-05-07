@@ -8,8 +8,7 @@ from lanterne_rouge.mission_config import bootstrap
 import streamlit as st
 from lanterne_rouge.mission_config import load_config, cache_to_sqlite
 
-cfg = load_config("missions/tdf_sim_2025.toml")
-st.json(cfg.dict())
+st.json(_mission_cfg.dict())
 
 
 # New function to run daily logic
