@@ -56,6 +56,8 @@ def get_athlete_id() -> int:
     # Handle token expiry transparently
     if response.status_code == 401:
         STRAVA_ACCESS_TOKEN, _ = refresh_strava_token()
+        if STRAVA_ACCESS_TOKEN is None:
+            raise RuntimeError("Failed to refresh Strava access token.")
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
         response = requests.get(url, headers=headers, timeout=10)
 
