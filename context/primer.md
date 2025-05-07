@@ -1,5 +1,7 @@
 # Lanterne Rouge — Project Context Primer
 
+**Primer Version:** 0.3.0‑dev
+
 ## Purpose
 
 Build an agentic AI system that adapts endurance training dynamically based on real-world data and mission-driven event goals. Inspired by the spirit of finishing strong, not just winning.
@@ -10,7 +12,8 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 - Observation Layer: Collects daily readiness, fitness metrics.
 - Reasoning Module: Decides daily actions based on observations and mission alignment.
 - Planning Module: Updates training calendar dynamically.
-- Communication Layer: Presents updates via GUI.
+- Communication Layer: Presents updates via Streamlit UI (Gradio prototype retired).
+- Storage Layer: Persists mission configs, readiness logs, and plan state to SQLite (lanterne.db).
 - Reflection Layer (future): Learns from past decision outcomes.
 - GitHub Integration Layer: Manages repository secrets programmatically via secure API calls
 
@@ -22,14 +25,17 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 - Modularity and Scalability
 - Human-editable Configuration
 - Lightweight at first, expandable later
+- Generative UI‑ready (prepare components for future LL‑driven layouts)
 
 ## Current Roadmap
 
-- Implement MissionConfig v1.0
-- Build Reasoning Module v1.0
-- Integrate daily GUI with Gradio
-- Expanded Oura contributor tracking with multiple readiness factors now logged per day
-- Integrated secure GitHub secret update mechanism using `GH_PAT` and custom headers in `update_github_secret.py`
+- Release v0.3.0‑dev — Mission‑Aware Daily Coaching  
+    • MissionConfig v1.1 (TOML, runtime secret injection)  
+    • Reasoning Module v1.0 (stable)  
+    • Streamlit UI v0.1.0 for daily summaries & charts  
+    • Full Oura contributor logging (completed)  
+    • Secure GitHub secret rotation via `GH_PAT` (completed)  
+    • Persist outputs to `lanterne.db` and push to repo nightly
 
 ## Repository Layout
 
@@ -46,10 +52,15 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     daily_run.py
 /config/
     mission_config.json
+/missions/
+    *.toml          # individual MissionConfig files
+/ui/
+    streamlit_app.py
 /output/
     tour_coach_update.txt
     readiness_score_log.csv
     reasoning_log.csv
+    lanterne.db
 /scripts/
     update_github_secret.py
     daily_run.py
@@ -65,6 +76,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 | Reasoning Agent     | Aligns observations with MissionConfig to make actionable decisions              | `reasoner.py`, `plan_generator.py`  |
 | GitHubOps Agent     | Updates secrets and interacts with GitHub programmatically                      | `update_github_secret.py`           |
 | Monitor Agent       | Pulls Oura and Strava data, calculates readiness and fitness baselines           | `monitor.py`, `strava_api.py`       |
+| UI Agent (Streamlit) | Renders daily summaries and charts for humans | `ui/streamlit_app.py` |
 
 ---
 
@@ -89,6 +101,7 @@ These must be defined in the GitHub repository or local `.env` file:
 - `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`, `STRAVA_REFRESH_TOKEN`
 - `GH_PAT` — used with `Authorization: token` header
 - `REPO_OWNER`, `REPO_NAME` — used for GitHub API requests
+- REPO_PUSH_PAT — scoped PAT that allows GitHub Actions to commit artifacts
 
 ---
 
@@ -104,9 +117,10 @@ The file `output/readiness_score_log.csv` contains:
 
 ## Component Versions
 
-| Component            | Current Version | Notes                                |
-|----------------------|-----------------|--------------------------------------|
-| Tour Coach Agent     | v0.2.1          | Daily readiness and training updates |
-| Reasoning Module     | v1.0            | Mission-aligned decision making      |
-| GitHubOps Agent      | v0.1.0          | Secure repo secret updates           |
-| Oura Contributor Log | v1.0            | Full contributor set now recorded    |
+| Component            | Current Version | Notes                                    |
+|----------------------|-----------------|-------------------------------------------|
+| Tour Coach Agent     | v0.3.0‑dev      | Mission‑aware daily training updates      |
+| Reasoning Module     | v1.0            | Mission‑aligned decision making           |
+| Streamlit UI         | v0.1.0          | First interactive dashboard               |
+| GitHubOps Agent      | v0.1.1          | Secure repo secret rotation + push rights |
+| Oura Contributor Log | v1.0            | Full contributor set recorded             |
