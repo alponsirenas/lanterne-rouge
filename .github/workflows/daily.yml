@@ -42,4 +42,5 @@ jobs:
           STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
           REPO_OWNER: alponsirenas
           REPO_NAME: lanterne-rouge
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: python scripts/daily_run.py
