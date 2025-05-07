@@ -8,7 +8,7 @@ from lanterne_rouge.mission_config import bootstrap
 import streamlit as st
 from lanterne_rouge.mission_config import load_config, cache_to_sqlite
 
-cfg = load_config("missions/ana_may24.toml")
+cfg = load_config("missions/tdf_sim_2025.toml")
 st.json(cfg.dict())
 
 
@@ -18,4 +18,4 @@ def run_daily_logic():
     return tour_coach.run()
 
 # Boot on import
-_mission_cfg = bootstrap(Path("missions/ana_may24.toml"))
+_mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"))

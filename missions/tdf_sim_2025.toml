@@ -1,0 +1,22 @@
+# ────────────────────────────────────────────────────────────────
+# MissionConfig – Tour de France Indoor Simulation 2025
+# ----------------------------------------------------------------
+id          = "tdf-sim-2025"
+
+# Resolved at runtime from an env var / secret:
+athlete_id  = "${STRAVA_ATHLETE_ID}"     # e.g. export STRAVA_ATHLETE_ID=1234567
+
+start_date  = 2025-03-01                 # first day of the block
+goal_event  = "Tour de France Indoor Simulation 2025"
+goal_date   = 2025-07-05
+
+[targets]
+ctl_peak               = 80
+long_ride_minutes      = 90        # formerly long_ride_km
+stage_climb_minutes    = 60
+threshold_interval_min = 20
+
+[constraints]
+min_readiness = 70
+max_rhr       = 56
+min_tsb       = -15
