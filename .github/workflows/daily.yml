@@ -44,3 +44,16 @@ jobs:
           REPO_NAME: lanterne-rouge
           GH_PAT: ${{ secrets.GH_PAT }}
         run: python scripts/daily_run.py
+
+      - name: Commit & push output
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: |
+            output/*.txt
+            output/*.csv
+            lanterne.db           
+          author_name: lanterne-rouge-bot
+          author_email: bot@users.noreply.github.com
+          message: 'chore(data): daily coach output [skip ci]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
