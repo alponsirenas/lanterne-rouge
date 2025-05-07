@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 import os
+import re
 from dotenv import load_dotenv
 
 # Optional: Twilio fallback
@@ -22,8 +23,34 @@ def send_email(subject, body, to_email):
         server.login(os.getenv("EMAIL_ADDRESS"), os.getenv("EMAIL_PASS"))
         server.send_message(msg)
 
-def send_sms_via_email(body, to_number_email):
-    subject = "Lanterne Rouge: Training Plan"
+def send_sms_via_email(body: str, to_number: str) -> None:
+    """
+    Send an SMS by emailing the carrier gateway.
+
+    Args:
+        body: Message text.
+        to_number: Either the full gateway address
+                   (e.g. '1234567890@vtext.com') **or**
+                   a raw phone number with optional symbols
+                   (+, spaces, dashes).
+
+    Environment:
+        SMS_GATEWAY_DOMAIN – used when only digits are provided.
+                             Defaults to 'txt.att.net'.
+
+    """
+    # Build gateway email address
+    if "@" in to_number:
+        to_number_email = to_number  # already a full address
+    else:
+        digits = re.sub(r"\D", "", to_number)
+        if len(digits) < 10:
+            raise ValueError(f"Invalid phone number: '{to_number}'")
+        domain = os.getenv("SMS_GATEWAY_DOMAIN", "txt.att.net")
+        to_number_email = f"{digits}@{domain}"
+
+    # Empty subject to avoid extra header text on phones
+    subject = ""
     send_email(subject, body, to_number_email)
 
 def send_sms_via_twilio(body, to_number):

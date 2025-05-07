@@ -27,14 +27,14 @@ def record_readiness_contributors(day_entry):
     row = {
         "day": day_entry.get('day'),
         "readiness_score": day_entry.get('score'),
-        "hrv_balance": contributors.get('hrv_balance', 'NA'),
         "activity_balance": contributors.get('activity_balance', 'NA'),
-        "body_temperature": contributors.get('temperature_delta', 'NA'),
+        "body_temperature": contributors.get('body_temperature', 'NA'),
+        "hrv_balance": contributors.get('hrv_balance', 'NA'),
+        "previous_day_activity": contributors.get('previous_day_activity', 'NA'),
+        "previous_night": contributors.get('previous_night', 'NA'),
         "recovery_index": contributors.get('recovery_index', 'NA'),
         "resting_heart_rate": contributors.get('resting_heart_rate', 'NA'),
         "sleep_balance": contributors.get('sleep_balance', 'NA'),
-        "previous_day_activity": contributors.get('previous_day_activity', 'NA'),
-        "previous_night_sleep": contributors.get('previous_night_sleep', 'NA'),
     }
 
     fieldnames = list(row.keys())
@@ -125,6 +125,9 @@ def get_ctl_atl_tsb():
     activities = strava_get(
         "athlete/activities?per_page=200"
     )
+    if not activities:
+        print("⚠️ No activities returned from Strava. Skipping CTL/ATL/TSB calc.")
+        return None, None, None
 
     today = datetime.now()
     days = 45

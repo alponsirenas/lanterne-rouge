@@ -6,13 +6,15 @@
 
 - **Tour Coach** (`run_tour_coach.py`):
   - Orchestrates daily update sequence.
+  - Includes subprocess calls for expanded Oura contributor tracking, secure GitHub secret updates using PAT with appropriate headers, and readiness/fitness metrics logging before generating the daily output.
 
 - **MissionConfig** (`mission_config.py`):
   - Loads structured simulation goals and constraints.
 
 - **Observation Layer** (`monitor.py`):
   - Gathers data from Oura and Strava APIs.
-  - Structures daily observations.
+  - Structures daily observations including full readiness contributor fields.
+  - Handles missing values gracefully.
 
 - **Reasoning Module** (`reasoner.py`):
   - Analyzes observations and recommends daily action.
@@ -23,6 +25,13 @@
 
 - **(GUI Incoming)**:
   - Gradio dashboard to present daily results.
+
+### GitHub Integration Layer
+
+- **update_github_secret.py**:
+  - Uses the GitHub API to programmatically update repository secrets.
+  - Requires a Personal Access Token (PAT) with `repo` and `actions` scopes.
+  - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests.
 
 ### Data Flow
 ```markdown

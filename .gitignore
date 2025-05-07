@@ -8,8 +8,5 @@ __pycache__/
 .venv
 tokens.json
 
-# Output artifacts
-/output/
-
 # MacOS system files
 .DS_Store
