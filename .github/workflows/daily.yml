@@ -3,6 +3,7 @@ name: Daily Coach Run
 permissions:
   contents: read
   actions: write
+  id-token: write
 
 on:
   schedule:
