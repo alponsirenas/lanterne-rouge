@@ -125,6 +125,9 @@ def get_ctl_atl_tsb():
     activities = strava_get(
         "athlete/activities?per_page=200"
     )
+    if not activities:
+        print("⚠️ No activities returned from Strava. Skipping CTL/ATL/TSB calc.")
+        return None, None, None
 
     today = datetime.now()
     days = 45
