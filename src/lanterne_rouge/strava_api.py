@@ -81,7 +81,19 @@ def strava_get(endpoint):
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
         response = requests.get(url, headers=headers)
 
-    return response.json()
+    if response.status_code != 200:
+        print(f"❌ Strava API error {response.status_code}: {response.text}")
+        return []
+
+    if not response.content:
+        print("⚠️ Strava API returned empty response.")
+        return []
+
+    try:
+        return response.json()
+    except json.JSONDecodeError:
+        print("❌ Failed to decode JSON from Strava response.")
+        return []
 
 
 def strava_post(endpoint, payload):
