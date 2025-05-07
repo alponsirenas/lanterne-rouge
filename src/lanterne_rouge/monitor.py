@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from lanterne_rouge.strava_api import strava_get
 
-
 # Load environment variables
 load_dotenv()
 
