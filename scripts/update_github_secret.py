@@ -50,4 +50,4 @@ payload = {
 put_resp = requests.put(put_url, headers=headers, data=json.dumps(payload))
 put_resp.raise_for_status()
 
-print(f"✅ Successfully updated {secret_name} in {repo_owner}/{repo_name}")
+print(f"✅ Successfully updated a secret in {repo_owner}/{repo_name}")
