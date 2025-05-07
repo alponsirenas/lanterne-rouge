@@ -1,5 +1,9 @@
 name: Daily Coach Run
 
+permissions:
+  contents: read
+  secrets: write
+
 on:
   schedule:
     - cron: '0 15 * * *'  # 7AM PT = 15:00 UTC
