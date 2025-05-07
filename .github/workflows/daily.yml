@@ -1,7 +1,7 @@
 name: Daily Coach Run
 
 permissions:
-  contents: read
+  contents: write
   actions: write
   id-token: write
 
@@ -55,5 +55,4 @@ jobs:
           author_name: lanterne-rouge-bot
           author_email: bot@users.noreply.github.com
           message: 'chore(data): daily coach output [skip ci]'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          github_token: ${{ secrets.GH_PAT }}
