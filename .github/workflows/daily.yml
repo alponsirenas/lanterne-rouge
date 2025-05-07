@@ -51,7 +51,7 @@ jobs:
           add: |
             output/*.txt
             output/*.csv
-            lanterne.db           
+            lanterne.db
           author_name: lanterne-rouge-bot
           author_email: bot@users.noreply.github.com
           message: 'chore(data): daily coach output [skip ci]'
