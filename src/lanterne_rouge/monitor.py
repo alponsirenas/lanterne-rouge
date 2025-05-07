@@ -46,7 +46,7 @@ def record_readiness_contributors(day_entry):
             writer.writeheader()
         writer.writerow(row)
 
-    print(f"✅ Saved detailed readiness for {row['day']}.")
+    print("✅ Successfully saved detailed readiness data.")
 
 
 def get_oura_readiness():
