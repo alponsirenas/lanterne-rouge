@@ -19,7 +19,7 @@ try:
 except ModuleNotFoundError:  # ≤ 3.10
     import tomli as tomllib  # type: ignore
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, ConfigDict
 
 # ──────────────────────────────────────────────────────────────────────────
 # Nested models for explicit schema (v0.3.0)
@@ -53,9 +53,11 @@ class MissionConfig(BaseModel):
     targets: Targets
     constraints: Constraints
 
-    class Config:
-        json_encoders = {date: lambda d: d.isoformat()}
-        frozen = True
+    # ─── Model-level config (Pydantic v2) ────────────────────────────────
+    model_config = ConfigDict(
+        ser_json_encoders={date: lambda d: d.isoformat()},
+        frozen=True,
+    )
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -95,7 +97,7 @@ def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "lanterne.db") -> 
         """
     )
     con.execute(
-        "REPLACE INTO mission_config VALUES (?, ?)", (cfg.id, cfg.json())
+        "REPLACE INTO mission_config VALUES (?, ?)", (cfg.id, cfg.model_dump_json())
     )
     con.commit()
     con.close()
