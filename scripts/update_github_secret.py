@@ -21,10 +21,16 @@ secret_name = "STRAVA_REFRESH_TOKEN"
 new_secret_value = os.getenv("STRAVA_REFRESH_TOKEN")  # new value to write
 github_token = os.getenv("GH_PAT")
 
+# Check for required GitHub token
+if not github_token:
+    print("❌ GH_PAT not found in environment. Ensure it is set as a secret and exposed to the script.")
+    sys.exit(1)
+
 # Step 1: Get the repository public key
 headers = {
     "Authorization": f"token {github_token}",
-    "Accept": "application/vnd.github+json"
+    "Accept": "application/vnd.github+json",
+    "User-Agent": "update-github-secret-script"
 }
 url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/secrets/public-key"
 resp = requests.get(url, headers=headers)
