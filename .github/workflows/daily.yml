@@ -39,12 +39,16 @@ jobs:
           STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
           STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
           STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
-        run: python scripts/daily_run.py
+        run: |
+          UPDATED_TOKEN=$(python scripts/daily_run.py)
+          echo "STRAVA_REFRESH_TOKEN=$UPDATED_TOKEN" >> $GITHUB_ENV
+        outputs:
+          strava_refresh_token: ${{ env.STRAVA_REFRESH_TOKEN }}
 
       - name: Update STRAVA_REFRESH_TOKEN in GitHub Secrets
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           REPO_OWNER: alponsirenas
           REPO_NAME: lanterne-rouge
-          STRAVA_REFRESH_TOKEN: ${{ env.STRAVA_REFRESH_TOKEN }}
+          STRAVA_REFRESH_TOKEN: ${{ needs.run-daily.outputs.strava_refresh_token }}
         run: python scripts/update_github_secret.py
