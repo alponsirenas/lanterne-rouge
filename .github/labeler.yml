@@ -1,30 +1,30 @@
+---
 # Add 'root' label to any root file changes
 # Quotation marks are required for the leading asterisk
 root:
-- changed-files:
-  - any-glob-to-any-file: '*'
+  changed-files:
+    - '*'
 
 # Add 'CI' label to any changes within the entire repository
 CI:
-- changed-files:
-  - any-glob-to-any-file: .github/**
-
+  changed-files:
+    - '.github/**'
 
 # Add 'Documentation' label to any file changes within 'docs' or 'guides' folders
 Documentation:
-- changed-files:
-  - any-glob-to-any-file:
-    - docs/*
-    - context/*
+  changed-files:
+    - 'docs/*'
+    - 'context/*'
 
-
-# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+# Add 'source' label to any change to src files within the source dir
+# EXCEPT for the docs sub-folder
 source:
-- all:
-  - changed-files:
-    - any-glob-to-any-file: 'src/**/*'
+  changed-files:
+    - 'src/**/*'
 
-# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+# Add 'feature' label to any PR where the head branch name starts with `feature`
+# or has a `feature` section in the name
 feature:
- - head-branch: ['^feature', 'feature']
-
+  head-branch:
+    - '^feature'
+    - 'feature'
