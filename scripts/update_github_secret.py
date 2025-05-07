@@ -1,4 +1,3 @@
-
 # Standard library imports
 import os
 import sys
@@ -8,9 +7,7 @@ import binascii
 
 # Third-party library imports
 import requests
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.serialization import load_der_public_key
-from cryptography.hazmat.primitives import hashes
+from nacl import encoding, public
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -38,14 +35,11 @@ resp = requests.get(url, headers=headers)
 resp.raise_for_status()
 key_data = resp.json()
 
-# Step 2: Encrypt the secret using the public key
-key_decoded = base64.b64decode(key_data["key"])
-public_key = load_der_public_key(key_decoded)
-encrypted_value = public_key.encrypt(
-    new_secret_value.encode("utf-8"),
-    padding.PKCS1v15()
-)
-encrypted_base64 = base64.b64encode(encrypted_value).decode("utf-8")
+# GitHub public key is Base64‑encoded and expects libsodium sealed‑box encryption
+public_key = public.PublicKey(key_data["key"].encode("utf-8"), encoding.Base64Encoder())
+sealed_box = public.SealedBox(public_key)
+encrypted = sealed_box.encrypt(new_secret_value.encode("utf-8"))
+encrypted_base64 = base64.b64encode(encrypted).decode("utf-8")
 
 # Step 3: Put the secret back into GitHub
 put_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/secrets/{secret_name}"
