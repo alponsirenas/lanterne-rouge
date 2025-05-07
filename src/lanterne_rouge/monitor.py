@@ -19,19 +19,25 @@ USER_FTP = int(os.getenv("USER_FTP", 250))
 
 def record_readiness_contributors(day_entry):
     """
-    Save Oura readiness score and HRV balance to a CSV file for future analysis.
+    Save Oura readiness score and detailed contributors to a CSV file for future analysis.
     """
     filename = "output/readiness_score_log.csv"
-    fieldnames = ["day", "readiness_score", "hrv_balance"]
-
     contributors = day_entry.get('contributors', {})
 
     row = {
         "day": day_entry.get('day'),
         "readiness_score": day_entry.get('score'),
-        "hrv_balance": contributors.get('hrv_balance')
+        "hrv_balance": contributors.get('hrv_balance', 'NA'),
+        "activity_balance": contributors.get('activity_balance', 'NA'),
+        "body_temperature": contributors.get('temperature_delta', 'NA'),
+        "recovery_index": contributors.get('recovery_index', 'NA'),
+        "resting_heart_rate": contributors.get('resting_heart_rate', 'NA'),
+        "sleep_balance": contributors.get('sleep_balance', 'NA'),
+        "previous_day_activity": contributors.get('previous_day_activity', 'NA'),
+        "previous_night_sleep": contributors.get('previous_night_sleep', 'NA'),
     }
 
+    fieldnames = list(row.keys())
     file_exists = os.path.isfile(filename)
 
     with open(filename, mode='a', newline='') as csvfile:
@@ -40,7 +46,7 @@ def record_readiness_contributors(day_entry):
             writer.writeheader()
         writer.writerow(row)
 
-    print(f"✅ Saved readiness and HRV balance for {row['day']}.")
+    print(f"✅ Saved detailed readiness for {row['day']}.")
 
 
 def get_oura_readiness():

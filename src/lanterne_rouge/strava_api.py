@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+USE_TOKEN_CACHE = os.getenv("USE_TOKEN_CACHE", "true").lower() == "true"
+
 # Load Strava credentials
 STRAVA_CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
@@ -15,8 +17,8 @@ STRAVA_ACCESS_TOKEN = os.getenv("STRAVA_ACCESS_TOKEN")
 STRAVA_REFRESH_TOKEN = os.getenv("STRAVA_REFRESH_TOKEN")
 STRAVA_BASE_URL = "https://www.strava.com/api/v3"
 
-# Try to load updated tokens from tokens.json if it exists
-if os.path.exists("tokens.json"):
+# Try to load updated tokens from tokens.json if it exists and USE_TOKEN_CACHE is True
+if USE_TOKEN_CACHE and os.path.exists("tokens.json"):
     with open("tokens.json", "r") as f:
         tokens = json.load(f)
     STRAVA_ACCESS_TOKEN = tokens["access_token"]
@@ -50,9 +52,10 @@ def refresh_strava_token():
             f"✅ Refreshed! New Access Token Expires At: {expires_at}"
         )
 
-        # Save updated tokens to tokens.json
-        with open("tokens.json", "w") as f:
-            json.dump(tokens, f, indent=2)
+        # Save updated tokens to tokens.json if USE_TOKEN_CACHE is True
+        if USE_TOKEN_CACHE:
+            with open("tokens.json", "w") as f:
+                json.dump(tokens, f, indent=2)
 
         return STRAVA_ACCESS_TOKEN
     else:
