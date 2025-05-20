@@ -61,7 +61,7 @@ def run(cfg: MissionConfig | None = None):
         ctl=ctl,
         atl=atl,
         tsb=tsb,
-        mission_cfg=cfg,
+        cfg=cfg,
     )
 
     # Log decision (recommendations) to memory
