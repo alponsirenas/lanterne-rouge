@@ -77,6 +77,20 @@ def generate_workout_adjustment(
     raw_response = call_llm(messages)
     # Split the raw LLM response into individual recommendation lines.
     # The model might return a block of text with newlines or bullets.
+    lines = parse_llm_list(raw_response)
+    return lines
+
+
+def parse_llm_list(raw_response: str) -> list[str]:
+    """
+    Parse the raw LLM response into a list of cleaned recommendation lines.
+
+    Args:
+        raw_response: The raw text response from the LLM.
+
+    Returns:
+        A list of non-empty, cleaned lines with bullets and extra whitespace removed.
+    """
     lines = [line.strip("- \t") for line in raw_response.splitlines()]
     return [line for line in lines if line]
 
