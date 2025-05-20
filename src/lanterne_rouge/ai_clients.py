@@ -14,7 +14,7 @@ def generate_workout_adjustment(
     tsb: float,
     mission_cfg,
     memories_limit: int = 5
-) -> str:
+) -> list[str]:
     """
     Generate workout adjustment using LLM, seeded with recent memories.
 
@@ -28,7 +28,7 @@ def generate_workout_adjustment(
         memories_limit: how many past memories to include.
 
     Returns:
-        A GPT-written adjustment recommendation.
+        List of GPT-written adjustment recommendation lines. Each line has leading hyphens and whitespace stripped.
     """
     # Build a structured 'plan' dict out of your mission config
     try:
@@ -74,7 +74,25 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    return call_llm(messages)
+    raw_response = call_llm(messages)
+    # Split the raw LLM response into individual recommendation lines.
+    # The model might return a block of text with newlines or bullets.
+    lines = parse_llm_list(raw_response)
+    return lines
+
+
+def parse_llm_list(raw_response: str) -> list[str]:
+    """
+    Parse the raw LLM response into a list of cleaned recommendation lines.
+
+    Args:
+        raw_response: The raw text response from the LLM.
+
+    Returns:
+        A list of non-empty, cleaned lines with bullets and extra whitespace removed.
+    """
+    lines = [line.strip("- \t") for line in raw_response.splitlines()]
+    return [line for line in lines if line]
 
 
 def call_llm(
