@@ -3,7 +3,7 @@
 # data from Oura and Strava.
 
 from dotenv import load_dotenv
-from lanterne_rouge.mission_config import load_config
+from lanterne_rouge.mission_config import MissionConfig, load_config
 import sys
 import os
 from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
@@ -26,9 +26,13 @@ def get_version():
 
 
 
-def run():
-    # Load mission configuration
-    cfg = load_config(os.getenv("MISSION_CONFIG_PATH", "missions/tdf-sim-2025.toml"))
+def run(cfg: MissionConfig | None = None):
+    """Generate the daily Tour Coach summary."""
+    # Load mission configuration lazily
+    if cfg is None:
+        cfg = load_config(
+            os.getenv("MISSION_CONFIG_PATH", "missions/tdf_sim_2025.toml")
+        )
 
     # Load agent memory
     memory = load_memory()
