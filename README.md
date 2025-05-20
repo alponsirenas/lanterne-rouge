@@ -38,27 +38,36 @@ Follow these steps to set up Lanterne Rouge:
    pip install -r requirements.txt
    ```
 
-4. **Configure your `.env` file with your API credentials:**
+4. **Configure your `.env` file with your API credentials and notification settings:**
 
    ```env
+   # Oura API
    OURA_TOKEN=your_oura_personal_access_token
+
+   # Strava API
    STRAVA_CLIENT_ID=your_strava_client_id
    STRAVA_CLIENT_SECRET=your_strava_client_secret
-   STRAVA_ACCESS_TOKEN=your_strava_access_token
    STRAVA_REFRESH_TOKEN=your_strava_refresh_token
+
+   # Notification settings
+   EMAIL_ADDRESS=your_email_address_for_notifications
+   EMAIL_PASS=your_email_app_password
+   TO_EMAIL=recipient_email_address
+   TO_PHONE=recipient_phone_sms_gateway (e.g., 1234567890@txt.att.net)
+   USE_TWILIO=false  # set to true to use Twilio SMS instead of email gateway
+
+   # GitHub integration (for auto secret updates)
+   GH_PAT=your_github_personal_access_token
    ```
 
 5. **Run your agent daily:**
 
-   ```bash
-   python run_tour_coach.py
-   ```
-
-   Each day, Lanterne Rouge will:
-   - Analyze your recovery and fitness data.
-   - Adjust your training plan based on your progress.
-   - Generate a coaching report (`output/tour_coach_update.txt`).
-   - Log readiness scores for future analysis (`output/readiness_score_log.csv`).
+   - Locally:
+     ```bash
+     python scripts/daily_run.py --config missions/example.toml
+     ```
+   - Automatically via GitHub Actions:
+     Copy your mission config into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
 
 6. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
@@ -69,9 +78,13 @@ This system is designed to fit into your routine, helping you build consistency 
 
 ## Looking Ahead
 
-With version **v0.2.1**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
+With version **v0.3.0-dev**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
 
 In future versions expect:
+- Expanded Oura readiness contributor tracking.
+- Mission-aware daily coaching via LLMs.
+- Optional Streamlit dashboard prototype.
+- Exploration of n8n for workflow orchestration.
 - Deeper trend analysis.
 - Smarter plan adaptations.
 - Enhanced personalization to support your endurance journey.
