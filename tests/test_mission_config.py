@@ -1,7 +1,13 @@
 from datetime import date
 from lanterne_rouge.reasoner import decide_adjustment
-from datetime import date
-from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
+import sqlite3
+import json
+from lanterne_rouge.mission_config import (
+    MissionConfig,
+    Targets,
+    Constraints,
+    cache_to_sqlite,
+)
 
 # Dummy mission config for tests
 _dummy_cfg = MissionConfig(
@@ -52,3 +58,19 @@ def test_high_fatigue_warning():
     adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
     # expect guidance to reduce / decrease / reducing load due to fatigue
     assert any(word in m.lower() for word in ("decrease", "reduce", "reducing") for m in adj)
+
+
+def test_cache_to_sqlite(tmp_path):
+    db_file = tmp_path / "mc.db"
+    cache_to_sqlite(_dummy_cfg, db_file)
+
+    con = sqlite3.connect(db_file)
+    row = con.execute(
+        "SELECT json FROM mission_config WHERE id=?",
+        (_dummy_cfg.id,),
+    ).fetchone()
+    con.close()
+
+    assert row is not None
+    loaded = MissionConfig(**json.loads(row[0]))
+    assert loaded == _dummy_cfg
