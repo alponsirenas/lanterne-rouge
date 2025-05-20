@@ -1,7 +1,5 @@
-import pytest
 from datetime import date
-from unittest.mock import patch, MagicMock
-from lanterne_rouge.plan_generator import generate_workout_plan
+from lanterne_rouge.reasoner import decide_adjustment
 from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
 # Dummy mission config for tests
@@ -24,18 +22,27 @@ _dummy_cfg = MissionConfig(
     ),
 )
 
-@patch("lanterne_rouge.plan_generator.openai.ChatCompletion.create")
-@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
-@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}))
-def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_openai):
-    # Prepare a fake LLM response object
-    fake_message = MagicMock()
-    fake_message.content = '{"workout":"test_plan"}'
-    fake_choice = MagicMock()
-    fake_choice.message = fake_message
-    mock_openai.return_value = MagicMock(choices=[fake_choice])
 
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
-    assert isinstance(plan, dict)
-    assert plan["workout"] == "test_plan"
-    mock_openai.assert_called_once()
+def test_low_readiness_triggers_warning():
+    messages = decide_adjustment(50, {"hrv_balance": 80}, 60, 55, 0, _dummy_cfg)
+    assert any("Readiness is low" in m for m in messages)
+
+
+def test_very_negative_tsb_recommends_recovery():
+    messages = decide_adjustment(80, {}, 60, 70, -25, _dummy_cfg)
+    assert any("Form is very negative" in m for m in messages)
+
+
+def test_moderately_negative_tsb_reduces_intensity():
+    messages = decide_adjustment(80, {}, 60, 70, -15, _dummy_cfg)
+    assert any("Form is moderately negative" in m for m in messages)
+
+
+def test_positive_tsb_encourages_intensity():
+    messages = decide_adjustment(80, {}, 70, 60, 15, _dummy_cfg)
+    assert any("Form is highly positive" in m for m in messages)
+
+
+def test_default_message_when_all_good():
+    messages = decide_adjustment(80, {"hrv_balance": 90}, 60, 60, 0, _dummy_cfg)
+    assert messages == ["✅ All metrics look good. Proceed with planned workout."]
