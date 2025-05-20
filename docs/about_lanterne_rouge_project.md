@@ -50,7 +50,6 @@ We’re currently in **v0.3.0**, focused on:
 - Prototyping an n8n workflow to orchestrate data pulls, processing, and notifications.
 - Building a demo harness (Streamlit stub) that runs one full daily cycle.
 - Generating natural-language coaching summaries via LLMs.
-- Logging memory for future reflection and adaptation.
 
 ---
 
