@@ -38,7 +38,14 @@ Follow these steps to set up Lanterne Rouge:
    pip install -r requirements.txt
    ```
 
-4. **Configure your `.env` file with your API credentials and notification settings:**
+4. **Initialize the SQLite database:**
+
+   ```bash
+   python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/example.toml')"
+   ```
+   This creates `lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
+
+5. **Configure your `.env` file with your API credentials and notification settings:**
 
    ```env
    # Oura API
@@ -60,7 +67,7 @@ Follow these steps to set up Lanterne Rouge:
    GH_PAT=your_github_personal_access_token
    ```
 
-5. **Run your agent daily:**
+6. **Run your agent daily:**
 
    - Locally:
      ```bash
@@ -69,7 +76,7 @@ Follow these steps to set up Lanterne Rouge:
    - Automatically via GitHub Actions:
      Copy your mission config into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
 
-6. **Review your coaching report:**
+7. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
    - Ride, recover, and let the AI adapt your plan as you progress.
 
