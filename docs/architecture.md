@@ -6,6 +6,7 @@
 
 - **Tour Coach** (`run_tour_coach.py`):
   - Orchestrates daily update sequence. It also triggers notification delivery through the new `notify.py` layer.
+  - `tour_coach.run()` accepts an optional `MissionConfig`. If omitted, the config is loaded from `missions/tdf_sim_2025.toml` by default.
   - Includes subprocess calls for expanded Oura contributor tracking, secure GitHub secret updates using PAT with appropriate headers, and readiness/fitness metrics logging before generating the daily output.
     - Pushes updated logs and database snapshots to GitHub (GitHub‑Actions step, currently blocked by permissions ‑ see Next Steps).
 
