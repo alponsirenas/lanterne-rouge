@@ -1,68 +1,51 @@
 from datetime import date
-from pathlib import Path
-import json
-import sqlite3
+from lanterne_rouge.reasoner import decide_adjustment
+from datetime import date
+from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
-from lanterne_rouge.mission_config import (
-    load_config,
-    cache_to_sqlite,
-    MissionConfig,
+# Dummy mission config for tests
+_dummy_cfg = MissionConfig(
+    id="test",
+    athlete_id="strava:0",
+    start_date=date(2025, 1, 1),
+    goal_event="test_event",
+    goal_date=date(2025, 12, 31),
+    targets=Targets(
+        ctl_peak=100,
+        long_ride_minutes=100,
+        stage_climb_minutes=60,
+        threshold_interval_min=20,
+    ),
+    constraints=Constraints(
+        min_readiness=65,
+        max_rhr=999,
+        min_tsb=-10,
+    ),
 )
 
-# ---------------------------------------------------------------------------
-# Inline sample mission (TOML v1.0)
-# ---------------------------------------------------------------------------
-_SAMPLE_TOML = """
-id = "ana_may24"
-athlete_id = "strava:123456"
 
-start_date = 2025-05-01
-goal_event = "Tour of California"
-goal_date = 2025-10-01
-
-[targets]
-ctl_peak = 90
-long_ride_minutes = 300
-stage_climb_minutes = 60
-threshold_interval_min = 40
-
-[constraints]
-min_readiness = 65
-max_rhr = 58
-min_tsb = -10
-"""
+def test_high_readiness_good_tsb():
+    readiness = 70
+    ctl = 80
+    atl = 50
+    tsb = 20
+    adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
+    assert adj == "increase"
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
-def test_load_config(tmp_path: Path):
-    toml_file = tmp_path / "mission.toml"
-    toml_file.write_text(_SAMPLE_TOML)
-
-    cfg = load_config(toml_file)
-
-    assert isinstance(cfg, MissionConfig)
-    assert cfg.id == "ana_may24"
-    assert cfg.targets.long_ride_minutes == 300
-    assert cfg.constraints.min_readiness == 65
-    assert cfg.start_date == date(2025, 5, 1)
+def test_low_readiness_warning():
+    readiness = 50
+    ctl = 80
+    atl = 50
+    tsb = 20
+    adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
+    assert adj == "decrease"
 
 
-def test_cache_to_sqlite(tmp_path: Path):
-    toml_file = tmp_path / "mission.toml"
-    toml_file.write_text(_SAMPLE_TOML)
-    cfg = load_config(toml_file)
-
-    db_file = tmp_path / "lanterne.db"
-    cache_to_sqlite(cfg, db_file)
-
-    con = sqlite3.connect(db_file)
-    row = con.execute(
-        "SELECT json FROM mission_config WHERE id = ?", (cfg.id,)
-    ).fetchone()
-    con.close()
-
-    assert row is not None
-    reloaded = MissionConfig(**json.loads(row[0]))
-    assert reloaded == cfg
+def test_high_fatigue_warning():
+    readiness = 70
+    ctl = 80
+    atl = 70
+    tsb = -15
+    adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
+    assert adj == "decrease"

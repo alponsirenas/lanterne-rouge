@@ -3,12 +3,14 @@
 # data from Oura and Strava.
 
 from dotenv import load_dotenv
+from lanterne_rouge.mission_config import load_config
 import sys
 import os
 from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
 from lanterne_rouge.reasoner import decide_adjustment
-from lanterne_rouge.plan_generator import generate_14_day_plan
+from lanterne_rouge.plan_generator import generate_workout_plan
 from lanterne_rouge.peloton_matcher import match_peloton_class
+from lanterne_rouge.memory_bus import load_memory, log_observation, log_decision, log_reflection
 from datetime import datetime
 
 load_dotenv()
@@ -25,24 +27,46 @@ def get_version():
 
 
 def run():
+    # Load mission configuration
+    cfg = load_config(os.getenv("MISSION_CONFIG_PATH", "missions/tdf-sim-2025.toml"))
+
+    # Load agent memory
+    memory = load_memory()
+
     # 1. Pull today's data
     readiness_score, hrv_balance, readiness_day = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
 
+    # Log today's observations to memory
+    log_observation({
+        "readiness_score": readiness_score,
+        "hrv_balance": hrv_balance,
+        "readiness_day": readiness_day,
+        "ctl": ctl,
+        "atl": atl,
+        "tsb": tsb,
+    })
+
     # 2. Decide if we need to adjust today's plan
-    recommendations = decide_adjustment(readiness_score, ctl, atl, tsb)
+    recommendations = decide_adjustment(
+        readiness_score=readiness_score,
+        readiness_details={
+            "hrv_balance": hrv_balance,
+            "readiness_day": readiness_day
+        },
+        ctl=ctl,
+        atl=atl,
+        tsb=tsb,
+        mission_cfg=cfg,
+    )
 
-    # 3. Get today's planned workout from plan_generator
-    plan = generate_14_day_plan()
-    today_date = datetime.now().strftime("%Y-%m-%d")
-    today_workout = next((w for w in plan if w["date"] == today_date), None)
+    # Log decision (recommendations) to memory
+    log_decision({"recommendations": recommendations})
 
-    if not today_workout:
-        print("⚠️ No workout found for today. Exiting.")
-        sys.exit(1)
-
-    today_workout_type = today_workout["name"]
-    today_workout_details = today_workout["description"]
+    # 3. Get today's workout plan via LLM-driven planner
+    workout = generate_workout_plan(cfg, memory)
+    today_workout_type = workout["name"]
+    today_workout_details = workout.get("description", "")
 
     # 4. Match to Peloton class
     peloton_class = match_peloton_class(today_workout_type)
@@ -86,6 +110,9 @@ def run():
     # Write to file
     with open("output/tour_coach_update.txt", "w") as f:
         f.write(summary)
+
+    # Log reflection (summary) to memory
+    log_reflection({"summary": summary})
 
     print(
         f"✅ Tour Coach Agent v{version} daily update generated: "

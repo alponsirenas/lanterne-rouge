@@ -23,20 +23,22 @@ def record_readiness_contributors(day_entry):
     filename = "output/readiness_score_log.csv"
     contributors = day_entry.get('contributors', {})
 
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    # Base row with day and readiness score
     row = {
-        "day": day_entry.get('day'),
-        "readiness_score": day_entry.get('score'),
-        "activity_balance": contributors.get('activity_balance', 'NA'),
-        "body_temperature": contributors.get('body_temperature', 'NA'),
-        "hrv_balance": contributors.get('hrv_balance', 'NA'),
-        "previous_day_activity": contributors.get('previous_day_activity', 'NA'),
-        "previous_night": contributors.get('previous_night', 'NA'),
-        "recovery_index": contributors.get('recovery_index', 'NA'),
-        "resting_heart_rate": contributors.get('resting_heart_rate', 'NA'),
-        "sleep_balance": contributors.get('sleep_balance', 'NA'),
+        "day": day_entry.get("day"),
+        "readiness_score": day_entry.get("score"),
     }
 
-    fieldnames = list(row.keys())
+    # Dynamically include all contributor fields
+    for key, value in contributors.items():
+        row[key] = value if value is not None else "NA"
+
+    # Fieldnames in order: day, readiness_score, then sorted contributor keys
+    fieldnames = ["day", "readiness_score"] + sorted(contributors.keys())
+
     file_exists = os.path.isfile(filename)
 
     with open(filename, mode='a', newline='') as csvfile:

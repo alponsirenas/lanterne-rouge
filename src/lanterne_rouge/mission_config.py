@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from datetime import date
 from pathlib import Path
-import json
 import sqlite3
 # tomllib is in the standard library starting with Python 3.11.
 # On earlier interpreters we fall back to the third‑party “tomli” package,

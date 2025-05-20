@@ -1,80 +1,38 @@
-# plan-generator.py
+import os
+import json
+import openai
+
+from lanterne_rouge.mission_config import MissionConfig
+from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
 
 
-from datetime import datetime, timedelta
-
-
-def generate_14_day_plan(start_date=None):
+def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
     """
-    Generate a 14-day training plan starting from the given start_date.
-    If no start_date is provided, it starts today.
+    Use OpenAI to generate today's workout plan based on mission and current metrics.
+    Returns a dict conforming to workout_plan.schema.json.
     """
-    if start_date is None:
-        start_date = datetime.today().date()
+    # Gather current metrics
+    readiness, _ = get_oura_readiness()
+    ctl, atl, tsb = get_ctl_atl_tsb()
+    metrics = {"readiness": readiness, "ctl": ctl, "atl": atl, "tsb": tsb}
 
-    plan = []
-    for i in range(14):
-        day = start_date + timedelta(days=i)
-        workout = {}
-        weekday = day.weekday()  # Monday = 0, Sunday = 6
+    # Build prompt
+    prompt = (
+        f"Mission configuration:\n{mission_cfg.model_dump_json()}\n"
+        f"Recent memory entries:\n{json.dumps(memory)}\n"
+        f"Current metrics:\n{json.dumps(metrics)}\n"
+        "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object."
+    )
 
-        # Map weekdays to workout types
-        if weekday == 0:  # Monday
-            workout = {
-                "name": "Rest",
-                "description": "Strength Day (no cycling)",
-                "tss": 0,
-                "duration_sec": 0,
-            }
-        elif weekday == 1:  # Tuesday
-            workout = {
-                "name": "Threshold Intervals",
-                "description": "3x10min @ 95–98% FTP",
-                "tss": 75,
-                "duration_sec": 3600,
-            }
-        elif weekday == 2:  # Wednesday
-            workout = {
-                "name": "Recovery Ride",
-                "description": "45 min easy spin @ Zone 1–2",
-                "tss": 25,
-                "duration_sec": 2700,
-            }
-        elif weekday == 3:  # Thursday
-            workout = {
-                "name": "Rest",
-                "description": "Strength Day (no cycling)",
-                "tss": 0,
-                "duration_sec": 0,
-            }
-        elif weekday == 4:  # Friday
-            workout = {
-                "name": "Climb Simulation",
-                "description": "4x6min climbs @ 105% FTP",
-                "tss": 80,
-                "duration_sec": 3600,
-            }
-        elif weekday == 5:  # Saturday
-            workout = {
-                "name": "Rest",
-                "description": "Optional recovery or off day",
-                "tss": 0,
-                "duration_sec": 0,
-            }
-        elif weekday == 6:  # Sunday
-            workout = {
-                "name": "Long Endurance Ride",
-                "description": "2hr @ Zone 2–3 with surges @ Zone 4",
-                "tss": 90,
-                "duration_sec": 7200,
-            }
+    # Call OpenAI
+    resp = openai.ChatCompletion.create(
+        model=os.getenv("OPENAI_MODEL", "gpt-4"),
+        messages=[
+            {"role": "system", "content": "You are a workout planning assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.7,
+    )
 
-        # Append with date attached
-        plan.append(
-            {
-                "date": day.strftime("%Y-%m-%d"),
-                **workout,
-            }
-        )
-
-    return plan
+    # Parse and return
+    return json.loads(resp.choices[0].message.content)
