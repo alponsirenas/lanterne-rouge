@@ -64,12 +64,11 @@ def test_cache_to_sqlite(tmp_path):
     db_file = tmp_path / "mc.db"
     cache_to_sqlite(_dummy_cfg, db_file)
 
-    con = sqlite3.connect(db_file)
-    row = con.execute(
-        "SELECT json FROM mission_config WHERE id=?",
-        (_dummy_cfg.id,),
-    ).fetchone()
-    con.close()
+    with sqlite3.connect(db_file) as con:
+        row = con.execute(
+            "SELECT json FROM mission_config WHERE id=?",
+            (_dummy_cfg.id,),
+        ).fetchone()
 
     assert row is not None
     loaded = MissionConfig(**json.loads(row[0]))
