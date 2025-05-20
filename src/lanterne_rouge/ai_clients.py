@@ -28,7 +28,7 @@ def generate_workout_adjustment(
         memories_limit: how many past memories to include.
 
     Returns:
-        List of GPT-written adjustment recommendation lines.
+        List of GPT-written adjustment recommendation lines. Each line has leading hyphens and whitespace stripped.
     """
     # Build a structured 'plan' dict out of your mission config
     try:
