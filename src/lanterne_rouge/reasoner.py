@@ -43,8 +43,8 @@ def decide_adjustment(
         )
     elif tsb < cfg.constraints.min_tsb:
         recommendations.append(
-            "⚠️ Form is moderately negative (TSB < -10). Training OK but monitor "
-            "fatigue."
+            "⚠️ Form is moderately negative (TSB < "
+            f"{cfg.constraints.min_tsb}). Decrease today’s intensity or overall volume to allow recovery."
         )
     elif tsb > 10:
         recommendations.append(

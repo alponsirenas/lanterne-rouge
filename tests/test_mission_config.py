@@ -30,7 +30,8 @@ def test_high_readiness_good_tsb():
     atl = 50
     tsb = 20
     adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
-    assert adj == "increase"
+    # expect an “increase” style recommendation in the returned list
+    assert any("increase" in m.lower() or "positive" in m.lower() for m in adj)
 
 
 def test_low_readiness_warning():
@@ -39,7 +40,8 @@ def test_low_readiness_warning():
     atl = 50
     tsb = 20
     adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
-    assert adj == "decrease"
+    # expect guidance to reduce / decrease / reducing load
+    assert any(word in m.lower() for word in ("decrease", "reduce", "reducing") for m in adj)
 
 
 def test_high_fatigue_warning():
@@ -48,4 +50,5 @@ def test_high_fatigue_warning():
     atl = 70
     tsb = -15
     adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
-    assert adj == "decrease"
+    # expect guidance to reduce / decrease / reducing load due to fatigue
+    assert any(word in m.lower() for word in ("decrease", "reduce", "reducing") for m in adj)

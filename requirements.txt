@@ -7,7 +7,7 @@ pynacl==1.5.*
 streamlit==1.33.*
 pydantic==2.7.*
 tomli>=2.0.1        # safe no‑op on 3.11+
-openai==0.27.*
+openai>=1.14.0
 typing-extensions>=4.10
 
 # Uncomment once token counting is integrated
