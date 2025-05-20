@@ -16,6 +16,9 @@
 - Explains decisions clearly (e.g., ease, push, or maintain).
 - Displays readiness, fitness, and recommendations in a simple dashboard.
 - Builds trust by ensuring every decision fits the bigger picture.
+- Logs all Oura readiness contributor metrics daily for richer reasoning.
+- Sends automated summary notifications via email and SMS.
+- Refreshes Strava access tokens and updates GitHub secrets automatically via Actions.
 
 ### v0.4.0 — Proactive planning and mission protection
 

@@ -50,8 +50,8 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     tour_coach.py
     update_github_secret.py
     daily_run.py
-/config/
-    mission_config.json
+/config/             # templates or examples of MissionConfig files
+    mission_config.toml   # example or template MissionConfig file
 /missions/
     *.toml          # individual MissionConfig files
 /ui/

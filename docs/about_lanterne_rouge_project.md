@@ -44,27 +44,46 @@ This is an exploration of:
 ## Current Status
 
 We’re currently in **v0.3.0**, focused on:
-- Defining the mission structure
-- Daily reasoning based on recovery, training stress, and trends
-- Generating coaching summaries using LLMs
-- Logging memory for future reflection
+- Integrating OpenAI Codex to generate and maintain core training logic (Bannister CTL/ATL/TSB model).
+- Replacing the static workout library with a GPT-driven Workout of the Day generator.
+- Expanding readiness logging to include all Oura readiness contributors.
+- Prototyping an n8n workflow to orchestrate data pulls, processing, and notifications.
+- Building a demo harness (Streamlit stub) that runs one full daily cycle.
+- Generating natural-language coaching summaries via LLMs.
+- Logging memory for future reflection and adaptation.
 
 ---
 
 ## Built With
 
-- Python + Gradio
+- Python
 - Oura + Strava data APIs
 - OpenAI and Anthropic LLMs
+- OpenAI Codex
+- n8n
+- Streamlit
 - A modular agent-based architecture
 
 ---
 
 ## What’s Next
 
-- Smarter planning
-- Long-term memory and adaptation
-- Simulation of full multi-stage events
-- A fully autonomous, explainable, coach-in-your-pocket
+1. **Wire up Codex for core logic**  
+   - Commit a Codex hook and workflow to auto-generate or update Bannister model code.
+
+2. **GPT-driven workout generator**  
+   - Draft and integrate prompts that produce Workout of the Day based on current CTL/ATL/TSB and mission targets.
+
+3. **Finalize Bannister model and tests**  
+   - Implement `ctl_atl_tsb()` in `monitor.py` with full test coverage.
+
+4. **Evaluate n8n orchestration**  
+   - Prototype an n8n workflow that glues together Oura, Strava, GPT reasoning, and notifications.
+
+5. **Demo harness & recording**  
+   - Develop a Streamlit or run-all script to showcase one daily run, and record a 30–45s walkthrough.
+
+6. **Release prep & version bump**  
+   - Update version to v0.3.0 in code, tag the repo, and draft release notes summarizing new features.
 
 Let’s see what it means to go the distance — with a system that’s training to go with you.
