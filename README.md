@@ -64,10 +64,10 @@ Follow these steps to set up Lanterne Rouge:
 
    - Locally:
      ```bash
-     python scripts/daily_run.py --config missions/example.toml
+     python scripts/daily_run.py --config missions/tdf_sim_2025.toml
      ```
    - Automatically via GitHub Actions:
-     Copy your mission config into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
+     Copy your mission config (for example `missions/tdf_sim_2025.toml`) into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
 
 6. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
