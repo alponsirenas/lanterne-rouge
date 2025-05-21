@@ -69,7 +69,7 @@ def run(cfg: MissionConfig | None = None):
 
     # 3. Get today's workout plan via LLM-driven planner
     workout = generate_workout_plan(cfg, memory)
-    today_workout_type = workout["name"]
+    today_workout_type = workout.get("workout", "No workout generated")
     today_workout_details = workout.get("description", "")
 
     # 4. Match to Peloton class
