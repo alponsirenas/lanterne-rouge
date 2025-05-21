@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import openai
+import logging
 
 from lanterne_rouge.mission_config import MissionConfig
 from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
@@ -15,7 +16,7 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
     Returns a dict conforming to workout_plan.schema.json.
     """
     # Gather current metrics
-    readiness, _ = get_oura_readiness()
+    readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
     metrics = {"readiness": readiness, "ctl": ctl, "atl": atl, "tsb": tsb}
 
