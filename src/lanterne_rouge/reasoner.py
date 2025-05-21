@@ -12,8 +12,16 @@ def decide_adjustment(
     ctl: float,
     atl: float,
     tsb: float,
-    cfg: MissionConfig
+    cfg: MissionConfig | None = None,
+    *,
+    mission_cfg: MissionConfig | None = None,
 ) -> list[str]:
+    """Return recommendation lines for today's workout adjustment."""
+    # Backwards-compatibility: allow ``mission_cfg`` alias for ``cfg``
+    if cfg is None:
+        cfg = mission_cfg
+    if cfg is None:
+        raise TypeError("Mission configuration required via 'cfg' or 'mission_cfg'")
     recommendations = []
 
     # LLM-first override: delegate all adjustment logic to the LLM if enabled
