@@ -20,12 +20,12 @@ Lanterne Rouge is an agentic AI system for endurance athletes inspired by the la
 **Current Target: v0.3.0 — Mission-Aware Daily Coaching**
 - MissionConfig v1
 - Reasoning Module v1
-- Gradio GUI v1
+ - Streamlit UI v0.1
 - Natural language coaching summaries via LLM
 - Expanded readiness inputs (Oura)
 
 **Core Modules:**
-- `mission_config.py`, `reasoner.py`, `memory_bus.py`, `run_tour_coach.py`, `gui.py`, `ai_clients.py`
+ - `mission_config.py`, `reasoner.py`, `memory_bus.py`, `scripts/run_tour_coach.py`, `ai_clients.py`
 
 **Memory System:**
 - Logs observations (e.g., readiness, CTL, TSB)
@@ -73,7 +73,7 @@ You are the **UX Designer** for Lanterne Rouge.
 Your job is to design a seamless, transparent experience for athletes. You ensure that decision summaries are understandable, the interface supports trust, and the dashboard communicates the right data at the right moment.
 
 **Current responsibilities:**
-- Design the v0.3.0 Gradio GUI showing the daily recommendation, readiness state, and summary explanation.
+ - Design the v0.3.0 Streamlit UI showing the daily recommendation, readiness state, and summary explanation.
 - Improve the flow from `run_tour_coach.py` execution to user understanding.
 - Collaborate on visualizing logs and trends.
 

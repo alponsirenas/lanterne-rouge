@@ -48,22 +48,22 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     reasoner.py
     strava_api.py
     tour_coach.py
-    update_github_secret.py
-    daily_run.py
+    ai_clients.py
+    memory_bus.py
 /config/             # templates or examples of MissionConfig files
     mission_config.toml   # example or template MissionConfig file
 /missions/
     *.toml          # individual MissionConfig files
-/ui/
-    streamlit_app.py
+/scripts/
+    run_tour_coach.py
+    daily_run.py
+    notify.py
+    update_github_secret.py
 /output/
     tour_coach_update.txt
     readiness_score_log.csv
     reasoning_log.csv
     lanterne.db
-/scripts/
-    update_github_secret.py
-    daily_run.py
 ```
 
 ---
@@ -72,11 +72,11 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 
 | Agent Name          | Responsibility                                                                 | Related Modules                      |
 |---------------------|----------------------------------------------------------------------------------|--------------------------------------|
-| Tour Coach Agent    | Summarizes daily readiness, generates training recommendations                  | `tour_coach.py`, `daily_run.py`     |
-| Reasoning Agent     | Aligns observations with MissionConfig to make actionable decisions              | `reasoner.py`, `plan_generator.py`  |
-| GitHubOps Agent     | Updates secrets and interacts with GitHub programmatically                      | `update_github_secret.py`           |
+| Tour Coach Agent    | Summarizes daily readiness, generates training recommendations                  | `tour_coach.py`, `scripts/run_tour_coach.py`, `daily_run.py` |
+| Reasoning Agent     | Aligns observations with MissionConfig to make actionable decisions              | `reasoner.py`, `plan_generator.py`, `ai_clients.py` |
+| GitHubOps Agent     | Updates secrets and interacts with GitHub programmatically                      | `scripts/update_github_secret.py`   |
 | Monitor Agent       | Pulls Oura and Strava data, calculates readiness and fitness baselines           | `monitor.py`, `strava_api.py`       |
-| UI Agent (Streamlit) | Renders daily summaries and charts for humans | `ui/streamlit_app.py` |
+| UI Agent (Streamlit) | Renders daily summaries and charts for humans | `scripts/run_tour_coach.py` |
 
 ---
 

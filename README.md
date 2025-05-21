@@ -12,6 +12,9 @@ Lanterne Rouge integrates data from your Oura Ring and Strava to understand your
 
 By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
 
+All observations and decisions are stored in a lightweight SQLite database (`src/lanterne_rouge/memory/lanterne.db`).
+This memory lets the LLM‑powered planner reference recent history when crafting each day’s workout.
+
 ## Getting Started
 
 Follow these steps to set up Lanterne Rouge:

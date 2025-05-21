@@ -130,7 +130,7 @@ lanterne-rouge/
 | Daily Run Frequency           | 1 time per day                              |
 | Data Sources                  | Oura API, Strava API (both free for personal use) |
 | Reasoning Module              | LLM-assisted lightweight reasoning text generation |
-| Communication                 | Gradio dashboard or simple output logging    |
+| Communication                 | Streamlit dashboard or simple output logging |
 | Hosting                       | Tiny server (VPS or serverless)              |
 
 
