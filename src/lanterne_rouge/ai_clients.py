@@ -1,4 +1,5 @@
 import os
+import json
 import openai
 from lanterne_rouge.memory_bus import fetch_recent_memories
 
@@ -59,10 +60,11 @@ def generate_workout_adjustment(
         }
     ]
     if recent_memories:
+        mem_lines = [json.dumps(m) for m in recent_memories]
         messages.append(
             {
                 "role": "system",
-                "content": "Recent observations & decisions:\n" + "\n".join(recent_memories),
+                "content": "Recent observations & decisions:\n" + "\n".join(mem_lines),
             }
         )
 
