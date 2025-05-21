@@ -41,7 +41,7 @@ Follow these steps to set up Lanterne Rouge:
 4. **Initialize the SQLite database:**
 
    ```bash
-   python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/example.toml')"
+   python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/tdf_sim_2025.toml')"
    ```
    This creates `lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
 
@@ -71,7 +71,7 @@ Follow these steps to set up Lanterne Rouge:
 
    - Locally:
      ```bash
-     python scripts/daily_run.py --config missions/example.toml
+     python scripts/daily_run.py
      ```
    - Automatically via GitHub Actions:
      Copy your mission config into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
