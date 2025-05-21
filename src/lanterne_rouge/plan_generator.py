@@ -37,8 +37,8 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
         # Parse and return
         return json.loads(resp.choices[0].message.content)
     except openai.OpenAIError as e:  # pragma: no cover - depends on API
-        print(f"❌ OpenAI request failed: {e}")
+        logger.error(f"❌ OpenAI request failed: {e}")
         return {}
     except Exception as e:  # Fallback for unexpected issues
-        print(f"❌ OpenAI request failed: {e}")
+        logger.error(f"❌ OpenAI request failed: {e}")
         return {}
