@@ -1,6 +1,7 @@
 import pytest
 from datetime import date
 from unittest.mock import patch, MagicMock
+import openai
 from lanterne_rouge.plan_generator import generate_workout_plan
 from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
@@ -39,3 +40,11 @@ def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_ope
     assert isinstance(plan, dict)
     assert plan["workout"] == "test_plan"
     mock_openai.assert_called_once()
+
+
+@patch("lanterne_rouge.plan_generator.openai.ChatCompletion.create", side_effect=openai.OpenAIError("boom"))
+@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
+@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}))
+def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_openai):
+    plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
+    assert plan == {}
