@@ -19,7 +19,7 @@ Initial Cards
 Title	Type	Notes
 Create and Integrate MissionConfig v1.0	Issue	Define simulation goals, fitness targets, stage demands.
 Build Reasoning Module v1.0	Issue	Enable daily decision-making aligned to MissionConfig.
-Build Initial GUI Using Gradio	Issue	Display daily readiness, decision, and explanations.
+Build Initial GUI Using Streamlit	Issue	Display daily readiness, decision, and explanations.
 Integrate First LLM for Explanations	Issue	Generate human-readable coaching summaries after reasoning decisions.
 Expand Oura Contributor Logging	Issue	Capture full readiness contributor data for future reasoning improvements.
 

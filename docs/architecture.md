@@ -24,6 +24,16 @@
   - Analyzes observations and recommends daily action.
   - Aligned with MissionConfig.
 
+- **Workout Plan Generator** (`plan_generator.py`):
+  - Uses OpenAI via `ai_clients.py` to create a daily workout plan.
+
+- **Peloton Matcher** (`peloton_matcher.py`):
+  - Suggests a matching Peloton class for the generated workout type.
+
+- **Memory Layer** (`memory_bus.py`):
+  - Stores observations, decisions, and reflections in `memory/lanterne.db`.
+  - Provides recent context for LLM prompts.
+
 - **Output Layer**:
   - Saves reports and logs into `/output/`.
 
