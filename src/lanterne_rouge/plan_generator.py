@@ -1,9 +1,12 @@
 import os
 import json
+import logging
 import openai
 
 from lanterne_rouge.mission_config import MissionConfig
 from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
+
+logger = logging.getLogger(__name__)
 
 
 def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
