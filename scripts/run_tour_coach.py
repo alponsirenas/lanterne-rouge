@@ -10,7 +10,12 @@ import streamlit as st
 # Boot on import
 _mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"))
 
-st.json(_mission_cfg.dict())
+# Only output the mission configuration when running via Streamlit
+if (
+    os.environ.get("RUN_WITH_STREAMLIT")
+    or getattr(st, "runtime", None) and st.runtime.exists()
+):
+    st.json(_mission_cfg.dict())
 
 
 # New function to run daily logic
