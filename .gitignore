@@ -10,6 +10,7 @@ tokens.json
 
 # SQLite database
 lanterne.db
+memory/lanterne.db
 
 # MacOS system files
 .DS_Store
