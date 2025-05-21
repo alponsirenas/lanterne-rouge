@@ -4,7 +4,7 @@ Named after the iconic "lanterne rouge" — the rider who finishes last at the T
 
 Lanterne Rouge started with the idea of [using AI to train](/docs/training_strategy.md) for an AI generated indoor [simulation of the Tour de France 2025](/docs/simulation_event.md).
 
-Designed to observe your recovery, reason about your daily readiness, and adapt dynamically to your life and training, Lanterne Rouge plans your next steps without loosing sight of your long-term goals.
+Designed to observe your recovery, reason about your daily readiness, and adapt dynamically to your life and training, Lanterne Rouge plans your next steps without losing sight of your long-term goals.
 
 ## How It Works
 
