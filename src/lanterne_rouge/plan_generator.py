@@ -24,15 +24,21 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
         "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object."
     )
 
-    # Call OpenAI
-    resp = openai.ChatCompletion.create(
-        model=os.getenv("OPENAI_MODEL", "gpt-4"),
-        messages=[
-            {"role": "system", "content": "You are a workout planning assistant."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.7,
-    )
-
-    # Parse and return
-    return json.loads(resp.choices[0].message.content)
+    # Call OpenAI with basic error handling
+    try:
+        resp = openai.ChatCompletion.create(
+            model=os.getenv("OPENAI_MODEL", "gpt-4"),
+            messages=[
+                {"role": "system", "content": "You are a workout planning assistant."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.7,
+        )
+        # Parse and return
+        return json.loads(resp.choices[0].message.content)
+    except openai.OpenAIError as e:  # pragma: no cover - depends on API
+        print(f"❌ OpenAI request failed: {e}")
+        return {}
+    except Exception as e:  # Fallback for unexpected issues
+        print(f"❌ OpenAI request failed: {e}")
+        return {}
