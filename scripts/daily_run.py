@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from scripts.run_tour_coach import run_daily_logic
-from notify import send_email, send_sms
+from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
 import subprocess
 
