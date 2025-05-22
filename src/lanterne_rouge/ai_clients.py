@@ -115,7 +115,7 @@ def call_llm(
     Returns:
         The assistant's reply content.
     """
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model=model,
         messages=messages,
         temperature=temperature,
