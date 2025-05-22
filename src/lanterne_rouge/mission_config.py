@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from datetime import date
 from pathlib import Path
-import json
 import sqlite3
 # tomllib is in the standard library starting with Python 3.11.
 # On earlier interpreters we fall back to the third‑party “tomli” package,
@@ -84,7 +83,7 @@ def load_config(path: Path | str) -> MissionConfig:
 # Cache Layer (SQLite for v0.3)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "lanterne.db") -> None:
+def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "memory/lanterne.db") -> None:
     """Upsert the JSON blob so other modules can query cheaply."""
     db_path = Path(db_path)
     con = sqlite3.connect(db_path)
@@ -105,7 +104,7 @@ def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "lanterne.db") -> 
 
 # Convenience – load + cache in one call
 
-def bootstrap(path: Path | str, db_path: str | Path = "lanterne.db") -> MissionConfig:
+def bootstrap(path: Path | str, db_path: str | Path = "memory/lanterne.db") -> MissionConfig:
     cfg = load_config(path)
     cache_to_sqlite(cfg, db_path)
     return cfg

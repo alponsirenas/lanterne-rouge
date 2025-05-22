@@ -7,7 +7,7 @@ permissions:
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # 7AM PT = 15:00 UTC
+    - cron: '0 14 * * *'  # 7AM PT = 14:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -39,6 +39,7 @@ jobs:
           REPO_OWNER: alponsirenas
           REPO_NAME: lanterne-rouge
           GH_PAT: ${{ secrets.GH_PAT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scripts/daily_run.py
 
       - name: Commit changes
@@ -47,7 +48,7 @@ jobs:
           add: |
             output/*.txt
             output/*.csv
-            lanterne.db
+            memory/lanterne.db
           author_name: lanterne-rouge-bot
           author_email: bot@users.noreply.github.com
           message: 'chore(data): daily coach output [skip ci]'

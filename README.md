@@ -4,13 +4,16 @@ Named after the iconic "lanterne rouge" — the rider who finishes last at the T
 
 Lanterne Rouge started with the idea of [using AI to train](/docs/training_strategy.md) for an AI generated indoor [simulation of the Tour de France 2025](/docs/simulation_event.md).
 
-Designed to observe your recovery, reason about your daily readiness, and adapt dynamically to your life and training, Lanterne Rouge plans your next steps without loosing sight of your long-term goals.
+Designed to observe your recovery, reason about your daily readiness, and adapt dynamically to your life and training, Lanterne Rouge plans your next steps without losing sight of your long-term goals.
 
 ## How It Works
 
 Lanterne Rouge integrates data from your Oura Ring and Strava to understand your fitness, fatigue, and recovery. Each day, it analyzes this information to generate a personalized coaching report and update your training schedule. This ensures your plan adapts to your progress and needs.
 
 By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
+
+All observations and decisions are stored in a lightweight SQLite database (`memory/lanterne.db`).
+This memory lets the LLM‑powered planner reference recent history when crafting each day’s workout.
 
 ## Getting Started
 
@@ -38,7 +41,14 @@ Follow these steps to set up Lanterne Rouge:
    pip install -r requirements.txt
    ```
 
-4. **Configure your `.env` file with your API credentials and notification settings:**
+4. **Initialize the SQLite database:**
+
+   ```bash
+   python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/tdf_sim_2025.toml')"
+   ```
+   This creates `memory/lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
+
+5. **Configure your `.env` file with your API credentials and notification settings:**
 
    ```env
    # Oura API
@@ -60,16 +70,16 @@ Follow these steps to set up Lanterne Rouge:
    GH_PAT=your_github_personal_access_token
    ```
 
-5. **Run your agent daily:**
+6. **Run your agent daily:**
 
    - Locally:
      ```bash
-     python scripts/daily_run.py --config missions/tdf_sim_2025.toml
+     python scripts/daily_run.py
      ```
    - Automatically via GitHub Actions:
      Copy your mission config (for example `missions/tdf_sim_2025.toml`) into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
 
-6. **Review your coaching report:**
+7. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
    - Ride, recover, and let the AI adapt your plan as you progress.
 

@@ -6,13 +6,14 @@
 
 - **Tour Coach** (`run_tour_coach.py`):
   - Orchestrates daily update sequence. It also triggers notification delivery through the new `notify.py` layer.
+  - `tour_coach.run()` accepts an optional `MissionConfig`. If omitted, the config is loaded from `missions/tdf_sim_2025.toml` by default.
   - Includes subprocess calls for expanded Oura contributor tracking, secure GitHub secret updates using PAT with appropriate headers, and readiness/fitness metrics logging before generating the daily output.
     - Pushes updated logs and database snapshots to GitHub (GitHub‑Actions step, currently blocked by permissions ‑ see Next Steps).
 
 - **MissionConfig** (`mission_config.py`):
   - Loads structured simulation goals and constraints from TOML (`missions/*.toml`).
   - Supports runtime overrides from environment secrets (e.g. `STRAVA_CLIENT_ID`).
-  - Persists the active config into SQLite (`lanterne.db`) via `cache_to_sqlite()` for reproducibility.
+  - Persists the active config into SQLite (`memory/lanterne.db`) via `cache_to_sqlite()` for reproducibility.
 
 - **Observation Layer** (`monitor.py`):
   - Gathers data from Oura and Strava APIs.
@@ -22,6 +23,16 @@
 - **Reasoning Module** (`reasoner.py`):
   - Analyzes observations and recommends daily action.
   - Aligned with MissionConfig.
+
+- **Workout Plan Generator** (`plan_generator.py`):
+  - Uses OpenAI via `ai_clients.py` to create a daily workout plan.
+
+- **Peloton Matcher** (`peloton_matcher.py`):
+  - Suggests a matching Peloton class for the generated workout type.
+
+- **Memory Layer** (`memory_bus.py`):
+  - Stores observations, decisions, and reflections in `memory/lanterne.db`.
+  - Provides recent context for LLM prompts.
 
 - **Output Layer**:
   - Saves reports and logs into `/output/`.
@@ -39,7 +50,7 @@
 - **update_github_secret.py**:
   - Uses the GitHub API to programmatically update repository secrets.
   - Requires a Personal Access Token (PAT) with `repo` and `actions` scopes.
-  - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests. The workflow now attempts to commit updated `/output/` artifacts and `lanterne.db` back to the repo; this requires the PAT to have `contents:write` (or use a deploy key) — currently blocked by 403 errors.
+  - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests. The workflow now attempts to commit updated `/output/` artifacts and `memory/lanterne.db` back to the repo; this requires the PAT to have `contents:write` (or use a deploy key) — currently blocked by 403 errors.
 
 ### Next Steps toward v0.3.0 Release
 

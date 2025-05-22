@@ -13,7 +13,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 - Reasoning Module: Decides daily actions based on observations and mission alignment.
 - Planning Module: Updates training calendar dynamically.
 - Communication Layer: Presents updates via Streamlit UI (Gradio prototype retired).
-- Storage Layer: Persists mission configs, readiness logs, and plan state to SQLite (lanterne.db).
+- Storage Layer: Persists mission configs, readiness logs, and plan state to SQLite (`memory/lanterne.db`).
 - Reflection Layer (future): Learns from past decision outcomes.
 - GitHub Integration Layer: Manages repository secrets programmatically via secure API calls
 
@@ -35,7 +35,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     • Streamlit UI v0.1.0 for daily summaries & charts  
     • Full Oura contributor logging (completed)  
     • Secure GitHub secret rotation via `GH_PAT` (completed)  
-    • Persist outputs to `lanterne.db` and push to repo nightly
+    • Persist outputs to `memory/lanterne.db` and push to repo nightly
 
 ## Repository Layout
 
@@ -48,22 +48,22 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     reasoner.py
     strava_api.py
     tour_coach.py
-    update_github_secret.py
-    daily_run.py
+    ai_clients.py
+    memory_bus.py
 /config/             # templates or examples of MissionConfig files
     mission_config.toml   # example or template MissionConfig file
 /missions/
     *.toml          # individual MissionConfig files
-/ui/
-    streamlit_app.py
+/scripts/
+    run_tour_coach.py
+    daily_run.py
+    notify.py
+    update_github_secret.py
 /output/
     tour_coach_update.txt
     readiness_score_log.csv
     reasoning_log.csv
-    lanterne.db
-/scripts/
-    update_github_secret.py
-    daily_run.py
+    memory/lanterne.db
 ```
 
 ---
@@ -72,11 +72,11 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 
 | Agent Name          | Responsibility                                                                 | Related Modules                      |
 |---------------------|----------------------------------------------------------------------------------|--------------------------------------|
-| Tour Coach Agent    | Summarizes daily readiness, generates training recommendations                  | `tour_coach.py`, `daily_run.py`     |
-| Reasoning Agent     | Aligns observations with MissionConfig to make actionable decisions              | `reasoner.py`, `plan_generator.py`  |
-| GitHubOps Agent     | Updates secrets and interacts with GitHub programmatically                      | `update_github_secret.py`           |
+| Tour Coach Agent    | Summarizes daily readiness, generates training recommendations                  | `tour_coach.py`, `scripts/run_tour_coach.py`, `daily_run.py` |
+| Reasoning Agent     | Aligns observations with MissionConfig to make actionable decisions              | `reasoner.py`, `plan_generator.py`, `ai_clients.py` |
+| GitHubOps Agent     | Updates secrets and interacts with GitHub programmatically                      | `scripts/update_github_secret.py`   |
 | Monitor Agent       | Pulls Oura and Strava data, calculates readiness and fitness baselines           | `monitor.py`, `strava_api.py`       |
-| UI Agent (Streamlit) | Renders daily summaries and charts for humans | `ui/streamlit_app.py` |
+| UI Agent (Streamlit) | Renders daily summaries and charts for humans | `scripts/run_tour_coach.py` |
 
 ---
 

@@ -8,5 +8,8 @@ __pycache__/
 .venv
 tokens.json
 
+# SQLite database
+# (tracked by default)
+
 # MacOS system files
 .DS_Store
