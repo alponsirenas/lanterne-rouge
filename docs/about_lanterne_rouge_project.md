@@ -43,7 +43,7 @@ This is an exploration of:
 
 ## Current Status
 
-We’re currently in **v0.3.0**, focused on:
+We’re currently in **v0.3.0-dev**, focused on:
 - Integrating OpenAI Codex to generate and maintain core training logic (Bannister CTL/ATL/TSB model).
 - Replacing the static workout library with a GPT-driven Workout of the Day generator.
 - Expanding readiness logging to include all Oura readiness contributors.
