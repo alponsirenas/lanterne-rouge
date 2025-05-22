@@ -9,8 +9,7 @@ __pycache__/
 tokens.json
 
 # SQLite database
-lanterne.db
-memory/lanterne.db
+# (tracked by default)
 
 # MacOS system files
 .DS_Store
