@@ -13,7 +13,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
 - Reasoning Module: Decides daily actions based on observations and mission alignment.
 - Planning Module: Updates training calendar dynamically.
 - Communication Layer: Presents updates via Streamlit UI (Gradio prototype retired).
-- Storage Layer: Persists mission configs, readiness logs, and plan state to SQLite (lanterne.db).
+- Storage Layer: Persists mission configs, readiness logs, and plan state to SQLite (`memory/lanterne.db`).
 - Reflection Layer (future): Learns from past decision outcomes.
 - GitHub Integration Layer: Manages repository secrets programmatically via secure API calls
 
@@ -35,7 +35,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     • Streamlit UI v0.1.0 for daily summaries & charts  
     • Full Oura contributor logging (completed)  
     • Secure GitHub secret rotation via `GH_PAT` (completed)  
-    • Persist outputs to `lanterne.db` and push to repo nightly
+    • Persist outputs to `memory/lanterne.db` and push to repo nightly
 
 ## Repository Layout
 
@@ -63,7 +63,7 @@ Build an agentic AI system that adapts endurance training dynamically based on r
     tour_coach_update.txt
     readiness_score_log.csv
     reasoning_log.csv
-    lanterne.db
+    memory/lanterne.db
 ```
 
 ---

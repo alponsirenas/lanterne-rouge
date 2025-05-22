@@ -13,7 +13,7 @@
 - **MissionConfig** (`mission_config.py`):
   - Loads structured simulation goals and constraints from TOML (`missions/*.toml`).
   - Supports runtime overrides from environment secrets (e.g. `STRAVA_CLIENT_ID`).
-  - Persists the active config into SQLite (`lanterne.db`) via `cache_to_sqlite()` for reproducibility.
+  - Persists the active config into SQLite (`memory/lanterne.db`) via `cache_to_sqlite()` for reproducibility.
 
 - **Observation Layer** (`monitor.py`):
   - Gathers data from Oura and Strava APIs.
@@ -50,7 +50,7 @@
 - **update_github_secret.py**:
   - Uses the GitHub API to programmatically update repository secrets.
   - Requires a Personal Access Token (PAT) with `repo` and `actions` scopes.
-  - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests. The workflow now attempts to commit updated `/output/` artifacts and `lanterne.db` back to the repo; this requires the PAT to have `contents:write` (or use a deploy key) — currently blocked by 403 errors.
+  - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests. The workflow now attempts to commit updated `/output/` artifacts and `memory/lanterne.db` back to the repo; this requires the PAT to have `contents:write` (or use a deploy key) — currently blocked by 403 errors.
 
 ### Next Steps toward v0.3.0 Release
 

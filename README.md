@@ -12,7 +12,7 @@ Lanterne Rouge integrates data from your Oura Ring and Strava to understand your
 
 By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
 
-All observations and decisions are stored in a lightweight SQLite database (`src/lanterne_rouge/memory/lanterne.db`).
+All observations and decisions are stored in a lightweight SQLite database (`memory/lanterne.db`).
 This memory lets the LLM‑powered planner reference recent history when crafting each day’s workout.
 
 ## Getting Started
@@ -46,7 +46,7 @@ Follow these steps to set up Lanterne Rouge:
    ```bash
    python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/tdf_sim_2025.toml')"
    ```
-   This creates `lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
+   This creates `memory/lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
 
 5. **Configure your `.env` file with your API credentials and notification settings:**
 
