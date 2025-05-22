@@ -26,7 +26,8 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
         f"Mission configuration:\n{mission_cfg.model_dump_json()}\n"
         f"Recent memory entries:\n{json.dumps(memory)}\n"
         f"Current metrics:\n{json.dumps(metrics)}\n"
-        "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object."
+        "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object. "
+        "You MUST reply with a JSON object that exactly matches workout_plan.schema.json. No markdown or extra keys."
     )
 
     # Call OpenAI with basic error handling
@@ -38,13 +39,19 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
                 {"role": "user", "content": prompt},
             ],
             temperature=0.7,
+            response_format={"type": "json_object"},
         )
         # Parse and return
+        plan = json.loads(resp.choices[0].message.content)
+        if "workouts" not in plan:
+            raise ValueError("LLM response missing required 'workouts' key")
         print("Workout plan generated successfully")
-        return json.loads(resp.choices[0].message.content)
+        return plan
     except openai.OpenAIError as e:  # pragma: no cover - depends on API
         logger.error(f"❌ OpenAI request failed: {e}")
         return {}
+    except ValueError:
+        raise
     except Exception as e:  # Fallback for unexpected issues
         logger.error(f"❌ OpenAI request failed: {e}")
         return {}
