@@ -29,7 +29,7 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
 
     # Call OpenAI with basic error handling
     try:
-        resp = openai.ChatCompletion.create(
+        resp = openai.chat.completions.create(
             model=os.getenv("OPENAI_MODEL", "gpt-4"),
             messages=[
                 {"role": "system", "content": "You are a workout planning assistant."},
