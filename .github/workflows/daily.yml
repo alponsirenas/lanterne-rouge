@@ -39,6 +39,7 @@ jobs:
           REPO_OWNER: alponsirenas
           REPO_NAME: lanterne-rouge
           GH_PAT: ${{ secrets.GH_PAT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scripts/daily_run.py
 
       - name: Commit changes
