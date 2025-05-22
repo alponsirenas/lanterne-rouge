@@ -14,6 +14,8 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
     Use OpenAI to generate today's workout plan based on mission and current metrics.
     Returns a dict conforming to workout_plan.schema.json.
     """
+    print("Generating workout plan...")
+
     # Gather current metrics
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
@@ -38,6 +40,7 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
             temperature=0.7,
         )
         # Parse and return
+        print("Workout plan generated successfully")
         return json.loads(resp.choices[0].message.content)
     except openai.OpenAIError as e:  # pragma: no cover - depends on API
         logger.error(f"❌ OpenAI request failed: {e}")
