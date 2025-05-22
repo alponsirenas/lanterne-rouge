@@ -78,9 +78,3 @@ Finish your race. Help someone finish theirs.
 
 ✅ This sets the tone, architecture expectations, and modular paths clearly.
 ✅ Contributors will know how to get started — and why it matters.
-
----
-
-# 🎯
-Would you like me to commit this as a new `CONTRIBUTING.md` in your repo root now?
-Ready when you are!
