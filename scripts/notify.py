@@ -22,6 +22,7 @@ def send_email(subject, body, to_email):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(os.getenv("EMAIL_ADDRESS"), os.getenv("EMAIL_PASS"))
         server.send_message(msg)
+        print("Email sent successfully")
 
 def send_sms_via_email(body: str, to_number: str) -> None:
     """
@@ -52,6 +53,7 @@ def send_sms_via_email(body: str, to_number: str) -> None:
     # Empty subject to avoid extra header text on phones
     subject = ""
     send_email(subject, body, to_number_email)
+    print("SMS sent successfully")
 
 def send_sms_via_twilio(body, to_number):
     if not TWILIO_AVAILABLE:
@@ -63,6 +65,7 @@ def send_sms_via_twilio(body, to_number):
         from_=os.getenv("TWILIO_PHONE"),
         to=to_number
     )
+    print("SMS sent successfully")
     return message.sid
 
 def send_sms(body, to_number, use_twilio=False):

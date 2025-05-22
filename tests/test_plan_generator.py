@@ -50,3 +50,23 @@ def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_o
     openai.api_key = "test-key"
     plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
     assert plan == {}
+
+@patch("lanterne_rouge.plan_generator.print")
+@patch("lanterne_rouge.plan_generator.openai.resources.chat.completions.Completions.create")
+@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
+@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
+def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, mock_openai, mock_print):
+    openai.api_key = "test-key"
+    # Prepare a fake LLM response object
+    fake_message = MagicMock()
+    fake_message.content = '{"workout":"test_plan"}'
+    fake_choice = MagicMock()
+    fake_choice.message = fake_message
+    mock_openai.return_value = MagicMock(choices=[fake_choice])
+
+    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
+    assert isinstance(plan, dict)
+    assert plan["workout"] == "test_plan"
+    mock_openai.assert_called_once()
+    mock_print.assert_any_call("Generating workout plan...")
+    mock_print.assert_any_call("Workout plan generated successfully")

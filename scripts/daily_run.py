@@ -28,3 +28,4 @@ if __name__ == "__main__":
 
     send_email(subject, summary, email_recipient)
     send_sms(summary, sms_recipient, use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
+    print(summary)
