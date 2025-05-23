@@ -1,3 +1,21 @@
+#
+# Models that natively support the `response_format={"type": "json_object"}` parameter
+_MODELS_WITH_JSON_SUPPORT = {
+    "gpt-4o-preview",
+    "gpt-4o-mini",
+    "gpt-4o",
+    "gpt-3.5-turbo-1106",
+    "gpt-3.5-turbo-0125",
+    "gpt-4o-2024-05-13",
+}
+
+def _model_supports_json(model: str) -> bool:
+    """
+    Return True if the specified model supports the structured JSON response
+    format. This lets us add the `response_format` parameter only when it’s
+    accepted by the model to avoid HTTP 400 errors.
+    """
+    return model in _MODELS_WITH_JSON_SUPPORT or model.endswith("-json")
 import os
 import json
 import openai
@@ -80,7 +98,7 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    raw_response = call_llm(messages, model=model)
+    raw_response = call_llm(messages, model=model, force_json=True)
 
     # The LLM may return either a bullet list or a JSON array of strings.
     # Attempt JSON parsing first; fall back to bullet parsing if that fails.
@@ -93,8 +111,8 @@ def generate_workout_adjustment(
     except json.JSONDecodeError:
         # If the response doesn't look like a bullet list either, treat it as invalid
         if not raw_response.strip().startswith("-"):
-            raise ValueError("Invalid JSON response from LLM")
-
+            # Fallback: parse as bullet/text list anyway
+            pass
     # Parse simple bullet/text list
     lines = parse_llm_list(raw_response)
     return lines
@@ -120,8 +138,10 @@ def parse_llm_list(raw_response: str) -> list[str]:
 def call_llm(
     messages: list[dict],
     model: str | None = None,
+    *,
     temperature: float = 0.7,
     max_tokens: int = 512,
+    force_json: bool = True,
 ) -> str:
     """
     Send a chat completion request to the OpenAI API.
@@ -132,19 +152,30 @@ def call_llm(
             ``OPENAI_MODEL`` environment variable or ``"gpt-4"`` if unset.
         temperature: Sampling temperature (default 0.7).
         max_tokens: Maximum number of tokens in the response (default 512).
+        force_json: If True (default), will request a structured JSON response
+            from models that support it. If False, lets the model reply in freeform text.
 
     Returns:
         The assistant's reply content.
     """
-    
-    if model is None:
-        model = os.getenv("OPENAI_MODEL", "gpt-4")
 
-    response = openai.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
+    # Resolve model:
+    # 1) explicit argument
+    # 2) environment variable `OPENAI_MODEL`
+    # 3) sensible lightweight default that supports JSON
+    if model is None:
+        model = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo-1106")
+
+    # Decide whether we can request structured JSON directly
+    response_kwargs: dict[str, object] = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+    if force_json and _model_supports_json(model):
+        response_kwargs["response_format"] = {"type": "json_object"}
+
+    response = openai.chat.completions.create(**response_kwargs)
     content = response.choices[0].message.content
     return content
