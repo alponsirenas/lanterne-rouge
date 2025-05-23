@@ -14,7 +14,9 @@ def generate_workout_adjustment(
     atl: float,
     tsb: float,
     mission_cfg,
-    memories_limit: int = 5
+    memories_limit: int = 5,
+    *,
+    model: str | None = None,
 ) -> list[str]:
     """
     Generate workout adjustment using LLM, seeded with recent memories.
@@ -27,6 +29,8 @@ def generate_workout_adjustment(
         tsb: current Training Stress Balance.
         mission_cfg: your MissionConfig instance (to extract plan targets).
         memories_limit: how many past memories to include.
+        model: Optional model name to pass to the LLM. If omitted, the
+            default from ``call_llm`` will be used.
 
     Returns:
         List of GPT-written adjustment recommendation lines. Each line has leading hyphens and whitespace stripped.
@@ -76,7 +80,7 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    raw_response = call_llm(messages)
+    raw_response = call_llm(messages, model=model)
 
     # The LLM may return either a bullet list or a JSON array of strings.
     # Attempt JSON parsing first; fall back to bullet parsing if that fails.
@@ -115,22 +119,27 @@ def parse_llm_list(raw_response: str) -> list[str]:
 
 def call_llm(
     messages: list[dict],
-    model: str = "gpt-4", 
-    temperature: float = 0.7, 
-    max_tokens: int = 512
+    model: str | None = None,
+    temperature: float = 0.7,
+    max_tokens: int = 512,
 ) -> str:
     """
     Send a chat completion request to the OpenAI API.
 
     Args:
         messages: A list of message dicts, each with 'role' ('system', 'user', 'assistant') and 'content'.
-        model: The OpenAI model to use (default 'gpt-4').
+        model: The OpenAI model to use. Defaults to the value of the
+            ``OPENAI_MODEL`` environment variable or ``"gpt-4"`` if unset.
         temperature: Sampling temperature (default 0.7).
         max_tokens: Maximum number of tokens in the response (default 512).
 
     Returns:
         The assistant's reply content.
     """
+    
+    if model is None:
+        model = os.getenv("OPENAI_MODEL", "gpt-4")
+
     response = openai.chat.completions.create(
         model=model,
         messages=messages,
