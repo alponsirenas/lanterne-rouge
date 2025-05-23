@@ -19,7 +19,6 @@ if (
     st.json(_mission_cfg.dict())
 
 
-# New function to run daily logic
 def run_daily_logic():
     """
     Execute the Tour Coach logic for the day.

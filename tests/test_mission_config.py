@@ -7,6 +7,7 @@ from lanterne_rouge.mission_config import (
     Targets,
     Constraints,
     cache_to_sqlite,
+    load_config,
 )
 
 # Dummy mission config for tests
@@ -73,3 +74,57 @@ def test_cache_to_sqlite(tmp_path):
     assert row is not None
     loaded = MissionConfig(**json.loads(row[0]))
     assert loaded == _dummy_cfg
+
+
+def test_load_and_cache_mission_config(tmp_path):
+    # Create a temporary mission config file
+    mission_config_content = """
+    id = "test"
+    athlete_id = "strava:0"
+    start_date = 2025-01-01
+    goal_event = "test_event"
+    goal_date = 2025-12-31
+
+    [targets]
+    ctl_peak = 100
+    long_ride_minutes = 100
+    stage_climb_minutes = 60
+    threshold_interval_min = 20
+
+    [constraints]
+    min_readiness = 65
+    max_rhr = 999
+    min_tsb = -10
+    """
+    mission_config_path = tmp_path / "test_mission_config.toml"
+    mission_config_path.write_text(mission_config_content)
+
+    # Load and cache the mission config
+    mission_config = load_config(mission_config_path)
+    db_file = tmp_path / "mc.db"
+    cache_to_sqlite(mission_config, db_file)
+
+    # Verify the mission config is loaded correctly
+    assert mission_config.id == "test"
+    assert mission_config.athlete_id == "strava:0"
+    assert mission_config.start_date == date(2025, 1, 1)
+    assert mission_config.goal_event == "test_event"
+    assert mission_config.goal_date == date(2025, 12, 31)
+    assert mission_config.targets.ctl_peak == 100
+    assert mission_config.targets.long_ride_minutes == 100
+    assert mission_config.targets.stage_climb_minutes == 60
+    assert mission_config.targets.threshold_interval_min == 20
+    assert mission_config.constraints.min_readiness == 65
+    assert mission_config.constraints.max_rhr == 999
+    assert mission_config.constraints.min_tsb == -10
+
+    # Verify the mission config is cached correctly
+    with sqlite3.connect(db_file) as con:
+        row = con.execute(
+            "SELECT json FROM mission_config WHERE id=?",
+            (mission_config.id,),
+        ).fetchone()
+
+    assert row is not None
+    loaded = MissionConfig(**json.loads(row[0]))
+    assert loaded == mission_config

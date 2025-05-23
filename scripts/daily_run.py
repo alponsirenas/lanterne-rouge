@@ -11,10 +11,20 @@ from lanterne_rouge.strava_api import refresh_strava_token
 import subprocess
 import csv
 
+# P2e0b
+from lanterne_rouge.mission_config import load_config, cache_to_sqlite
+
 load_dotenv()
 
 if __name__ == "__main__":
-    summary, log = run_daily_logic()  # summary: str, log: dict
+    # P3f5d
+    mission_config = load_config(os.getenv("MISSION_CONFIG_PATH", "missions/tdf_sim_2025.toml"))
+    # Pf489
+    cache_to_sqlite(mission_config)
+
+    summary, log = run_daily_logic(mission_config)  # summary: str, log: dict
+
+# Removed redundant logging of reasoning output to avoid duplication.
 
     # Refresh token and make it available to the updater
     _, refresh_token = refresh_strava_token()
