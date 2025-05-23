@@ -94,6 +94,15 @@ Follow these steps to set up Lanterne Rouge:
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
+## Current Version: v0.3.0
+
+Release highlights:
+- Enhanced daily coaching and notifications for a more responsive training experience.
+- Introduction of the Reasoning Module v1.0 with large language model (LLM) integration for generating user-friendly explanations.
+- Added mission-specific configuration and improved integration with daily reasoning decisions.
+- Improved error handling, streamlined configuration, and updated documentation.
+- Expanded test coverage and upgraded dependencies (e.g., Streamlit 1.45.x).
+
 ## Looking Ahead
 
 With version **v0.3.0-dev**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
