@@ -44,10 +44,9 @@ def decide_adjustment(
         )
 
     # 2. TSB (Form) Checks
-    if tsb < cfg.constraints.min_tsb * 2:
+    if tsb <= cfg.constraints.min_tsb * 2:
         recommendations.append(
-            "🚨 Form is very negative (TSB < -20). Strongly recommend easier or "
-            "recovery day."
+            "🚨 Form is very negative (TSB < -20). Strongly recommend easier or recovery day."
         )
     elif tsb < cfg.constraints.min_tsb:
         recommendations.append(
@@ -66,7 +65,7 @@ def decide_adjustment(
             "⚠️ Chronic fitness level (CTL) is relatively low (<30). Gradually "
             "build volume."
         )
-    elif ctl > cfg.targets.ctl_peak * 0.9:
+    elif ctl > cfg.targets.ctl_peak * 0.7:
         recommendations.append(
             "✅ Chronic fitness (CTL > 70) is excellent. Maintain consistency."
         )
