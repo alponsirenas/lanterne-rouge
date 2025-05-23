@@ -61,4 +61,4 @@ def test_multiple_assertions():
 
     messages = decide_adjustment(80, {"hrv_balance": 90}, 80, 70, 15, _dummy_cfg)
     assert any("Form is highly positive" in m for m in messages)
-    assert any("Chronic fitness (CTL > 70) is excellent" in m for in messages)
+    assert any("Chronic fitness (CTL > 70) is excellent" in m for m in messages)
