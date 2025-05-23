@@ -85,7 +85,7 @@ def generate_workout_adjustment(
         if isinstance(parsed, list):
             lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
             return lines
-        raise ValueError("Invalid JSON response from LLM")
+        raise ValueError(f"Invalid JSON response from LLM: {raw_response}")
     except json.JSONDecodeError:
         # If the response doesn't look like a bullet list either, treat it as invalid
         if not raw_response.strip().startswith("-"):
