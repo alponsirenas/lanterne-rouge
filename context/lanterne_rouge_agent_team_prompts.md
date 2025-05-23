@@ -16,12 +16,13 @@ Lanterne Rouge is an agentic AI system for endurance athletes inspired by the la
 **Current Target: v0.3.0 — Mission-Aware Daily Coaching**
 - MissionConfig v1
 - Reasoning Module v1
- - Streamlit UI v0.1
+- Streamlit UI v0.1
 - Natural language coaching summaries via LLM
 - Expanded readiness inputs (Oura)
+- Documentation Review Process
 
 **Core Modules:**
- - `mission_config.py`, `reasoner.py`, `memory_bus.py`, `scripts/run_tour_coach.py`, `ai_clients.py`
+- `mission_config.py`, `reasoner.py`, `memory_bus.py`, `scripts/run_tour_coach.py`, `ai_clients.py`
 
 **Memory System:**
 - Logs observations (e.g., readiness, CTL, TSB)
@@ -112,3 +113,24 @@ Your role is to translate structured agent outputs into clear, actionable coachi
 **First action:**
 Propose a prompt template and example input/output for generating a coaching summary like:  
 "Today’s readiness is low, and you’ve had two hard days. We recommend recovery to support your long-term goals."
+
+---
+
+## Documentation Review Prompts
+
+**Purpose:**
+To ensure that all documentation is up-to-date, accurate, and reflective of the current state of the project.
+
+**Guidelines:**
+1. **Review Frequency:** Documentation should be reviewed at the end of each sprint and before major releases.
+2. **Reviewers:** Assign specific team members to review different sections of the documentation.
+3. **Checklist:**
+   - Verify that all project goals and milestones are current.
+   - Ensure that all team roles and responsibilities are accurately described.
+   - Check that all technical details, including system architecture and core modules, are up-to-date.
+   - Confirm that all user instructions and guidelines are clear and accurate.
+4. **Feedback:** Collect feedback from the team and incorporate necessary changes.
+5. **Approval:** Obtain approval from the project lead before finalizing updates.
+
+**First action:**
+Assign team members to review specific sections of the documentation and schedule a review meeting to discuss findings and updates.
