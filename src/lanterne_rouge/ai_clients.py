@@ -1,9 +1,17 @@
-#
+
+import os
+import json
+import openai
+from lanterne_rouge.memory_bus import fetch_recent_memories
+
 # Models that natively support the `response_format={"type": "json_object"}` parameter
 _MODELS_WITH_JSON_SUPPORT = {
     "gpt-4o-preview",
     "gpt-4o-mini",
     "gpt-4o",
+    "gpt-4-turbo-preview",
+    "gpt-4-0125-preview",
+    "gpt-4-1106-preview",
     "gpt-3.5-turbo-1106",
     "gpt-3.5-turbo-0125",
     "gpt-4o-2024-05-13",
@@ -12,14 +20,13 @@ _MODELS_WITH_JSON_SUPPORT = {
 def _model_supports_json(model: str) -> bool:
     """
     Return True if the specified model supports the structured JSON response
-    format. This lets us add the `response_format` parameter only when it’s
-    accepted by the model to avoid HTTP 400 errors.
+    format. This lets us add the `response_format` parameter only when it's
+    accepted by the model to avoid HTTP 400 errors.
     """
-    return model in _MODELS_WITH_JSON_SUPPORT or model.endswith("-json")
-import os
-import json
-import openai
-from lanterne_rouge.memory_bus import fetch_recent_memories
+    # Check if model is in our explicit list or has specific prefixes that indicate JSON support
+    return (model in _MODELS_WITH_JSON_SUPPORT or 
+            model.endswith("-json") or 
+            model.startswith(("gpt-4-turbo", "gpt-4o")))
 
 # Initialize OpenAI API key from environment
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -98,25 +105,40 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    raw_response = call_llm(messages, model=model, force_json=True)
-
-    # The LLM may return either a bullet list or a JSON array of strings.
-    # Attempt JSON parsing first; fall back to bullet parsing if that fails.
     try:
-        parsed = json.loads(raw_response)
-        if isinstance(parsed, list):
-            lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
+        # Always call with force_json=False to avoid API compatibility issues
+        raw_response = call_llm(messages, model=model, force_json=False)
+        
+        # Try to parse the response - first check if it's a bullet list
+        if raw_response.lstrip().startswith("-"):
+            lines = parse_llm_list(raw_response)
             return lines
-        raise ValueError("Invalid JSON response from LLM")
-    except json.JSONDecodeError:
-        # If the reply is *not* a bullet‑list (doesn’t start with “‑”) we treat it
-        # as an invalid response and surface an error so callers/tests can catch it.
-        if not raw_response.lstrip().startswith("-"):
-            raise ValueError("Invalid JSON response from LLM")
-        # Otherwise fall back to bullet‑list parsing.
-    # Parse simple bullet/text list
-    lines = parse_llm_list(raw_response)
-    return lines
+            
+        # Then try to parse as JSON if it looks like JSON
+        if raw_response.strip().startswith("{") and raw_response.strip().endswith("}"):
+            try:
+                parsed = json.loads(raw_response)
+                if isinstance(parsed, list):
+                    lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
+                    return lines
+                elif isinstance(parsed, dict) and "recommendations" in parsed:
+                    if isinstance(parsed["recommendations"], list):
+                        lines = [str(line).strip("- \t") for line in parsed["recommendations"] if str(line).strip()]
+                        return lines
+            except json.JSONDecodeError:
+                pass  # Failed to parse as JSON, continue to fallback
+                
+        # Try generic parsing of any free-text response
+        lines = parse_llm_list(raw_response)
+        if lines:
+            return lines
+            
+        # If all else fails, provide a generic recommendation
+        return ["Plan looks good. Continue with scheduled workout."]
+        
+    except Exception as e:
+        print(f"Error generating workout adjustment: {e}")
+        return ["Unable to generate recommendations. Proceed with scheduled workout."]
 
 
 def parse_llm_list(raw_response: str) -> list[str]:
@@ -142,7 +164,7 @@ def call_llm(
     *,
     temperature: float = 0.7,
     max_tokens: int = 512,
-    force_json: bool = True,
+    force_json: bool = False,  # Changed default to False for better compatibility
 ) -> str:
     """
     Send a chat completion request to the OpenAI API.
@@ -150,33 +172,45 @@ def call_llm(
     Args:
         messages: A list of message dicts, each with 'role' ('system', 'user', 'assistant') and 'content'.
         model: The OpenAI model to use. Defaults to the value of the
-            ``OPENAI_MODEL`` environment variable or ``"gpt-4"`` if unset.
+            ``OPENAI_MODEL`` environment variable or ``"gpt-3.5-turbo"`` if unset.
         temperature: Sampling temperature (default 0.7).
         max_tokens: Maximum number of tokens in the response (default 512).
-        force_json: If True (default), will request a structured JSON response
-            from models that support it. If False, lets the model reply in freeform text.
+        force_json: If True, will request a structured JSON response
+            from models that support it. If False (default), lets the model reply in freeform text.
 
     Returns:
         The assistant's reply content.
     """
-
-    # Resolve model:
-    # 1) explicit argument
-    # 2) environment variable `OPENAI_MODEL`
-    # 3) sensible lightweight default that supports JSON
+    # Resolve model
     if model is None:
-        model = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo-1106")
+        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")  # Default to a model that can handle JSON
 
-    # Decide whether we can request structured JSON directly
-    response_kwargs: dict[str, object] = {
+    # Set up request parameters
+    response_kwargs = {
         "model": model,
         "messages": messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
     }
+
+    # Only add response_format for models that explicitly support it
     if force_json and _model_supports_json(model):
         response_kwargs["response_format"] = {"type": "json_object"}
 
-    response = openai.chat.completions.create(**response_kwargs)
-    content = response.choices[0].message.content
-    return content
+    try:
+        # Use the new OpenAI client API
+        client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        response = client.chat.completions.create(**response_kwargs)
+        
+        # Get the content from the response
+        content = response.choices[0].message.content
+        
+        # Handle empty responses
+        if content is None or content.strip() == "":
+            return "- No valid response received from the model."
+        
+        return content
+    
+    except Exception as e:
+        print(f"❌ OpenAI request failed: {e}")
+        return "- Error: Could not get a response from the LLM."

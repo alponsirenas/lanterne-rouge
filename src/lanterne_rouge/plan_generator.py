@@ -27,27 +27,41 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
         f"Recent memory entries:\n{json.dumps(memory)}\n"
         f"Current metrics:\n{json.dumps(metrics)}\n"
         "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object. "
-        "You MUST reply with a JSON object that exactly matches workout_plan.schema.json. No markdown or extra keys."
+        "You MUST reply with a JSON object that contains a 'today' object and an 'adjustments' array as required by the schema. "
+        "The schema requires: today.type, today.duration_minutes, today.intensity and adjustments array. "
+        "The response must exactly match workout_plan.schema.json. No markdown or extra text."
     )
 
     # Call OpenAI with basic error handling
     try:
-        resp = openai.chat.completions.create(
-            model=os.getenv("OPENAI_MODEL", "gpt-4"),
-            messages=[
+        # Initialize OpenAI client
+        client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        
+        # Define response kwargs with a model that properly supports JSON generation
+        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+        response_kwargs = {
+            "model": model,
+            "messages": [
                 {"role": "system", "content": "You are a workout planning assistant."},
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.7,
-            response_format={"type": "json_object"},
-        )
+            "temperature": 0.7,
+        }
+        
+        # Only add response_format for compatible models
+        # Re-using the same logic as in ai_clients.py for model compatibility
+        if (model.startswith(("gpt-4-turbo", "gpt-4o", "gpt-4-1106", "gpt-4-0125")) or
+            model in ("gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125")) and not model.startswith("gpt-4-vision"):
+            response_kwargs["response_format"] = {"type": "json_object"}
+            
+        resp = client.chat.completions.create(**response_kwargs)
         # Parse and return
         plan = json.loads(resp.choices[0].message.content)
-        if "workouts" not in plan:
-            raise ValueError("LLM response missing required 'workouts' key")
+        if "today" not in plan or "adjustments" not in plan:
+            raise ValueError("LLM response missing required keys ('today' and 'adjustments')")
         print("Workout plan generated successfully")
         return plan
-    except openai.OpenAIError as e:  # pragma: no cover - depends on API
+    except (openai.OpenAIError, openai.APIError, openai.APIConnectionError) as e:  # pragma: no cover - depends on API
         logger.error(f"❌ OpenAI request failed: {e}")
         return {}
     except ValueError:
