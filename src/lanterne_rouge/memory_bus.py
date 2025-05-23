@@ -43,7 +43,7 @@ def load_memory():
     return mem
 
 def log_observation(data):
-    ts = datetime.datetime.now().isoformat()
+    ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
     conn = _get_conn()
     conn.execute(
         "INSERT OR IGNORE INTO memory (timestamp, type, data) VALUES (?, ?, ?)",
