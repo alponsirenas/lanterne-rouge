@@ -10,7 +10,7 @@ from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
 import subprocess
 
-# P2e0b
+# Import functions for mission configuration and caching
 from lanterne_rouge.mission_config import load_config, cache_to_sqlite
 
 load_dotenv()
