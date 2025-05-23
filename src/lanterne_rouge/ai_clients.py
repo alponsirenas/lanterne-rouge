@@ -76,7 +76,13 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    raw_response = call_llm(messages)
+    try:
+        raw_response = call_llm(messages)
+        # Add a check to ensure the response is a valid JSON string
+        json.loads(raw_response)
+    except json.JSONDecodeError:
+        raise ValueError("Invalid JSON response from LLM")
+
     # Split the raw LLM response into individual recommendation lines.
     # The model might return a block of text with newlines or bullets.
     lines = parse_llm_list(raw_response)

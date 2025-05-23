@@ -20,7 +20,7 @@ def test_generate_workout_adjustment_returns_list(mock_call_llm):
 
 @patch("lanterne_rouge.ai_clients.call_llm")
 def test_generate_workout_adjustment_raises_value_error(mock_call_llm):
-    mock_call_llm.return_value = '{"foo": "bar"}'
+    mock_call_llm.return_value = "Invalid JSON"
     mission_cfg = MagicMock()
     mission_cfg.dict.return_value = {}
     with pytest.raises(ValueError):
