@@ -2,6 +2,9 @@ import pytest
 from datetime import date
 from unittest.mock import patch, MagicMock
 import openai
+import os
+
+os.environ["OPENAI_API_KEY"] = "test-key"
 from lanterne_rouge.plan_generator import generate_workout_plan
 from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
@@ -25,7 +28,7 @@ _dummy_cfg = MissionConfig(
     ),
 )
 
-@patch("lanterne_rouge.plan_generator.openai.resources.chat.completions.Completions.create")
+@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_openai):
@@ -44,7 +47,7 @@ def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_ope
     mock_openai.assert_called_once()
 
 
-@patch("lanterne_rouge.plan_generator.openai.resources.chat.completions.Completions.create", side_effect=openai.OpenAIError("boom"))
+@patch("lanterne_rouge.plan_generator.openai.chat.completions.create", side_effect=openai.OpenAIError("boom"))
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_openai):
@@ -53,7 +56,7 @@ def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_o
     assert plan == {}
 
 @patch("lanterne_rouge.plan_generator.print")
-@patch("lanterne_rouge.plan_generator.openai.resources.chat.completions.Completions.create")
+@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, mock_openai, mock_print):
@@ -73,7 +76,7 @@ def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, moc
     mock_print.assert_any_call("Workout plan generated successfully")
 
 
-@patch("lanterne_rouge.plan_generator.openai.resources.chat.completions.Completions.create")
+@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_missing_workouts(mock_readiness, mock_ctl_atl, mock_openai):
