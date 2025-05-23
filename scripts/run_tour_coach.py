@@ -21,7 +21,14 @@ if (
 
 # New function to run daily logic
 def run_daily_logic():
-    """Execute the Tour Coach logic for the day."""
+    """
+    Execute the Tour Coach logic for the day.
+
+    Returns:
+        tuple: A tuple containing:
+            - summary (str): The summary of the day's logic execution.
+            - log (dict): The log containing detailed information about the day's logic execution.
+    """
     # Pass the loaded mission configuration into the tour_coach runner
     summary, log = tour_coach.run(_mission_cfg)
     
