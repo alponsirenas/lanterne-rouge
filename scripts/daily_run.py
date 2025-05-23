@@ -49,5 +49,5 @@ if __name__ == "__main__":
             log["readiness"].get("body_temperature", ""), log["readiness"].get("hrv_balance", ""),
             log["readiness"].get("previous_day_activity", ""), log["readiness"].get("previous_night", ""),
             log["readiness"].get("recovery_index", ""), log["readiness"].get("resting_heart_rate", ""),
-            log["readiness"].get("sleep_balance", ""), "\n".join(log["recommendations"])
+            log["readiness"].get("sleep_balance", ""), summary
         ])
