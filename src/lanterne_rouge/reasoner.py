@@ -3,7 +3,34 @@ Decide if today's workout should be adjusted based on readiness, CTL,
 ATL, and TSB.
 """
 
+import os
 from .mission_config import MissionConfig
+import csv
+from datetime import datetime
+
+
+def log_reasoning_output(date, readiness_score, ctl, atl, tsb, recommendations):
+    """Log the reasoning output to a CSV file."""
+    filename = "output/reasoning_log.csv"
+    fieldnames = ["date", "readiness_score", "ctl", "atl", "tsb", "recommendations"]
+
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    file_exists = os.path.isfile(filename)
+
+    with open(filename, mode='a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow({
+            "date": date,
+            "readiness_score": readiness_score,
+            "ctl": ctl,
+            "atl": atl,
+            "tsb": tsb,
+            "recommendations": "; ".join(recommendations)
+        })
 
 
 def decide_adjustment(
@@ -83,5 +110,8 @@ def decide_adjustment(
         recommendations.append(
             "✅ All metrics look good. Proceed with planned workout."
         )
+
+    # Log the reasoning output
+    log_reasoning_output(datetime.now().strftime("%Y-%m-%d"), readiness_score, ctl, atl, tsb, recommendations)
 
     return recommendations

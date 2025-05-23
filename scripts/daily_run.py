@@ -23,6 +23,8 @@ if __name__ == "__main__":
 
     summary, log = run_daily_logic(mission_config)  # summary: str, log: dict
 
+# Removed redundant logging of reasoning output to avoid duplication.
+
     # Refresh token and make it available to the updater
     _, refresh_token = refresh_strava_token()
     os.environ["STRAVA_REFRESH_TOKEN"] = refresh_token
