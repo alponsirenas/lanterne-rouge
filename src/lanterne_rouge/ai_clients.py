@@ -136,14 +136,15 @@ def call_llm(
     Returns:
         The assistant's reply content.
     """
+    
     if model is None:
         model = os.getenv("OPENAI_MODEL", "gpt-4")
 
-    response = openai.resources.chat.completions.Completions.create(
+    response = openai.chat.completions.create(
         model=model,
         messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
     )
-    content = response.choices[0].message["content"]
+    content = response.choices[0].message.content
     return content
