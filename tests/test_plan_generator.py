@@ -39,6 +39,7 @@ def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_ope
 
     plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
     assert isinstance(plan, dict)
+    assert "workouts" in plan
     assert plan["workouts"] == ["test_plan"]
     mock_openai.assert_called_once()
 
