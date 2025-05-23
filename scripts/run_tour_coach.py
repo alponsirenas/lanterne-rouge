@@ -43,8 +43,6 @@ def run_daily_logic():
     )
     
     # Append LLM summaries to the summary
-    summary += "\n\nLLM-Generated Summaries:\n"
-    for line in llm_summaries:
-        summary += f"- {line}\n"
+    summary += "\n\nLLM-Generated Summaries:\n" + "\n".join(f"- {line}" for line in llm_summaries) + "\n"
     
     return summary, log
