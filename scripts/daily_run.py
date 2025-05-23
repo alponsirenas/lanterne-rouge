@@ -10,13 +10,16 @@ from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
 import subprocess
 
+# P2e0b
 from lanterne_rouge.mission_config import load_config, cache_to_sqlite
 
 load_dotenv()
 
 if __name__ == "__main__":
+    # P3f5d
     mission_config = load_config(os.getenv("MISSION_CONFIG_PATH", "missions/tdf_sim_2025.toml"))
-    cache_to_sqlite(mission_config, "memory/lanterne.db")
+    # Pf489
+    cache_to_sqlite(mission_config)
 
     summary, log = run_daily_logic(mission_config)  # summary: str, log: dict
 

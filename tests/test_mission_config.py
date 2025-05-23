@@ -78,7 +78,7 @@ def test_cache_to_sqlite(tmp_path):
 
 def test_load_and_cache_mission_config(tmp_path):
     # Create a temporary mission config file
-    mission_config_content = textwrap.dedent("""
+    mission_config_content = """
     id = "test"
     athlete_id = "strava:0"
     start_date = 2025-01-01
