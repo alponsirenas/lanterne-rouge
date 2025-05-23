@@ -59,6 +59,11 @@ Follow these steps to set up Lanterne Rouge:
    STRAVA_CLIENT_SECRET=your_strava_client_secret
    STRAVA_REFRESH_TOKEN=your_strava_refresh_token
 
+   # OpenAI
+   OPENAI_API_KEY=your_openai_api_key
+   # Optional: override the default model
+   OPENAI_MODEL=gpt-4
+
    # Notification settings
    EMAIL_ADDRESS=your_email_address_for_notifications
    EMAIL_PASS=your_email_app_password
