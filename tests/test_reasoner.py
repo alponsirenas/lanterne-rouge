@@ -46,3 +46,8 @@ def test_positive_tsb_encourages_intensity():
 def test_default_message_when_all_good():
     messages = decide_adjustment(80, {"hrv_balance": 90}, 60, 60, 0, _dummy_cfg)
     assert messages == ["✅ All metrics look good. Proceed with planned workout."]
+
+
+def test_decide_adjustment_uses_mission_config():
+    messages = decide_adjustment(80, {"hrv_balance": 90}, 60, 60, 0, _dummy_cfg)
+    assert messages == ["✅ All metrics look good. Proceed with planned workout."]
