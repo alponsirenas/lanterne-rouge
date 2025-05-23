@@ -76,15 +76,22 @@ def generate_workout_adjustment(
     )
     messages.append({"role": "user", "content": user_content})
 
-    try:
-        raw_response = call_llm(messages)
-        # Add a check to ensure the response is a valid JSON string
-        json.loads(raw_response)
-    except json.JSONDecodeError:
-        raise ValueError("Invalid JSON response from LLM")
+    raw_response = call_llm(messages)
 
-    # Split the raw LLM response into individual recommendation lines.
-    # The model might return a block of text with newlines or bullets.
+    # The LLM may return either a bullet list or a JSON array of strings.
+    # Attempt JSON parsing first; fall back to bullet parsing if that fails.
+    try:
+        parsed = json.loads(raw_response)
+        if isinstance(parsed, list):
+            lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
+            return lines
+        raise ValueError("Invalid JSON response from LLM")
+    except json.JSONDecodeError:
+        # If the response doesn't look like a bullet list either, treat it as invalid
+        if not raw_response.strip().startswith("-"):
+            raise ValueError("Invalid JSON response from LLM")
+
+    # Parse simple bullet/text list
     lines = parse_llm_list(raw_response)
     return lines
 
@@ -99,7 +106,10 @@ def parse_llm_list(raw_response: str) -> list[str]:
     Returns:
         A list of non-empty, cleaned lines with bullets and extra whitespace removed.
     """
-    lines = [line.strip("- \t") for line in raw_response.splitlines()]
+    lines = [
+        line.lstrip("-0123456789. \t").strip()
+        for line in raw_response.splitlines()
+    ]
     return [line for line in lines if line]
 
 
@@ -121,11 +131,11 @@ def call_llm(
     Returns:
         The assistant's reply content.
     """
-    response = openai.ChatCompletion.create(
+    response = openai.resources.chat.completions.Completions.create(
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=max_tokens
+        max_tokens=max_tokens,
     )
     content = response.choices[0].message["content"]
     return content
