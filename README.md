@@ -62,7 +62,9 @@ Follow these steps to set up Lanterne Rouge:
    # OpenAI
    OPENAI_API_KEY=your_openai_api_key
    # Optional: override the default model
-   OPENAI_MODEL=gpt-4
+   # Use a model that supports JSON response format such as:
+   # gpt-4-turbo-preview, gpt-4o, gpt-4-0125-preview, or gpt-3.5-turbo-1106
+   OPENAI_MODEL=gpt-4-turbo-preview
 
    # Notification settings
    EMAIL_ADDRESS=your_email_address_for_notifications
@@ -94,9 +96,14 @@ Follow these steps to set up Lanterne Rouge:
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-## Current Version: v0.3.0
+## Current Version: v0.3.1
 
 Release highlights:
+- Fixed OpenAI API compatibility issues with the latest API versions
+- Updated client initialization to use new OpenAI client interface
+- Enhanced model compatibility checks for response formats
+- Improved error handling and response parsing for API calls
+- Set appropriate default models that properly support JSON generation
 - Enhanced daily coaching and notifications for a more responsive training experience.
 - Introduction of the Reasoning Module v1.0 with large language model (LLM) integration for generating user-friendly explanations.
 - Added mission-specific configuration and improved integration with daily reasoning decisions.
@@ -105,18 +112,16 @@ Release highlights:
 
 ## Looking Ahead
 
-With version **v0.3.0-dev**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with user-focused design.
+With version **v0.3.1**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with mission-aware training recommendations.
 
-In future versions expect:
-- Expanded Oura readiness contributor tracking.
-- Mission-aware daily coaching via LLMs.
-- Optional Streamlit dashboard prototype.
+In our TO DO:
+- Refining recommendations and data visualization.
 - Exploration of n8n for workflow orchestration.
 - Deeper trend analysis.
 - Smarter plan adaptations.
 - Enhanced personalization to support your endurance journey.
 
-You can track upcoming features and roadmap progress on the [Lanterne Rouge Project Board](https://github.com/users/alponsirenas/projects/1).
+You can track upcoming features and roadmap progress on the [Lanterne Rouge Project Board](https://github.com/users/alponsirenas/projects/2).
 
 ## License
 
