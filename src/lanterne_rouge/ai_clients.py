@@ -89,6 +89,7 @@ def generate_workout_adjustment(
     except json.JSONDecodeError:
         # If the response doesn't look like a bullet list either, treat it as invalid
         if not raw_response.strip().startswith("-"):
+            logging.error("Invalid JSON response from LLM: %s", raw_response)
             raise ValueError("Invalid JSON response from LLM")
 
     # Parse simple bullet/text list
