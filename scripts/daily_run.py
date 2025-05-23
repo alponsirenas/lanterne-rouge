@@ -8,12 +8,23 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from scripts.run_tour_coach import run_daily_logic
 from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
+from lanterne_rouge.reasoner import log_reasoning_output
 import subprocess
 
 load_dotenv()
 
 if __name__ == "__main__":
     summary, log = run_daily_logic()  # summary: str, log: dict
+
+    # Log the reasoning output
+    log_reasoning_output(
+        date=log["date"],
+        readiness_score=log["readiness"]["score"],
+        ctl=log["ctl"],
+        atl=log["atl"],
+        tsb=log["tsb"],
+        recommendations=log["recommendations"]
+    )
 
     # Refresh token and make it available to the updater
     _, refresh_token = refresh_strava_token()
