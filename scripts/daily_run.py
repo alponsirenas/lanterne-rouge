@@ -9,6 +9,7 @@ from scripts.run_tour_coach import run_daily_logic
 from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
 import subprocess
+import csv
 
 load_dotenv()
 

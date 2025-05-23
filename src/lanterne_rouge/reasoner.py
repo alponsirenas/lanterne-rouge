@@ -4,6 +4,7 @@ ATL, and TSB.
 """
 
 from .mission_config import MissionConfig
+from .ai_clients import generate_workout_adjustment  # Import the function
 
 
 def decide_adjustment(
