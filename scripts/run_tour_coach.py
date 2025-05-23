@@ -23,7 +23,7 @@ if (
 def run_daily_logic():
     """Execute the Tour Coach logic for the day."""
     # Pass the loaded mission configuration into the tour_coach runner
-    summary, log = tour_coach.run(_mission_cfg)
+    summary, log = tour_coach.run()
     
     # Generate LLM-based summaries
     llm_summaries = generate_workout_adjustment(

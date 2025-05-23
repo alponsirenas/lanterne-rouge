@@ -1,7 +1,7 @@
-import datetime
+from datetime import datetime
 from pathlib import Path
-import json
 import sqlite3
+import json
 
 DB_FILE = Path(__file__).resolve().parents[2] / "memory" / "lanterne.db"
 DB_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -43,7 +43,7 @@ def load_memory():
     return mem
 
 def log_observation(data):
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.datetime.now().isoformat()
     conn = _get_conn()
     conn.execute(
         "INSERT OR IGNORE INTO memory (timestamp, type, data) VALUES (?, ?, ?)",
@@ -53,7 +53,7 @@ def log_observation(data):
     conn.close()
 
 def log_decision(data):
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.datetime.now().isoformat()
     conn = _get_conn()
     conn.execute(
         "INSERT OR IGNORE INTO memory (timestamp, type, data) VALUES (?, ?, ?)",
@@ -63,7 +63,7 @@ def log_decision(data):
     conn.close()
 
 def log_reflection(data):
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.datetime.now().isoformat()
     conn = _get_conn()
     conn.execute(
         "INSERT OR IGNORE INTO memory (timestamp, type, data) VALUES (?, ?, ?)",
