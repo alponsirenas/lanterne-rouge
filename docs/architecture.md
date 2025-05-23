@@ -1,6 +1,6 @@
 # Architecture
 
-## Current Architecture (v0.3.0‑dev)
+## Current Architecture (v0.3.1)
 
 ### Core Components
 
@@ -26,6 +26,8 @@
 
 - **Workout Plan Generator** (`plan_generator.py`):
   - Uses OpenAI via `ai_clients.py` to create a daily workout plan.
+  - Utilizes the new OpenAI client interface with appropriate model compatibility checks.
+  - Supports JSON-formatted responses from compatible models (GPT-4-turbo, GPT-4o, etc.).
 
 - **Peloton Matcher** (`peloton_matcher.py`):
   - Suggests a matching Peloton class for the generated workout type.
@@ -52,7 +54,7 @@
   - Requires a Personal Access Token (PAT) with `repo` and `actions` scopes.
   - Now explicitly includes both `Authorization` and `User-Agent` headers in API requests. The workflow now attempts to commit updated `/output/` artifacts and `memory/lanterne.db` back to the repo; this requires the PAT to have `contents:write` (or use a deploy key) — currently blocked by 403 errors.
 
-### Next Steps toward v0.3.0 Release
+### Next Steps for Future Releases
 
 - **Resolve GitHub Push**  
   Grant write access (PAT or Deploy Key) or switch to `actions/upload-artifact` for daily logs and database snapshots.

@@ -2,14 +2,14 @@
 
 | Version | User experience focus           | How it will feel                                                                                     |
 |---------|---------------------------------|------------------------------------------------------------------------------------------------------|
-| v0.3.0  | Daily reasoning and dashboard   | Users receive adaptive training advice aligned with their mission, supported by clear explanations. |
+| v0.3.1  | Daily reasoning and dashboard   | Users receive adaptive training advice aligned with their mission, supported by clear explanations. |
 | v0.4.0  | Smarter planning and trend protection | The system anticipates future needs, adjusting plans to protect long-term performance.              |
 | v0.5.0  | Reflection and self-adjustment  | Users see personalized adjustments based on past performance, fostering trust in the system.        |
 | v1.0.0  | Full agentic coach              | Users experience a virtual coach that adapts naturally, explains decisions, and supports endurance goals. |
 
 ## What changes for users at each release
 
-### v0.3.0 — Mission-aware daily adaptation
+### v0.3.1 — Mission-aware daily adaptation with improved API compatibility
 
 > **Lanterne Rouge knows your goal and helps you daily.**
 - Provides daily recommendations aligned with your mission (e.g., Tour simulation).
@@ -19,6 +19,8 @@
 - Logs all Oura readiness contributor metrics daily for richer reasoning.
 - Sends automated summary notifications via email and SMS.
 - Refreshes Strava access tokens and updates GitHub secrets automatically via Actions.
+- Utilizes modern OpenAI API architecture with robust error handling and JSON response support.
+- Automatically selects compatible models for structured data generation.
 
 ### v0.4.0 — Proactive planning and mission protection
 
@@ -51,7 +53,7 @@ Each release adds a new cognitive ability to the system:
 
 | Release | New intelligence                              |
 |---------|-----------------------------------------------|
-| v0.3.0  | Situation awareness and daily mission alignment |
+| v0.3.1  | Situation awareness and daily mission alignment with improved API reliability |
 | v0.4.0  | Temporal reasoning for future protection        |
 | v0.5.0  | Reflective learning and micro-adaptation        |
 | v1.0.0  | Full multi-layered agency (observation, reasoning, planning, reflection) |
