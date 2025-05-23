@@ -119,12 +119,7 @@ def call_llm(
         model=model,
         messages=messages,
         temperature=temperature,
-        max_tokens=max_tokens,
-        response_format={"type": "json_object"},
+        max_tokens=max_tokens
     )
-    content = response.choices[0].message.content
-    if isinstance(content, str):
-        content = content.strip()
-    if "workouts" not in content:
-        raise ValueError("LLM response missing required 'workouts' key")
+    content = response.choices[0].message["content"]
     return content
