@@ -74,27 +74,3 @@ Need Help?
 We’re building this as a resilient, reflective agentic system — and we’re excited to build it with you.
 
 Finish your race. Help someone finish theirs.
-
----
-
-## Documentation Review Process
-
-To ensure that our documentation remains accurate and up-to-date, we follow a structured review process. This process involves regular reviews, updates, and approvals to maintain the quality and relevance of our documentation.
-
-### Steps for Reviewing and Updating Documentation
-
-1. **Identify Documentation to Review**: Determine which documents need to be reviewed based on project milestones, changes in the system, or feedback from team members.
-
-2. **Assign Reviewers**: Assign team members or GPT instances to review the identified documents. Ensure that reviewers have the necessary domain knowledge and context.
-
-3. **Review and Annotate**: Reviewers should thoroughly read the documents, annotate any discrepancies, outdated information, or areas that need clarification.
-
-4. **Update Content**: Based on the annotations, update the content to reflect the latest information, changes, and improvements. Ensure that the updates are clear, concise, and accurate.
-
-5. **Approval and Integration**: Once the updates are made, the revised documents should be reviewed and approved by the Product Owner or designated approver. After approval, integrate the updated documents into the project repository.
-
-6. **Communicate Changes**: Notify the team about the updated documentation and highlight any significant changes or new information.
-
-7. **Regular Review Cycle**: Establish a regular review cycle (e.g., quarterly) to ensure that documentation remains current and relevant. Schedule periodic reviews and updates as part of the project workflow.
-
-By following this process, we ensure that our documentation remains a valuable resource for the team, providing accurate and up-to-date information to support the development and maintenance of the Lanterne Rouge project.
