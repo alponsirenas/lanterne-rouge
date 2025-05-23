@@ -1,6 +1,6 @@
 import datetime
-import json
 from pathlib import Path
+import json
 import sqlite3
 
 DB_FILE = Path(__file__).resolve().parents[2] / "memory" / "lanterne.db"
