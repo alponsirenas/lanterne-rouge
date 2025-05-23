@@ -3,6 +3,7 @@ Decide if today's workout should be adjusted based on readiness, CTL,
 ATL, and TSB.
 """
 
+import os
 from .mission_config import MissionConfig
 import csv
 from datetime import datetime
