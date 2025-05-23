@@ -1,4 +1,3 @@
-
 # peloton-matcher.py
 
 def match_peloton_class(workout_type):

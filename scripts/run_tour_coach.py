@@ -6,6 +6,7 @@ from lanterne_rouge import tour_coach
 from pathlib import Path
 from lanterne_rouge.mission_config import bootstrap
 import streamlit as st
+from lanterne_rouge.ai_clients import generate_workout_adjustment
 
 # Boot on import
 _mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"))
@@ -19,7 +20,24 @@ if (
 
 
 # New function to run daily logic
-def run_daily_logic(mission_config):
+def run_daily_logic():
     """Execute the Tour Coach logic for the day."""
     # Pass the loaded mission configuration into the tour_coach runner
-    return tour_coach.run(mission_config)
+    summary, log = tour_coach.run()
+    
+    # Generate LLM-based summaries
+    llm_summaries = generate_workout_adjustment(
+        readiness_score=log["readiness"]["score"],
+        readiness_details=log["readiness"],
+        ctl=log["ctl"],
+        atl=log["atl"],
+        tsb=log["tsb"],
+        mission_cfg=_mission_cfg
+    )
+    
+    # Append LLM summaries to the summary
+    summary += "\n\nLLM-Generated Summaries:\n"
+    for line in llm_summaries:
+        summary += f"- {line}\n"
+    
+    return summary, log
