@@ -91,12 +91,18 @@ def generate_workout_adjustment(
             return lines
         raise ValueError("Invalid JSON response from LLM")
     except json.JSONDecodeError:
-        # If the response doesn't look like a bullet list either, treat it as invalid
-        if not raw_response.strip().startswith("-"):
-            raise ValueError("Invalid JSON response from LLM")
+        pass
 
-    # Parse simple bullet/text list
+    # Attempt to interpret as a bullet / numbered list. We allow lines starting
+    # with hyphens, asterisks or digits. If none of these patterns are present
+    # and there is only a single line of text, treat the response as invalid so
+    # callers can handle the error.
     lines = parse_llm_list(raw_response)
+    stripped = raw_response.strip()
+    if not lines:
+        raise ValueError("Invalid JSON response from LLM")
+    if len(lines) == 1 and not (stripped.startswith(('-', '*')) or stripped[:1].isdigit()):
+        raise ValueError("Invalid JSON response from LLM")
     return lines
 
 
