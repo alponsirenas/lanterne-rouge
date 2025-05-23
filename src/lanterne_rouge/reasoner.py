@@ -4,6 +4,7 @@ ATL, and TSB.
 """
 
 from .mission_config import MissionConfig
+from .ai_clients import generate_workout_adjustment
 
 
 def decide_adjustment(
@@ -26,7 +27,6 @@ def decide_adjustment(
 
     # LLM-first override: delegate all adjustment logic to the LLM if enabled
     if getattr(cfg, "use_llm_for_plan", False):
-        from .ai_clients import generate_workout_adjustment
         # generate_workout_adjustment should return list[str]
         return generate_workout_adjustment(
             readiness_score=readiness_score,
