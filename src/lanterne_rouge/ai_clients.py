@@ -124,10 +124,7 @@ def call_llm(
     )
     content = response.choices[0].message.content
     if isinstance(content, str):
-        try:
-            content = json.loads(content)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Failed to parse LLM response as JSON: {e}")
-    if not isinstance(content, dict) or "workouts" not in content:
+        content = content.strip()
+    if "workouts" not in content:
         raise ValueError("LLM response missing required 'workouts' key")
     return content
