@@ -19,7 +19,7 @@ if (
 
 
 # New function to run daily logic
-def run_daily_logic():
+def run_daily_logic(mission_config):
     """Execute the Tour Coach logic for the day."""
     # Pass the loaded mission configuration into the tour_coach runner
-    return tour_coach.run(_mission_cfg)
+    return tour_coach.run(mission_config)
