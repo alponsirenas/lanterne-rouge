@@ -115,11 +115,16 @@ def call_llm(
     Returns:
         The assistant's reply content.
     """
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model=model,
         messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
         response_format={"type": "json_object"},
     )
-    return response.choices[0].message.content.strip()
+    content = response.choices[0].message.content
+    if isinstance(content, str):
+        content = content.strip()
+    if "workouts" not in content:
+        raise ValueError("LLM response missing required 'workouts' key")
+    return content
