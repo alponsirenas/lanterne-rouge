@@ -11,6 +11,7 @@ from lanterne_rouge.reasoner import decide_adjustment
 from lanterne_rouge.plan_generator import generate_workout_plan
 from lanterne_rouge.peloton_matcher import match_peloton_class
 from lanterne_rouge.memory_bus import load_memory, log_observation, log_decision, log_reflection
+from lanterne_rouge.ai_clients import generate_workout_adjustment
 from datetime import datetime
 
 load_dotenv()
@@ -23,6 +24,15 @@ def get_version():
             return f.read().strip()
     except FileNotFoundError:
         return "Unknown"
+
+
+# Helper: first non-empty line from list of strings
+def first_line(lines: list[str]) -> str | None:
+    """Return the first non‑empty line from a list of strings."""
+    for ln in lines:
+        if ln.strip():
+            return ln.strip().lstrip("- ").strip()
+    return None
 
 
 
@@ -67,10 +77,33 @@ def run(cfg: MissionConfig | None = None):
     # Log decision (recommendations) to memory
     log_decision({"recommendations": recommendations})
 
-    # 3. Get today's workout plan via LLM-driven planner
+    # Generate LLM‑driven workout adjustment lines
+    adjustment_lines = generate_workout_adjustment(
+        readiness_score=readiness_score,
+        readiness_details={
+            "hrv_balance": hrv_balance,
+            "readiness_day": readiness_day,
+        },
+        ctl=ctl,
+        atl=atl,
+        tsb=tsb,
+        mission_cfg=cfg,
+    )
+
+    # 3. Get today's workout plan (multi‑day planner may still be useful)
     workout = generate_workout_plan(cfg, memory)
-    today_workout_type = workout.get("workout", "No workout generated")
+    today_workout_type = workout.get("workout", "")
     today_workout_details = workout.get("description", "")
+
+    # If the plan generator did not return a workout, fall back to the first
+    # line suggested by the adjustment LLM.
+    if not today_workout_type:
+        fallback = first_line(adjustment_lines)
+        if fallback:
+            today_workout_type = fallback
+            today_workout_details = ""
+        else:
+            today_workout_type = "No workout generated"
 
     # 4. Match to Peloton class
     peloton_class = match_peloton_class(today_workout_type)
@@ -96,7 +129,8 @@ def run(cfg: MissionConfig | None = None):
     summary_lines.append(f"- ATL (Fatigue): {atl if atl else 'Unavailable'}\n")
     summary_lines.append(f"- TSB (Form): {tsb if tsb else 'Unavailable'}\n")
     summary_lines.append("\nRecommendation:\n")
-    for rec in recommendations:
+    combined_recs = recommendations + [ln for ln in adjustment_lines if ln not in recommendations]
+    for rec in combined_recs:
         summary_lines.append(f"- {rec}\n")
     summary_lines.append("\nPeloton Class Suggestion:\n")
     summary_lines.append(f"- {peloton_class}\n")
@@ -139,6 +173,7 @@ def run(cfg: MissionConfig | None = None):
         "atl": atl,
         "tsb": tsb,
         "recommendations": recommendations,
+        "adjustment_lines": adjustment_lines,
         "peloton_class": peloton_class,
         "version": version,
     }
