@@ -120,5 +120,6 @@ def call_llm(
         messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
+        response_format={"type": "json_object"},
     )
     return response.choices[0].message.content.strip()
