@@ -3,9 +3,9 @@ Decide if today's workout should be adjusted based on readiness, CTL,
 ATL, and TSB.
 """
 
-import os
 from .mission_config import MissionConfig
-from .ai_clients import generate_workout_adjustment  # Import the function
+from .ai_clients import generate_workout_adjustment
+
 
 def decide_adjustment(
     readiness_score: float,
@@ -83,8 +83,5 @@ def decide_adjustment(
         recommendations.append(
             "✅ All metrics look good. Proceed with planned workout."
         )
-
-    # Log the reasoning output
-    log_reasoning_output(datetime.now().strftime("%Y-%m-%d"), readiness_score, ctl, atl, tsb, recommendations)
 
     return recommendations

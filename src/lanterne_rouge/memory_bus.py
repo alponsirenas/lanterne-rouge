@@ -1,7 +1,7 @@
-from datetime import datetime
+import datetime
+import json
 from pathlib import Path
 import sqlite3
-import json
 
 DB_FILE = Path(__file__).resolve().parents[2] / "memory" / "lanterne.db"
 DB_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -95,16 +95,3 @@ def fetch_recent_memories(limit: int):
         }
         for row in rows
     ]
-
-def log_summary(summary):
-    """
-    Log the generated summary to the SQLite database.
-    """
-    ts = datetime.utcnow().isoformat()
-    conn = _get_conn()
-    conn.execute(
-        "INSERT OR IGNORE INTO memory (timestamp, type, data) VALUES (?, ?, ?)",
-        (ts, "summary", json.dumps({"summary": summary}))
-    )
-    conn.commit()
-    conn.close()

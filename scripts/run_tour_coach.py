@@ -19,15 +19,9 @@ if (
     st.json(_mission_cfg.dict())
 
 
+# New function to run daily logic
 def run_daily_logic():
-    """
-    Execute the Tour Coach logic for the day.
-
-    Returns:
-        tuple: A tuple containing:
-            - summary (str): The summary of the day's logic execution.
-            - log (dict): The log containing detailed information about the day's logic execution.
-    """
+    """Execute the Tour Coach logic for the day."""
     # Pass the loaded mission configuration into the tour_coach runner
     summary, log = tour_coach.run(_mission_cfg)
     
@@ -42,6 +36,8 @@ def run_daily_logic():
     )
     
     # Append LLM summaries to the summary
-    summary += "\n\nLLM-Generated Summaries:\n" + "\n".join(f"- {line}" for line in llm_summaries) + "\n"
+    summary += "\n\nLLM-Generated Summaries:\n"
+    for line in llm_summaries:
+        summary += f"- {line}\n"
     
     return summary, log
