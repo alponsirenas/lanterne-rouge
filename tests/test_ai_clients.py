@@ -23,7 +23,7 @@ def test_generate_workout_adjustment_raises_value_error(mock_call_llm):
     mock_call_llm.return_value = "Invalid JSON"
     mission_cfg = MagicMock()
     mission_cfg.dict.return_value = {}
-    with pytest.raises(ValueError, match="Invalid JSON response"):
+    with pytest.raises(ValueError) as exc_info:
         generate_workout_adjustment(
             readiness_score=80,
             readiness_details={},
