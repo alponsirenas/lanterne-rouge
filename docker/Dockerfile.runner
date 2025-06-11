@@ -1,0 +1,35 @@
+FROM python:3.11.8-slim
+
+# Install security updates and required dependencies
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends gcc libc6-dev libffi-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for better security
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
+# 1) set up working directory
+WORKDIR /app
+
+# 2) copy requirements first for better layer caching
+COPY requirements.txt .
+
+# 3) install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 4) copy code
+COPY . .
+
+# 5) create necessary directories with proper permissions
+RUN mkdir -p /app/data/memory /app/data/logs && chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# 6) expose FastAPI port
+EXPOSE 8000
+
+# 7) run server
+CMD ["uvicorn", "docker.server_runner:app", "--host", "0.0.0.0", "--port", "8000"]

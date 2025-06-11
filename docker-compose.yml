@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  tour-runner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.runner
+    image: tour-runner:latest         # pushed later to GHCR/Docker Hub
+    ports:
+      - "8000:8000"
+    # ⬇️ share the SQLite file and other data
+    volumes:
+      - ./data:/app/data
+      - ./missions:/app/missions
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4o-mini        # or omit to keep default
+      STRAVA_CLIENT_ID: ${STRAVA_CLIENT_ID}
+      STRAVA_CLIENT_SECRET: ${STRAVA_CLIENT_SECRET}
+      STRAVA_REFRESH_TOKEN: ${STRAVA_REFRESH_TOKEN}
+      OURA_TOKEN: ${OURA_TOKEN}
+      LANTERNE_DB_PATH: /app/data/memory/lanterne.db
+    # Add health check
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n     # n8n settings/credentials
+      - ./data:/data  # optional read
+    restart: unless-stopped
