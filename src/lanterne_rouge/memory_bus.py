@@ -3,7 +3,8 @@ from pathlib import Path
 import sqlite3
 import json
 
-DB_FILE = Path(__file__).resolve().parents[2] / "memory" / "lanterne.db"
+# All writable files now live under repo_root/data/
+DB_FILE = Path(__file__).resolve().parents[2] / "data" / "memory" / "lanterne.db"
 DB_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 _conn = sqlite3.connect(DB_FILE)

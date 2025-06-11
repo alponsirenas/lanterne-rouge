@@ -7,6 +7,7 @@ Usage
 """
 from __future__ import annotations
 
+import os
 from datetime import date
 from pathlib import Path
 import sqlite3
@@ -83,9 +84,16 @@ def load_config(path: Path | str) -> MissionConfig:
 # Cache Layer (SQLite for v0.3)
 # ──────────────────────────────────────────────────────────────────────────────
 
-def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "memory/lanterne.db") -> None:
+def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = None) -> None:
     """Upsert the JSON blob so other modules can query cheaply."""
+    if db_path is None:
+        # Use environment variable if set, otherwise fallback to default
+        db_path = os.environ.get("LANTERNE_DB_PATH", "data/memory/lanterne.db")
+    
+    # Ensure directory exists
     db_path = Path(db_path)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    
     con = sqlite3.connect(db_path)
     con.execute(
         """
@@ -104,7 +112,7 @@ def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "memory/lanterne.d
 
 # Convenience – load + cache in one call
 
-def bootstrap(path: Path | str, db_path: str | Path = "memory/lanterne.db") -> MissionConfig:
+def bootstrap(path: Path | str, db_path: str | Path = None) -> MissionConfig:
     cfg = load_config(path)
     cache_to_sqlite(cfg, db_path)
     return cfg

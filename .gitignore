@@ -13,3 +13,7 @@ tokens.json
 
 # MacOS system files
 .DS_Store
+
+# Data
+data/
+n8n_data/

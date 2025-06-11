@@ -9,6 +9,8 @@ pydantic==2.7.*
 tomli>=2.0.1        # safe no‑op on 3.11+
 openai>=1.14.0
 typing-extensions>=4.10
+fastapi==0.110.0
+uvicorn==0.29.0
 
 # Uncomment once token counting is integrated
 # tiktoken>=0.6.0

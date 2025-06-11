@@ -9,7 +9,7 @@ import streamlit as st
 from lanterne_rouge.ai_clients import generate_workout_adjustment
 
 # Boot on import
-_mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"))
+_mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"), os.environ.get("LANTERNE_DB_PATH", "data/memory/lanterne.db"))
 
 # Only output the mission configuration when running via Streamlit
 if (
