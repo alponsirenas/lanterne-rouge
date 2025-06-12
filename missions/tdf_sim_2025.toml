@@ -11,8 +11,8 @@ goal_event  = "Tour de France Indoor Simulation 2025"
 goal_date   = 2025-07-05
 
 [targets]
-ctl_peak               = 80
-long_ride_minutes      = 90        # formerly long_ride_km
+ctl_peak               = 55        # Adjusted from 80 to reflect sustainable completion
+long_ride_minutes      = 75        # Adjusted from 90 to match simulation cap
 stage_climb_minutes    = 60
 threshold_interval_min = 20
 
