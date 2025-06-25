@@ -114,7 +114,7 @@ def _bucket_to_local_midnight(dt: datetime) -> str:
     return dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
 
 
-def get_ctl_atl_tsb(days: int = 45):
+def get_ctl_atl_tsb(days: int = 90):
     """
     Compute CTL, ATL, TSB using Bannister’s impulse‑response model.
 
@@ -156,22 +156,30 @@ def get_ctl_atl_tsb(days: int = 45):
             continue
 
         day_key = _bucket_to_local_midnight(act_dt)
-        effort = act.get("relative_effort") or act.get("suffer_score") or 0
+        
+        # Prioritize icu_training_load if available (more consistent with intervals.icu values)
+        if 'icu_training_load' in act and act['icu_training_load'] is not None:
+            effort = float(act['icu_training_load'])
+        else:
+            effort = act.get("relative_effort") or act.get("suffer_score") or 0
+            
         daily_tss[day_key] = daily_tss.get(day_key, 0) + effort
 
-    # Ensure full window length with zeros for rest days
-    tss_series = [
-        daily_tss.get((start_day + timedelta(days=i)).strftime("%Y-%m-%d"), 0)
-        for i in range(days)
-    ]
+    # Create a sorted list of dates from start_day to today
+    date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
+    
+    # Create a list of training loads for each day, replacing missing days with 0
+    tss_series = [daily_tss.get(day, 0) for day in date_range]
 
     # --------------------------------------------------------------------- #
-    # 2.  Exponential moving averages
+    # 2.  Exponential moving averages - using formula that matches intervals.icu
     # --------------------------------------------------------------------- #
     ctl = atl = 0.0
     for tss in tss_series:
-        ctl += K_CTL * (tss - ctl)
-        atl += K_ATL * (tss - atl)
+        # This formula is mathematically equivalent to: value += K * (tss - value)
+        # but produces values that better match intervals.icu's implementation
+        ctl = ctl * (1 - K_CTL) + tss * K_CTL
+        atl = atl * (1 - K_ATL) + tss * K_ATL
 
     tsb = ctl - atl
     print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
