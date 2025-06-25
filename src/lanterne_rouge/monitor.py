@@ -69,7 +69,8 @@ def get_oura_readiness():
     """
     Return (readiness_score:int | None, hrv_balance:int | None, readiness_day:str | None)
     """
-    today = datetime.now().date()
+    # Use naive datetime objects consistently
+    today = datetime.now().replace(tzinfo=None).date()
     start_date = today - timedelta(days=6)
 
     url = "https://api.ouraring.com/v2/usercollection/daily_readiness"
@@ -125,7 +126,8 @@ def get_ctl_atl_tsb(days: int = 45):
         print("⚠️  No activities from Strava; CTL/ATL/TSB unavailable.")
         return None, None, None
 
-    today = datetime.now()
+    # Use naive datetimes consistently to avoid timezone comparison issues
+    today = datetime.now().replace(tzinfo=None)
     start_day = today - timedelta(days=days)
     daily_tss: dict[str, float] = {}
 
@@ -143,6 +145,9 @@ def get_ctl_atl_tsb(days: int = 45):
         # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
         try:
             act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
         except ValueError:
             # Fallback for legacy "Z" suffix
             act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
