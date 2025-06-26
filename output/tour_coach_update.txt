@@ -1,28 +1,29 @@
-Date: Wednesday, June 25, 2025
+Date: Thursday, June 26, 2025
 Planned Workout:
-- Given the current metrics and the mission targets for the Tour de France Indoor Simulation 2025, it's essential to make immediate adjustments to the training plan to ensure the athlete's readiness and performance are optimized for the goal event. The athlete's current form (TSB: -22.5) indicates a significant level of fatigue, which must be addressed to avoid overtraining or injury. Here are the recommended adjustments: ()
+- Given the current metrics and the mission targets for the Tour de France Indoor Simulation 2025, it's clear that immediate adjustments are necessary to ensure the athlete's readiness and performance are optimized for the goal event. The athlete's current form (TSB: -24.7) indicates a significant level of fatigue, which must be addressed to avoid overtraining or injury. Here are the recommended adjustments based on today's metrics and the mission plan: ()
 
 Readiness and Recovery:
-- Readiness Score: 72
-- Readiness Day: 2025-06-24
-- CTL (Fitness): 37.1
-- ATL (Fatigue): 59.5
-- TSB (Form): -22.5
+- Readiness Score: 71
+- Readiness Day: 2025-06-26
+- CTL (Fitness): 37.9
+- ATL (Fatigue): 62.5
+- TSB (Form): -24.7
 
 Recommendation:
 - ⚠️ Form is moderately negative (TSB < -15). Decrease today’s intensity or overall volume to allow recovery.
-- Given the current metrics and the mission targets for the Tour de France Indoor Simulation 2025, it's essential to make immediate adjustments to the training plan to ensure the athlete's readiness and performance are optimized for the goal event. The athlete's current form (TSB: -22.5) indicates a significant level of fatigue, which must be addressed to avoid overtraining or injury. Here are the recommended adjustments:
+- Given the current metrics and the mission targets for the Tour de France Indoor Simulation 2025, it's clear that immediate adjustments are necessary to ensure the athlete's readiness and performance are optimized for the goal event. The athlete's current form (TSB: -24.7) indicates a significant level of fatigue, which must be addressed to avoid overtraining or injury. Here are the recommended adjustments based on today's metrics and the mission plan:
 - ### Immediate Adjustments:
-- **Recovery Focus:** Given the very negative TSB, prioritize recovery immediately. This should include one or two days of either complete rest or very light, low-intensity activities such as easy spinning, yoga, or stretching. This will aid in recovery and help improve the TSB.
+- **Prioritize Recovery:** Given the very negative TSB, prioritize recovery immediately. This should include either complete rest or very light, low-intensity activities such as easy spinning for no more than 30 minutes, yoga, or stretching. This will aid in recovery and help improve the TSB.
 - **Monitor Readiness and Adjust Daily:** Continue to monitor the athlete's readiness score, HRV balance, and TSB daily. Use these metrics to adjust the training load dynamically, ensuring the athlete does not exceed their fatigue threshold and has adequate recovery.
 - ### Training Plan Modifications:
-- **Long Ride Minutes:** Reduce the long ride duration temporarily to not exceed 45 minutes (60% of the target duration) until the athlete's TSB is improved and remains within a safer range (-15 or better).
+- **Long Ride Minutes:** Reduce the long ride duration temporarily to not exceed 45 minutes until the athlete's TSB is improved and remains within a safer range (-15 or better).
 - **Stage Climb Minutes:** Postpone any intense climb simulations until the athlete's form (TSB) and readiness improve. This will help in avoiding further fatigue accumulation.
-- **Threshold Interval Minutes:** Introduce very short threshold intervals, not exceeding 12 minutes (60% of the target duration), as part of a controlled reintroduction to intensity. These intervals should be approached with caution, ensuring they do not exacerbate the athlete's current fatigue levels.
+- **Threshold Interval Minutes:** Introduce very short threshold intervals, not exceeding 10 minutes, as part of a controlled reintroduction to intensity. These intervals should be approached with caution, ensuring they do not exacerbate the athlete's current fatigue levels.
 - ### Long-Term Plan Adjustments:
 - **Gradual Increase in Training Load:** Once the athlete's TSB improves, gradually reintroduce a higher training load. Begin with lower-intensity and shorter-duration workouts, slowly increasing both as the athlete's form and readiness improve. Avoid sudden spikes in training load.
 - **Adjust Training Intensity and Volume:** With the goal of reaching a CTL peak of 55, carefully manage the increase in training volume and intensity. Plan for a mix of endurance rides, threshold intervals, and climb simulations, ensuring they are scaled appropriately to prevent overtraining.
-- **Specific Goals Alignment:** Align the reintroduction of specific workout targets (long ride minutes, stage climb minutes, threshold interval minutes) with the athlete's recovery and improvement in form. Ensure these workouts are reintroduced in a manner that supports the athlete
+- **Specific Goals Alignment:** Align the reintroduction of specific workout targets (long ride minutes, stage climb minutes, threshold interval minutes) with the athlete's recovery and improvement in form. Ensure these workouts are reintroduced in a manner that supports the athlete's progression towards the mission targets.
+- ### Additional Recommendations:
 
 Peloton Class Suggestion:
 - No matching Peloton class found.
