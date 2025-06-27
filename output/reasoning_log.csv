@@ -105,3 +105,22 @@ day,readiness_score,activity_balance,body_temperature,hrv_balance,previous_day_a
 - **Gradually Increase CTL**: A gradual increase in CTL to reach the target of 55 is essential. This should be done by carefully balancing volume and intensity over the next days and weeks, avoiding sudden spikes in training load that could further negatively impact TSB.
 - **Monitor and Adjust Based on Readiness and TSB**: Continuously monitor the athlete's readiness and TSB. Adjust the training plan dynamically to ensure the athlete remains within safe training stress
 "
+"Friday, June 27, 2025",85,,,85,,,,,,"LLM-Generated Summaries:
+- Given the current metrics and the mission plan for the Tour de France Indoor Simulation 2025, it's crucial to make informed adjustments to today's workout to ensure the athlete's readiness and performance are optimized for the goal event, while also considering the athlete's wellness and avoiding overtraining risks.
+- ### Review of Current Metrics:
+- **Readiness Score**: 85 (Well above the mission constraint of min_readiness: 70, indicating high readiness)
+- **CTL (Chronic Training Load)**: 33.2 (Below the target CTL peak of 55)
+- **ATL (Acute Training Load)**: 38.9
+- **TSB (Training Stress Balance)**: -17.1 (Below the minimum TSB constraint of -15, indicating accumulated fatigue)
+- ### Today's Workout Modifications:
+- Given the athlete's current state, particularly the negative TSB value, which suggests a high level of fatigue despite a high readiness score, the focus should be on recovery and gradual improvement in CTL without exacerbating the negative TSB.
+- **Reduce Overall Volume**: Acknowledging the plan to reach a long ride target of 75 minutes and a stage climb target of 60 minutes, it's advisable to scale back significantly today to not exacerbate the athlete's TSB further into the negative. Aim for not more than 60 minutes of total workout time, focusing on active recovery.
+- **Decrease Intensity**: Maintain today's workout intensity at a low level to promote recovery. The workout should entail easy spinning or a recovery ride, with heart rate zones kept within Zone 1 to Zone 2. This means avoiding any high-intensity efforts that could elevate heart rate significantly.
+- **Specific Adjustments**:
+- **Long Ride Minutes**: If a long ride was part of today's plan, it should be adjusted to no more than 60 minutes, focusing on easy, aerobic efforts.
+- **Stage Climb Minutes**: Avoid any simulated stage climbs today to aid in the recovery process and prevent additional fatigue.
+- **Threshold Interval Minutes**: Any threshold intervals or similar high-intensity efforts planned for today should be postponed. The focus should be on recovery, without any work near threshold intensity.
+- ### Immediate and Long-Term Focus:
+- **Monitor and Manage Fatigue**: It's vital to monitor the athlete's TSB closely in the coming days, aiming to gradually improve the TSB to within or above the -15 threshold without compromising readiness.
+- **Gradual Increase in CTL**: Considering
+"
