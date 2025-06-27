@@ -18,6 +18,7 @@ import requests
 from dotenv import load_dotenv
 
 from lanterne_rouge.strava_api import strava_get
+from lanterne_rouge.mission_config import get_athlete_ftp
 
 # --------------------------------------------------------------------------- #
 #  Environment
@@ -26,8 +27,10 @@ from lanterne_rouge.strava_api import strava_get
 load_dotenv()
 OURA_TOKEN = os.getenv("OURA_TOKEN")
 
-# Optional; used by future helpers such as Workout Plan Generator
-USER_FTP = int(os.getenv("USER_FTP", 250))
+# Function to get the current FTP from mission config
+def get_current_ftp():
+    """Get the current athlete FTP value from mission config."""
+    return get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
 
 # Output folder
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
@@ -103,20 +106,60 @@ def get_oura_readiness():
 # --------------------------------------------------------------------------- #
 #  Strava CTL / ATL / TSB (Bannister model)
 # --------------------------------------------------------------------------- #
-CTL_TC = 42  # days
-ATL_TC = 7   # days
-K_CTL = 1 - math.exp(-1 / CTL_TC)
-K_ATL = 1 - math.exp(-1 / ATL_TC)
+CTL_TC = 42  # days - Standard time constant for Chronic Training Load
+ATL_TC = 7   # days - Standard time constant for Acute Training Load
+# Using the formula λ = 2/(N+1) as specified in TrainingPeaks documentation
+K_CTL = 2 / (CTL_TC + 1)  # Lambda for CTL (Fitness)
+K_ATL = 2 / (ATL_TC + 1)  # Lambda for ATL (Fatigue)
 
 
 def _bucket_to_local_midnight(dt: datetime) -> str:
-    """Return YYYY‑MM‑DD key representing the athlete’s *local* training day."""
+    """Return YYYY‑MM‑DD key representing the athlete's *local* training day."""
     return dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+
+def _calculate_power_tss(activity: dict) -> float:
+    """
+    Calculate TSS using power data if available.
+    
+    Formula: TSS = (duration_seconds × NP × IF) / (FTP × 3600) × 100, where IF = NP/FTP
+    
+    Returns calculated TSS value or 0 if power data is insufficient.
+    """
+    # Get current FTP value - force reload from mission config each time
+    ftp = get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
+    
+    # Extract power metrics from activity
+    weighted_avg_watts = activity.get("weighted_average_watts")  # This is NP (Normalized Power)
+    avg_watts = activity.get("average_watts")
+    duration_seconds = activity.get("moving_time") or activity.get("elapsed_time")
+    
+    # Check if we have required fields
+    if not all([duration_seconds, ftp]):
+        return 0
+    
+    # For NP, prefer weighted_average_watts over average_watts
+    normalized_power = weighted_avg_watts or avg_watts
+    
+    # If no power data available, can't calculate power-based TSS
+    if not normalized_power:
+        return 0
+    
+    # Calculate Intensity Factor (IF)
+    intensity_factor = normalized_power / ftp
+    
+    # Calculate TSS
+    tss = (duration_seconds * normalized_power * intensity_factor) / (ftp * 3600) * 100
+    
+    # Log if debug enabled
+    print(f"DEBUG: Power-based TSS: {tss:.1f} (NP={normalized_power}, IF={intensity_factor:.2f}, Duration={duration_seconds}s, FTP={ftp})")
+    
+    return tss
 
 
 def get_ctl_atl_tsb(days: int = 90):
     """
-    Compute CTL, ATL, TSB using Bannister’s impulse‑response model.
+    Compute CTL, ATL, TSB using Bannister's impulse‑response model.
 
     Returns (ctl:float, atl:float, tsb:float) rounded to 1 decimal place.
     """
@@ -130,6 +173,10 @@ def get_ctl_atl_tsb(days: int = 90):
     today = datetime.now().replace(tzinfo=None)
     start_day = today - timedelta(days=days)
     daily_tss: dict[str, float] = {}
+
+    # Debug info
+    print(f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)")
+    print(f"DEBUG: Found {len(activities)} activities from Strava")
 
     # --------------------------------------------------------------------- #
     # 1.  Aggregate TSS per local day
@@ -157,13 +204,20 @@ def get_ctl_atl_tsb(days: int = 90):
 
         day_key = _bucket_to_local_midnight(act_dt)
         
-        # Prioritize icu_training_load if available (more consistent with intervals.icu values)
-        if 'icu_training_load' in act and act['icu_training_load'] is not None:
-            effort = float(act['icu_training_load'])
-        else:
-            effort = act.get("relative_effort") or act.get("suffer_score") or 0
+        # Priority 1: Calculate power-based TSS if power data is available
+        tss = _calculate_power_tss(act)
+        
+        # Priority 2: Use Strava's native relative_effort or suffer_score if no power data
+        if tss <= 0:
+            tss = act.get("relative_effort") or act.get("suffer_score") or 0
+            print(f"DEBUG: Using Strava heart rate-based score: {tss}")
             
-        daily_tss[day_key] = daily_tss.get(day_key, 0) + effort
+        # Priority 3: Fall back to icu_training_load only if no other metric is available
+        if tss <= 0 and 'icu_training_load' in act and act['icu_training_load'] is not None:
+            tss = float(act['icu_training_load'])
+            print(f"DEBUG: Using intervals.icu training load: {tss}")
+            
+        daily_tss[day_key] = daily_tss.get(day_key, 0) + tss
 
     # Create a sorted list of dates from start_day to today
     date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
@@ -171,16 +225,61 @@ def get_ctl_atl_tsb(days: int = 90):
     # Create a list of training loads for each day, replacing missing days with 0
     tss_series = [daily_tss.get(day, 0) for day in date_range]
 
+    # Debug: Print the most recent training loads
+    print("\nDEBUG: Recent daily training loads (most recent 10 days):")
+    recent_days = min(10, len(date_range))
+    for i in range(-recent_days, 0):
+        print(f"DEBUG: {date_range[i]}: {tss_series[i]}")
+
     # --------------------------------------------------------------------- #
     # 2.  Exponential moving averages - using formula that matches intervals.icu
     # --------------------------------------------------------------------- #
-    ctl = atl = 0.0
-    for tss in tss_series:
-        # This formula is mathematically equivalent to: value += K * (tss - value)
-        # but produces values that better match intervals.icu's implementation
-        ctl = ctl * (1 - K_CTL) + tss * K_CTL
-        atl = atl * (1 - K_ATL) + tss * K_ATL
+    
+    # Initialize CTL and ATL with better starting values
+    # Use the average of first 14 days of data as a starting point (if available)
+    init_period = min(14, len(tss_series))
+    if init_period > 0:
+        avg_tss = sum(tss_series[:init_period]) / init_period
+        ctl = atl = avg_tss
+    else:
+        ctl = atl = 0.0
+    
+    # Debug: Print intermediate calculation steps
+    print(f"\nDEBUG: Starting with initial values: CTL={ctl:.1f}, ATL={atl:.1f}")
+    print("\nDEBUG: Bannister model calculation steps:")
+    
+    # Keep track of daily CTL/ATL values to access yesterday's values at the end
+    daily_values = []
+    
+    for i, tss in enumerate(tss_series):
+        # Calculate new values
+        new_ctl = ctl * (1 - K_CTL) + tss * K_CTL
+        new_atl = atl * (1 - K_ATL) + tss * K_ATL
+        
+        # Store daily values
+        daily_values.append((date_range[i], new_ctl, new_atl))
+        
+        # Log every 10 days and the last 5 days for debugging
+        if i % 10 == 0 or i >= len(tss_series) - 5:
+            print(f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})")
+        
+        # Update values
+        ctl = new_ctl
+        atl = new_atl
 
-    tsb = ctl - atl
-    print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
+    # Calculate TSB using previous day's values as per TrainingPeaks & Strava definition
+    # TSB = Yesterday's Fitness (CTL) - Yesterday's Fatigue (ATL)
+    if len(daily_values) >= 2:
+        # Use the values from yesterday (second to last entry)
+        yesterday_date, yesterday_ctl, yesterday_atl = daily_values[-2]
+        tsb = yesterday_ctl - yesterday_atl
+        print(f"DEBUG: Using previous day ({yesterday_date}) values for TSB: CTL={yesterday_ctl:.1f}, ATL={yesterday_atl:.1f}")
+    else:
+        # Fall back to current values if we don't have enough history
+        tsb = ctl - atl
+        print(f"DEBUG: Insufficient history, using current values for TSB")
+    
+    print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f} (Form calculated using yesterday's CTL/ATL)")
+    
+    # Return the final values - Note that TSB uses previous day's values
     return round(ctl, 1), round(atl, 1), round(tsb, 1)
