@@ -1,4 +1,10 @@
 
+"""
+AI client interfaces for Lanterne Rouge.
+
+This module provides utilities for interacting with AI models like OpenAI,
+adapting responses for workout adjustments, and handling structured output.
+"""
 import os
 import json
 import openai
