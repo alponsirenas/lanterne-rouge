@@ -31,7 +31,7 @@ _dummy_cfg = MissionConfig(
 @patch("lanterne_rouge.plan_generator.openai.OpenAI")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_openai_client):
+def test_generate_workout_plan_happy_path(mock_openai_client, mock_ctl_atl, mock_readiness):
     # Setup the mock OpenAI client
     mock_client = MagicMock()
     mock_openai_client.return_value = mock_client
