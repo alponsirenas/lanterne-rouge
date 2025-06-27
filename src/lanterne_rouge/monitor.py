@@ -267,19 +267,12 @@ def get_ctl_atl_tsb(days: int = 90):
         ctl = new_ctl
         atl = new_atl
 
-    # Calculate TSB using previous day's values as per TrainingPeaks & Strava definition
-    # TSB = Yesterday's Fitness (CTL) - Yesterday's Fatigue (ATL)
-    if len(daily_values) >= 2:
-        # Use the values from yesterday (second to last entry)
-        yesterday_date, yesterday_ctl, yesterday_atl = daily_values[-2]
-        tsb = yesterday_ctl - yesterday_atl
-        print(f"DEBUG: Using previous day ({yesterday_date}) values for TSB: CTL={yesterday_ctl:.1f}, ATL={yesterday_atl:.1f}")
-    else:
-        # Fall back to current values if we don't have enough history
-        tsb = ctl - atl
-        print(f"DEBUG: Insufficient history, using current values for TSB")
+    # Calculate TSB using today's CTL and ATL values
+    # TSB = Today's Fitness (CTL) - Today's Fatigue (ATL)
+    tsb = ctl - atl
+    print(f"DEBUG: Using today's values for TSB: CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
     
-    print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f} (Form calculated using yesterday's CTL/ATL)")
+    print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
     
-    # Return the final values - Note that TSB uses previous day's values
+    # Return the final values
     return round(ctl, 1), round(atl, 1), round(tsb, 1)

@@ -92,13 +92,11 @@ This approach provides more realistic starting values and ensures the model stab
 
 ### TSB (Form) Calculation
 
-TSB (Training Stress Balance or Form) is calculated using the previous day's CTL and ATL values, not the current day's values:
+TSB (Training Stress Balance or Form) is calculated using today's CTL and ATL values:
 
 ```python
-# TSB = Yesterday's Fitness (CTL) - Yesterday's Fatigue (ATL)
-if len(daily_values) >= 2:
-    yesterday_date, yesterday_ctl, yesterday_atl = daily_values[-2]
-    tsb = yesterday_ctl - yesterday_atl
+# TSB = Today's Fitness (CTL) - Today's Fatigue (ATL)
+tsb = ctl - atl
 ```
 
 This follows the TrainingPeaks and Strava definition where:
