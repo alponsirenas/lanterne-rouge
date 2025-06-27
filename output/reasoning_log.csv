@@ -74,3 +74,34 @@ day,readiness_score,activity_balance,body_temperature,hrv_balance,previous_day_a
 - ### Specific Recommendations:
 - **June
 "
+"Friday, June 27, 2025",71,,,71,,,,,,"LLM-Generated Summaries:
+- Based on the provided mission plan and the athlete's current metrics, here's a revised workout plan for today:
+- ### Goals Overview:
+- **Goal Event**: Tour de France Indoor Simulation 2025
+- **Goal Date**: July 5, 2025
+- **Targets**:
+- CTL Peak: 55
+- Long Ride Minutes: 75
+- Stage Climb Minutes: 60
+- Threshold Interval Min: 20
+- **Constraints**:
+- Minimum Readiness: 70
+- Maximum Resting Heart Rate (RHR): 56
+- Minimum Training Stress Balance (TSB): -15
+- ### Athlete's Current Status (as of June 26, 2025):
+- **Readiness Score**: 71
+- **CTL (Chronic Training Load)**: 37.0
+- **ATL (Acute Training Load)**: 54.2
+- **TSB (Training Stress Balance)**: -17.2
+- ### Adjustments Needed:
+- Given the athlete's current TSB of -17.2, which falls below the constraints’ minimum of -15, indicating moderate fatigue, the following modifications are suggested:
+- **Reduce Overall Volume**: Today's planned workout should be adjusted to reduce the overall volume. Considering the TSB level, the workout should not exceed 45 minutes to facilitate recovery.
+- **Decrease Intensity**: The intensity of today's workout should be low. This means focusing on a recovery ride or easy spin, ensuring the heart rate stays within Zone 1 to Zone 2. Avoid any high-intensity intervals or stage climbs today.
+- **Specific Workout Suggestions**:
+- **Duration**: Limit today's ride to no more than 45 minutes.
+- **Intensity**: Keep the effort easy and comfortable, focusing on recovery.
+- **Activities**: Consider incorporating activities that promote recovery and flexibility, such as gentle cycling on flat terrain, yoga, or stretching.
+- **Long-Term Training Plan Adjustments**:
+- **Gradually Increase CTL**: A gradual increase in CTL to reach the target of 55 is essential. This should be done by carefully balancing volume and intensity over the next days and weeks, avoiding sudden spikes in training load that could further negatively impact TSB.
+- **Monitor and Adjust Based on Readiness and TSB**: Continuously monitor the athlete's readiness and TSB. Adjust the training plan dynamically to ensure the athlete remains within safe training stress
+"
