@@ -116,7 +116,6 @@ def strava_get(endpoint):
     """
     Perform a GET request to Strava API with current Access Token.
     """
-    global STRAVA_ACCESS_TOKEN
     headers = {
         "Authorization": f"Bearer {STRAVA_ACCESS_TOKEN}"
     }
@@ -150,7 +149,6 @@ def strava_post(endpoint, payload):
     """
     Perform a POST request to Strava API with current Access Token.
     """
-    global STRAVA_ACCESS_TOKEN
     headers = {
         "Authorization": f"Bearer {STRAVA_ACCESS_TOKEN}",
         "Content-Type": "application/json"

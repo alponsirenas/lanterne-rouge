@@ -170,12 +170,8 @@ def check_memory_db():
         print("Recent observations in memory database:")
         for row in cursor:
             data = json.loads(row["data"])
-            print(
-                f"{
-                    row['timestamp']}: CTL={
-                    data.get('ctl')}, ATL={
-                    data.get('atl')}, TSB={
-                    data.get('tsb')}")
+            print(f"{row['timestamp']}: CTL={data.get('ctl')}, "
+                  f"ATL={data.get('atl')}, TSB={data.get('tsb')}")
 
         conn.close()
 

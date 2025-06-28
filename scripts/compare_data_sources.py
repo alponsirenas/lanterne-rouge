@@ -186,9 +186,8 @@ def main():
                 csv_value = csv_tss.get(day_key, 0)
 
                 if strava_value != 0 or csv_value != 0:
-                    print(
-                        f"  {day_key}: Strava={strava_value}, CSV={csv_value}, Diff={
-                            strava_value - csv_value}")
+                    print(f"  {day_key}: Strava={strava_value}, CSV={csv_value}, "
+                          f"Diff={strava_value - csv_value}")
 
 
 if __name__ == "__main__":

@@ -85,36 +85,18 @@ def test_power_tss_calculation():
     if results:
         print("\nPower-Based TSS Comparison:")
         print("=" * 100)
-        print(
-            f"{
-                'Date':<12} | {
-                'Type':<12} | {
-                'Avg W':<6} | {
-                    'NP':<6} | {
-                        'Duration':<10} | {
-                            'Power TSS':>9} | {
-                                'Strava':>8} | {
-                                    'ICU':>8} | {
-                                        'Activity Name':<30}")
+        print(f"{'Date':<12} | {'Type':<12} | {'Avg W':<6} | {'NP':<6} | {'Duration':<10} | "
+              f"{'Power TSS':>9} | {'Strava':>8} | {'ICU':>8} | {'Activity Name':<30}")
         print("-" * 100)
 
         for r in sorted(results, key=lambda x: x["activity_date"], reverse=True):
-            date = r["activity_date"].split(
-                "T")[0] if "T" in r["activity_date"] else r["activity_date"]
+            date = r["activity_date"].split("T")[0] if "T" in r["activity_date"] else r["activity_date"]
             duration_mins = round(r["duration_seconds"] / 60, 1) if r["duration_seconds"] else "?"
 
-            print(
-                f"{
-                    date:<12} | {
-                    r['activity_type']:<12} | {
-                    r['avg_watts']:<6} | {
-                    r['normalized_watts'] or '?':<6} | {
-                        duration_mins:<10} | {
-                            r['calculated_power_tss']:>9} | {
-                                r['strava_score']:>8} | {
-                                    r['icu_score']:>8} | {
-                                        r['activity_name'][
-                                            :30]}")
+            print(f"{date:<12} | {r['activity_type']:<12} | {r['avg_watts']:<6} | "
+                  f"{r['normalized_watts'] or '?':<6} | {duration_mins:<10} | "
+                  f"{r['calculated_power_tss']:>9} | {r['strava_score']:>8} | "
+                  f"{r['icu_score']:>8} | {r['activity_name'][:30]}")
     else:
         print("No activities with power data found")
 
