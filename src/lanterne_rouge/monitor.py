@@ -84,7 +84,7 @@ def get_oura_readiness():
     try:
         r = requests.get(url, headers=headers, params=params, timeout=10)
         r.raise_for_status()
-    except Exception as exc:
+    except (requests.RequestException, requests.HTTPError) as exc:
         print(f"❌  Oura API error: {exc}")
         return None, None, None
 
@@ -163,33 +163,19 @@ def _calculate_power_tss(activity: dict) -> float:
     return tss
 
 
-def get_ctl_atl_tsb(days: int = 90):
+def _process_activities_to_daily_tss(activities, start_day):
     """
-    Compute CTL, ATL, TSB using Bannister's impulse‑response model.
+    Process activities to compute daily TSS (Training Stress Score).
 
-    Returns (ctl:float, atl:float, tsb:float) rounded to 1 decimal place.
+    Args:
+        activities: List of activities from Strava
+        start_day: Datetime object representing the start day for calculation
+
+    Returns:
+        Dictionary mapping date strings to TSS values
     """
-    print("🔍  Pulling activities from Strava for CTL/ATL/TSB…")
-    activities = strava_get("athlete/activities?per_page=200")
-    if not activities:
-        print("⚠️  No activities from Strava; CTL/ATL/TSB unavailable.")
-        return None, None, None
+    daily_tss = {}
 
-    # Use naive datetimes consistently to avoid timezone comparison issues
-    today = datetime.now().replace(tzinfo=None)
-    start_day = today - timedelta(days=days)
-    daily_tss: dict[str, float] = {}
-
-    # Debug info
-    print(
-        f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, "
-        f"looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)"
-    )
-    print(f"DEBUG: Found {len(activities)} activities from Strava")
-
-    # --------------------------------------------------------------------- #
-    # 1.  Aggregate TSS per local day
-    # --------------------------------------------------------------------- #
     for act in activities:
         if not isinstance(act, dict):
             continue
@@ -228,25 +214,20 @@ def get_ctl_atl_tsb(days: int = 90):
 
         daily_tss[day_key] = daily_tss.get(day_key, 0) + tss
 
-    # Create a sorted list of dates from start_day to today
-    date_range = [
-        (start_day + timedelta(days=i)).strftime("%Y-%m-%d")
-        for i in range(days)
-    ]
+    return daily_tss
 
-    # Create a list of training loads for each day, replacing missing days with 0
-    tss_series = [daily_tss.get(day, 0) for day in date_range]
 
-    # Debug: Print the most recent training loads
-    print("\nDEBUG: Recent daily training loads (most recent 10 days):")
-    recent_days = min(10, len(date_range))
-    for i in range(-recent_days, 0):
-        print(f"DEBUG: {date_range[i]}: {tss_series[i]}")
+def _calculate_bannister_values(tss_series, date_range):
+    """
+    Calculate the Bannister model values (CTL, ATL, TSB) from TSS series.
 
-    # --------------------------------------------------------------------- #
-    # 2.  Exponential moving averages - using formula that matches intervals.icu
-    # --------------------------------------------------------------------- #
+    Args:
+        tss_series: List of daily TSS values
+        date_range: List of date strings corresponding to tss_series
 
+    Returns:
+        Tuple of final (ctl, atl, tsb) values
+    """
     # Initialize CTL and ATL with better starting values
     # Use the average of first 14 days of data as a starting point (if available)
     init_period = min(14, len(tss_series))
@@ -260,7 +241,7 @@ def get_ctl_atl_tsb(days: int = 90):
     print(f"\nDEBUG: Starting with initial values: CTL={ctl:.1f}, ATL={atl:.1f}")
     print("\nDEBUG: Bannister model calculation steps:")
 
-    # Keep track of daily CTL/ATL values to access yesterday's values at the end
+    # Keep track of daily CTL/ATL values
     daily_values = []
 
     for i, tss in enumerate(tss_series):
@@ -285,6 +266,59 @@ def get_ctl_atl_tsb(days: int = 90):
     # Calculate TSB using today's CTL and ATL values
     # TSB = Today's Fitness (CTL) - Today's Fatigue (ATL)
     tsb = ctl - atl
+
+    return ctl, atl, tsb
+
+
+def get_ctl_atl_tsb(days: int = 90):
+    """
+    Compute CTL, ATL, TSB using Bannister's impulse‑response model.
+
+    Returns (ctl:float, atl:float, tsb:float) rounded to 1 decimal place.
+    """
+    print("🔍  Pulling activities from Strava for CTL/ATL/TSB…")
+    activities = strava_get("athlete/activities?per_page=200")
+    if not activities:
+        print("⚠️  No activities from Strava; CTL/ATL/TSB unavailable.")
+        return None, None, None
+
+    # Use naive datetimes consistently to avoid timezone comparison issues
+    today = datetime.now().replace(tzinfo=None)
+    start_day = today - timedelta(days=days)
+
+    # Debug info
+    print(
+        f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, "
+        f"looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)"
+    )
+    print(f"DEBUG: Found {len(activities)} activities from Strava")
+
+    # --------------------------------------------------------------------- #
+    # 1.  Aggregate TSS per local day
+    # --------------------------------------------------------------------- #
+    daily_tss = _process_activities_to_daily_tss(activities, start_day)
+
+    # Create a sorted list of dates from start_day to today
+    date_range = [
+        (start_day + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(days)
+    ]
+
+    # Create a list of training loads for each day, replacing missing days with 0
+    tss_series = [daily_tss.get(day, 0) for day in date_range]
+
+    # Debug: Print the most recent training loads
+    print("\nDEBUG: Recent daily training loads (most recent 10 days):")
+    recent_days = min(10, len(date_range))
+    for i in range(-recent_days, 0):
+        print(f"DEBUG: {date_range[i]}: {tss_series[i]}")
+
+    # --------------------------------------------------------------------- #
+    # 2.  Exponential moving averages - using formula that matches intervals.icu
+    # --------------------------------------------------------------------- #
+
+    ctl, atl, tsb = _calculate_bannister_values(tss_series, date_range)
+
     print(
         f"DEBUG: Using today's values for TSB: CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}"
     )
