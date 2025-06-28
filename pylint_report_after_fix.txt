@@ -1,0 +1,605 @@
+************* Module test_mission_config
+tests/test_mission_config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_mission_config.py:35:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:55:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:65:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:80:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module test_bannister
+tests/test_bannister.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_bannister.py:83:0: R0914: Too many local variables (25/15) (too-many-locals)
+tests/test_bannister.py:1:0: W0611: Unused import datetime (unused-import)
+tests/test_bannister.py:2:0: W0611: Unused import json (unused-import)
+tests/test_bannister.py:3:0: W0611: Unused import math (unused-import)
+tests/test_bannister.py:5:0: W0611: Unused timedelta imported from datetime (unused-import)
+tests/test_bannister.py:11:0: W0611: Unused ATL_TC imported from src.lanterne_rouge.monitor (unused-import)
+tests/test_bannister.py:11:0: W0611: Unused CTL_TC imported from src.lanterne_rouge.monitor (unused-import)
+************* Module test_bannister_fix
+tests/test_bannister_fix.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_bannister_fix.py:17:0: R0914: Too many local variables (23/15) (too-many-locals)
+tests/test_bannister_fix.py:17:0: R0912: Too many branches (17/12) (too-many-branches)
+tests/test_bannister_fix.py:17:0: R0915: Too many statements (56/50) (too-many-statements)
+tests/test_bannister_fix.py:174:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+tests/test_bannister_fix.py:2:0: W0611: Unused import json (unused-import)
+************* Module test_ai_clients
+tests/test_ai_clients.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_ai_clients.py:9:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:26:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:44:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:3:0: W0611: Unused import pytest (unused-import)
+************* Module test_reasoner
+tests/test_reasoner.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_reasoner.py:27:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:32:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:37:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:42:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:47:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:52:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:57:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module test_plan_generator
+tests/test_plan_generator.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_plan_generator.py:36:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:36:42: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:36:58: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:63:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:63:44: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:63:60: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:80:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:81:8: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:81:24: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:109:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:109:48: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:109:64: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:3:0: C0411: standard import "os" should be placed before first party imports "lanterne_rouge.plan_generator.generate_workout_plan", "lanterne_rouge.mission_config.Constraints"  (wrong-import-order)
+tests/test_plan_generator.py:4:0: C0411: standard import "datetime.date" should be placed before first party imports "lanterne_rouge.plan_generator.generate_workout_plan", "lanterne_rouge.mission_config.Constraints"  (wrong-import-order)
+tests/test_plan_generator.py:5:0: C0411: standard import "unittest.mock.MagicMock" should be placed before first party imports "lanterne_rouge.plan_generator.generate_workout_plan", "lanterne_rouge.mission_config.Constraints"  (wrong-import-order)
+tests/test_plan_generator.py:7:0: C0411: third party import "openai" should be placed before first party imports "lanterne_rouge.plan_generator.generate_workout_plan", "lanterne_rouge.mission_config.Constraints"  (wrong-import-order)
+tests/test_plan_generator.py:8:0: C0411: third party import "pytest" should be placed before first party imports "lanterne_rouge.plan_generator.generate_workout_plan", "lanterne_rouge.mission_config.Constraints"  (wrong-import-order)
+************* Module scripts.test_power_tss
+scripts/test_power_tss.py:22:0: R0914: Too many local variables (17/15) (too-many-locals)
+scripts/test_power_tss.py:28:42: W1508: os.getenv default type is builtins.int. Expected str or None. (invalid-envvar-default)
+scripts/test_power_tss.py:34:4: C0415: Import outside toplevel (subprocess.run) (import-outside-toplevel)
+scripts/test_power_tss.py:35:4: W1510: 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
+scripts/test_power_tss.py:9:0: C0411: standard import "csv" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:10:0: C0411: standard import "json" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:11:0: C0411: standard import "os" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:12:0: C0411: standard import "sys" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:13:0: C0411: standard import "datetime.datetime" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:14:0: C0411: standard import "pathlib.Path" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:16:0: C0411: third party import "pandas" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor._calculate_power_tss", "lanterne_rouge.mission_config.get_athlete_ftp"  (wrong-import-order)
+scripts/test_power_tss.py:9:0: W0611: Unused import csv (unused-import)
+scripts/test_power_tss.py:10:0: W0611: Unused import json (unused-import)
+scripts/test_power_tss.py:13:0: W0611: Unused datetime imported from datetime (unused-import)
+scripts/test_power_tss.py:13:0: W0611: Unused timedelta imported from datetime (unused-import)
+scripts/test_power_tss.py:14:0: W0611: Unused Path imported from pathlib (unused-import)
+scripts/test_power_tss.py:16:0: W0611: Unused pandas imported as pd (unused-import)
+************* Module scripts.compare_data_sources
+scripts/compare_data_sources.py:125:0: C0301: Line too long (113/100) (line-too-long)
+scripts/compare_data_sources.py:58:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/compare_data_sources.py:66:0: R0914: Too many local variables (19/15) (too-many-locals)
+scripts/compare_data_sources.py:98:19: W0718: Catching too general exception BaseException (broad-exception-caught)
+scripts/compare_data_sources.py:66:0: R0912: Too many branches (15/12) (too-many-branches)
+scripts/compare_data_sources.py:12:0: C0411: standard import "math" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_data_sources.py:13:0: C0411: standard import "os" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_data_sources.py:14:0: C0411: standard import "sys" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_data_sources.py:15:0: C0411: standard import "datetime.datetime" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_data_sources.py:16:0: C0411: standard import "pathlib.Path" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_data_sources.py:18:0: C0411: third party import "pandas" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+************* Module scripts.compare_db_vs_calc
+scripts/compare_db_vs_calc.py:38:0: C0301: Line too long (101/100) (line-too-long)
+scripts/compare_db_vs_calc.py:55:0: R0914: Too many local variables (17/15) (too-many-locals)
+scripts/compare_db_vs_calc.py:92:19: W0718: Catching too general exception BaseException (broad-exception-caught)
+scripts/compare_db_vs_calc.py:129:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/compare_db_vs_calc.py:9:0: C0411: standard import "json" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:10:0: C0411: standard import "math" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:11:0: C0411: standard import "os" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:12:0: C0411: standard import "sqlite3" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:13:0: C0411: standard import "sys" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:14:0: C0411: standard import "datetime.datetime" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/compare_db_vs_calc.py:15:0: C0411: standard import "pathlib.Path" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+************* Module scripts.update_athlete_ftp
+scripts/update_athlete_ftp.py:63:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/update_athlete_ftp.py:13:0: C0411: standard import "argparse" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:14:0: C0411: standard import "json" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:15:0: C0411: standard import "os" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:16:0: C0411: standard import "sqlite3" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:17:0: C0411: standard import "sys" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:18:0: C0411: standard import "pathlib.Path" should be placed before first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+scripts/update_athlete_ftp.py:12:0: W0611: Unused MissionConfig imported from lanterne_rouge.mission_config (unused-import)
+scripts/update_athlete_ftp.py:12:0: W0611: Unused get_current_mission imported from lanterne_rouge.mission_config (unused-import)
+************* Module scripts.notify
+scripts/notify.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/notify.py:18:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:62:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:62:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+scripts/notify.py:76:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:77:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+************* Module scripts.manage_memory_db
+scripts/manage_memory_db.py:110:0: C0301: Line too long (105/100) (line-too-long)
+scripts/manage_memory_db.py:62:19: W0718: Catching too general exception BaseException (broad-exception-caught)
+scripts/manage_memory_db.py:103:10: W0612: Unused variable 'db_path' (unused-variable)
+scripts/manage_memory_db.py:146:4: C0415: Import outside toplevel (argparse) (import-outside-toplevel)
+scripts/manage_memory_db.py:11:0: W0611: Unused datetime imported from datetime (unused-import)
+************* Module scripts.daily_run
+scripts/daily_run.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/daily_run.py:17:24: W0621: Redefining name 'summary' from outer scope (line 26) (redefined-outer-name)
+scripts/daily_run.py:35:4: C0103: Constant name "subject" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/daily_run.py:45:4: C0103: Constant name "reasoning_log_path" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/daily_run.py:53:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/daily_run.py:56:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/daily_run.py:4:0: C0411: standard import "subprocess" should be placed before first party imports "scripts.run_tour_coach.run_daily_logic", "scripts.notify.send_email", "lanterne_rouge.strava_api.refresh_strava_token"  (wrong-import-order)
+scripts/daily_run.py:5:0: C0411: standard import "os" should be placed before first party imports "scripts.run_tour_coach.run_daily_logic", "scripts.notify.send_email", "lanterne_rouge.strava_api.refresh_strava_token"  (wrong-import-order)
+scripts/daily_run.py:6:0: C0411: standard import "sys" should be placed before first party imports "scripts.run_tour_coach.run_daily_logic", "scripts.notify.send_email", "lanterne_rouge.strava_api.refresh_strava_token"  (wrong-import-order)
+scripts/daily_run.py:8:0: C0411: third party import "dotenv.load_dotenv" should be placed before first party imports "scripts.run_tour_coach.run_daily_logic", "scripts.notify.send_email", "lanterne_rouge.strava_api.refresh_strava_token"  (wrong-import-order)
+************* Module scripts.update_github_secret
+scripts/update_github_secret.py:24:0: C0301: Line too long (103/100) (line-too-long)
+scripts/update_github_secret.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/update_github_secret.py:18:0: C0103: Constant name "secret_name" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:33:0: C0103: Constant name "url" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:34:7: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+scripts/update_github_secret.py:45:0: C0103: Constant name "put_url" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:50:11: W3101: Missing timeout argument for method 'requests.put' can cause your program to hang indefinitely (missing-timeout)
+scripts/update_github_secret.py:3:0: W0611: Unused import binascii (unused-import)
+************* Module scripts.run_tour_coach
+scripts/run_tour_coach.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/run_tour_coach.py:4:0: C0411: third party import "streamlit" should be placed before first party imports "lanterne_rouge.mission_config.bootstrap", "lanterne_rouge.ai_clients.generate_workout_adjustment", "lanterne_rouge.tour_coach"  (wrong-import-order)
+scripts/run_tour_coach.py:5:0: C0411: standard import "pathlib.Path" should be placed before third party import "streamlit" and first party imports "lanterne_rouge.mission_config.bootstrap", "lanterne_rouge.ai_clients.generate_workout_adjustment", "lanterne_rouge.tour_coach"  (wrong-import-order)
+scripts/run_tour_coach.py:6:0: C0411: standard import "os" should be placed before third party import "streamlit" and first party imports "lanterne_rouge.mission_config.bootstrap", "lanterne_rouge.ai_clients.generate_workout_adjustment", "lanterne_rouge.tour_coach"  (wrong-import-order)
+scripts/run_tour_coach.py:7:0: C0411: standard import "sys" should be placed before third party import "streamlit" and first party imports "lanterne_rouge.mission_config.bootstrap", "lanterne_rouge.ai_clients.generate_workout_adjustment", "lanterne_rouge.tour_coach"  (wrong-import-order)
+************* Module scripts.export_strava_for_testing
+scripts/export_strava_for_testing.py:30:28: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/export_strava_for_testing.py:53:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/export_strava_for_testing.py:90:19: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/export_strava_for_testing.py:19:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+scripts/export_strava_for_testing.py:8:0: C0411: standard import "csv" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:9:0: C0411: standard import "json" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:10:0: C0411: standard import "os" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:11:0: C0411: standard import "sys" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:12:0: C0411: standard import "datetime.datetime" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:13:0: C0411: standard import "pathlib.Path" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/export_strava_for_testing.py:9:0: W0611: Unused import json (unused-import)
+************* Module scripts.fix_lint_issues
+scripts/fix_lint_issues.py:12:0: W0611: Unused import sys (unused-import)
+************* Module scripts.test_tsb_parameters
+scripts/test_tsb_parameters.py:27:0: C0301: Line too long (132/100) (line-too-long)
+scripts/test_tsb_parameters.py:24:0: R0914: Too many local variables (27/15) (too-many-locals)
+scripts/test_tsb_parameters.py:62:19: W0718: Catching too general exception BaseException (broad-exception-caught)
+scripts/test_tsb_parameters.py:24:0: R0912: Too many branches (14/12) (too-many-branches)
+scripts/test_tsb_parameters.py:24:0: R0915: Too many statements (51/50) (too-many-statements)
+scripts/test_tsb_parameters.py:14:0: C0411: standard import "math" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/test_tsb_parameters.py:15:0: C0411: standard import "os" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/test_tsb_parameters.py:16:0: C0411: standard import "sys" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/test_tsb_parameters.py:17:0: C0411: standard import "datetime.datetime" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/test_tsb_parameters.py:18:0: C0411: standard import "pathlib.Path" should be placed before first party import "lanterne_rouge.strava_api.strava_get"  (wrong-import-order)
+scripts/test_tsb_parameters.py:18:0: W0611: Unused Path imported from pathlib (unused-import)
+************* Module scripts.diagnose_bannister
+scripts/diagnose_bannister.py:169:0: C0301: Line too long (111/100) (line-too-long)
+scripts/diagnose_bannister.py:31:0: R0914: Too many local variables (22/15) (too-many-locals)
+scripts/diagnose_bannister.py:59:15: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/diagnose_bannister.py:97:19: W0718: Catching too general exception BaseException (broad-exception-caught)
+scripts/diagnose_bannister.py:144:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/diagnose_bannister.py:31:0: R0912: Too many branches (22/12) (too-many-branches)
+scripts/diagnose_bannister.py:31:0: R0915: Too many statements (66/50) (too-many-statements)
+scripts/diagnose_bannister.py:157:8: W0621: Redefining name 'Path' from outer scope (line 15) (redefined-outer-name)
+scripts/diagnose_bannister.py:184:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/diagnose_bannister.py:156:8: C0415: Import outside toplevel (sqlite3) (import-outside-toplevel)
+scripts/diagnose_bannister.py:157:8: W0404: Reimport 'Path' (imported line 15) (reimported)
+scripts/diagnose_bannister.py:157:8: C0415: Import outside toplevel (pathlib.Path) (import-outside-toplevel)
+scripts/diagnose_bannister.py:239:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/diagnose_bannister.py:9:0: C0411: standard import "csv" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:10:0: C0411: standard import "json" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:11:0: C0411: standard import "math" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:12:0: C0411: standard import "os" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:13:0: C0411: standard import "sys" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:14:0: C0411: standard import "datetime.datetime" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:15:0: C0411: standard import "pathlib.Path" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:17:0: C0411: third party import "pandas" should be placed before first party imports "lanterne_rouge.strava_api.strava_get", "lanterne_rouge.monitor.ATL_TC"  (wrong-import-order)
+scripts/diagnose_bannister.py:9:0: W0611: Unused import csv (unused-import)
+scripts/diagnose_bannister.py:11:0: W0611: Unused import math (unused-import)
+************* Module src.lanterne_rouge.strava_api
+src/lanterne_rouge/strava_api.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/strava_api.py:24:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/strava_api.py:47:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:89:8: W0621: Redefining name 'tokens' from outer scope (line 25) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:100:45: W0621: Redefining name 'f' from outer scope (line 24) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:76:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:77:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:87:15: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:88:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+src/lanterne_rouge/strava_api.py:100:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/strava_api.py:123:29: W0621: Redefining name 'STRAVA_REFRESH_TOKEN' from outer scope (line 18) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:113:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:119:15: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:123:29: C0103: Variable name "STRAVA_REFRESH_TOKEN" doesn't conform to snake_case naming style (invalid-name)
+src/lanterne_rouge/strava_api.py:125:19: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:123:29: W0612: Unused variable 'STRAVA_REFRESH_TOKEN' (unused-variable)
+src/lanterne_rouge/strava_api.py:157:29: W0621: Redefining name 'STRAVA_REFRESH_TOKEN' from outer scope (line 18) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:146:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:153:15: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:157:29: C0103: Variable name "STRAVA_REFRESH_TOKEN" doesn't conform to snake_case naming style (invalid-name)
+src/lanterne_rouge/strava_api.py:159:19: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:157:29: W0612: Unused variable 'STRAVA_REFRESH_TOKEN' (unused-variable)
+************* Module intervals_calendar
+src/lanterne_rouge/archive/intervals_calendar.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/archive/intervals_calendar.py:32:0: C0103: Constant name "api_key_with_colon" doesn't conform to UPPER_CASE naming style (invalid-name)
+src/lanterne_rouge/archive/intervals_calendar.py:59:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/archive/intervals_calendar.py:51:19: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/archive/intervals_calendar.py:52:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+src/lanterne_rouge/archive/intervals_calendar.py:100:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/archive/intervals_calendar.py:84:19: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/archive/intervals_calendar.py:92:19: W0718: Catching too general exception Exception (broad-exception-caught)
+************* Module src.lanterne_rouge.reasoner
+src/lanterne_rouge/reasoner.py:54:0: C0301: Line too long (108/100) (line-too-long)
+src/lanterne_rouge/reasoner.py:10:0: R0913: Too many arguments (7/5) (too-many-arguments)
+src/lanterne_rouge/reasoner.py:10:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+************* Module src.lanterne_rouge.plan_generator
+src/lanterne_rouge/plan_generator.py:37:0: C0301: Line too long (103/100) (line-too-long)
+src/lanterne_rouge/plan_generator.py:79:0: C0301: Line too long (118/100) (line-too-long)
+src/lanterne_rouge/plan_generator.py:14:0: R0914: Too many local variables (16/15) (too-many-locals)
+src/lanterne_rouge/plan_generator.py:95:11: W0718: Catching too general exception Exception (broad-exception-caught)
+************* Module src.lanterne_rouge.peloton_matcher
+src/lanterne_rouge/peloton_matcher.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module src.lanterne_rouge.tour_coach
+src/lanterne_rouge/tour_coach.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/tour_coach.py:29:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/tour_coach.py:31:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/tour_coach.py:46:0: R0914: Too many local variables (24/15) (too-many-locals)
+src/lanterne_rouge/tour_coach.py:160:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/tour_coach.py:46:0: R0915: Too many statements (52/50) (too-many-statements)
+src/lanterne_rouge/tour_coach.py:6:0: W0611: Unused import sys (unused-import)
+src/lanterne_rouge/tour_coach.py:19:0: W0611: Unused load_config imported from lanterne_rouge.mission_config (unused-import)
+************* Module src.lanterne_rouge.memory_bus
+src/lanterne_rouge/memory_bus.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/memory_bus.py:28:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:47:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:58:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:69:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module src.lanterne_rouge.ai_clients
+src/lanterne_rouge/ai_clients.py:71:0: C0301: Line too long (115/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:184:0: C0301: Line too long (106/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:45:0: R0913: Too many arguments (8/5) (too-many-arguments)
+src/lanterne_rouge/ai_clients.py:45:0: R0917: Too many positional arguments (7/5) (too-many-positional-arguments)
+src/lanterne_rouge/ai_clients.py:45:0: R0914: Too many local variables (18/15) (too-many-locals)
+src/lanterne_rouge/ai_clients.py:76:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/ai_clients.py:150:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/ai_clients.py:131:16: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
+src/lanterne_rouge/ai_clients.py:226:11: W0718: Catching too general exception Exception (broad-exception-caught)
+************* Module src.lanterne_rouge.mission_config
+src/lanterne_rouge/mission_config.py:84:12: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/mission_config.py:85:12: R1732: Consider using 'with' for resource-allocating operations (consider-using-with)
+src/lanterne_rouge/mission_config.py:140:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/mission_config.py:147:4: C0415: Import outside toplevel (json) (import-outside-toplevel)
+src/lanterne_rouge/mission_config.py:168:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/mission_config.py:175:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_mission_config:[14:35]
+==test_reasoner:[6:27]
+_dummy_cfg = MissionConfig(
+    id="test",
+    athlete_id="strava:0",
+    start_date=date(2025, 1, 1),
+    goal_event="test_event",
+    goal_date=date(2025, 12, 31),
+    targets=Targets(
+        ctl_peak=100,
+        long_ride_minutes=100,
+        stage_climb_minutes=60,
+        threshold_interval_min=20,
+    ),
+    constraints=Constraints(
+        min_readiness=65,
+        max_rhr=999,
+        min_tsb=-10,
+    ),
+)
+
+
+def test_high_readiness_good_tsb(): (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[69:92]
+==scripts.test_tsb_parameters:[41:62]
+    start_day = today - timedelta(days=days)
+
+    # Aggregate TSS
+    daily_tss = {}
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        # Get date
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except BaseException: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[79:102]
+==scripts.compare_db_vs_calc:[73:95]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except BaseException:
+                print(f"Could not parse date: {start_local}")
+                continue
+
+        # Track date range in data (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[79:98]
+==scripts.test_tsb_parameters:[45:62]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        # Get date
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except BaseException: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[204:223]
+==test_bannister_fix:[134:154]
+    wellness_df = pd.read_csv(wellness_path)
+    wellness_df['date'] = pd.to_datetime(wellness_df['date'])
+
+    # Get target row
+    if target_date:
+        target_dt = pd.to_datetime(target_date)
+        wellness_row = wellness_df[wellness_df['date'] == target_dt]
+        if len(wellness_row) == 0:
+            print(f"No wellness data found for date {target_date}")
+            return
+    else:
+        wellness_row = wellness_df.sort_values('date', ascending=False).iloc[0:1]
+        target_date = wellness_row['date'].iloc[0].strftime('%Y-%m-%d')
+
+    # Extract intervals.icu values
+    icu_ctl = wellness_row['ctl'].iloc[0]
+    icu_atl = wellness_row['atl'].iloc[0]
+    icu_tsb = icu_ctl - icu_atl
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[70:89]
+==src.lanterne_rouge.monitor:[176:194]
+    daily_tss = {}
+
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[84:102]
+==scripts.diagnose_bannister:[84:101]
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except BaseException:
+                print(f"Could not parse date: {start_local}")
+                continue
+
+        # Track date range in data (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[79:95]
+==src.lanterne_rouge.monitor:[178:194]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_bannister:[24:43]
+==test_bannister_fix:[28:47]
+    test_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    data_path = test_dir / activities_file
+
+    try:
+        # Process the activities CSV
+        activities_df = pd.read_csv(data_path)
+
+        # Make sure we have date information
+        if 'start_date_local' in activities_df.columns:
+            activities_df['date'] = pd.to_datetime(activities_df['start_date_local'])
+        elif 'date' not in activities_df.columns:
+            raise ValueError("No date column found in the activities CSV")
+        else:
+            activities_df['date'] = pd.to_datetime(activities_df['date'])
+
+        # Sort by date
+        activities_df = activities_df.sort_values('date')
+
+        # Determine date range (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[84:97]
+==scripts.test_tsb_parameters:[51:62]
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except BaseException: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[130:148]
+==scripts.compare_db_vs_calc:[110:128]
+    date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
+
+    # Create training load series
+    tss_series = [daily_tss.get(day, 0) for day in date_range]
+
+    # Print recent training loads
+    print("\nRecent daily training loads:")
+    for i in range(-10, 0):
+        print(f"  {date_range[i]}: {tss_series[i]}")
+
+    # Calculate CTL/ATL
+    ctl = atl = 0.0
+    for tss in tss_series:
+        ctl = ctl * (1 - K_CTL) + tss * K_CTL
+        atl = atl * (1 - K_ATL) + tss * K_ATL
+
+    tsb = ctl - atl
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[108:122]
+==scripts.compare_db_vs_calc:[95:110]
+        if act_dt < start_day:
+            continue
+
+        # Get day key
+        day_key = act_dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+        # Prioritize icu_training_load
+        if 'icu_training_load' in act and act['icu_training_load'] is not None:
+            effort = float(act['icu_training_load'])
+        else:
+            effort = act.get("relative_effort") or act.get("suffer_score") or 0
+
+        daily_tss[day_key] = daily_tss.get(day_key, 0) + effort
+
+    # Create a sorted list of dates (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[84:94]
+==src.lanterne_rouge.monitor:[183:194]
+        if not start_local:
+            continue
+
+        # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[36:43]
+==scripts.manage_memory_db:[108:115]
+        cursor = conn.execute(
+            "SELECT timestamp, data FROM memory WHERE type='observation' ORDER BY timestamp DESC LIMIT 1"
+        )
+        row = cursor.fetchone()
+
+        if not row:
+            print("No observation found in the database.") (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[27:36]
+==scripts.manage_memory_db:[19:26]
+    db_path = Path(__file__).resolve().parents[1] / "memory" / "lanterne.db"
+    if not db_path.exists():
+        print(f"Memory database not found at {db_path}")
+        return None
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+
+    # Get the latest observation (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_bannister:[77:100]
+==test_bannister_fix:[118:135]
+    except Exception as e:
+        print(f"Error processing activities CSV: {str(e)}")
+        raise
+
+
+def test_ctl_atl_against_intervals_snapshot():
+    """
+    Test our Bannister implementation against reference values from intervals.icu.
+
+    This test validates that our Bannister model implementation produces CTL/ATL values
+    that closely match the reference values from intervals.icu (stored in wellness CSV).
+
+    Note: Due to differences in implementation details between intervals.icu and our model,
+    we allow for a higher error threshold for ATL which is more volatile (shorter time constant).
+    """
+    # Get the full path to the test data file
+    test_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    wellness_path = test_dir / 'athlete_i296483_wellness.csv'
+
+    # Read reference values from wellness CSV
+    wellness_df = pd.read_csv(wellness_path)
+
+    # Make sure we only work with rows that have valid CTL/ATL values (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[93:103]
+==scripts.test_tsb_parameters:[62:71]
+                continue
+
+        if act_dt < start_day:
+            continue
+
+        day_key = act_dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+        # Get TSS with scaling factor
+        if 'icu_training_load' in act and act['icu_training_load'] is not None: (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 8.57/10 (previous run: 6.86/10, +1.71)
+

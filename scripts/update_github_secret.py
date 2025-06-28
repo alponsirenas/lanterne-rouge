@@ -1,14 +1,21 @@
+#!/usr/bin/env python3
+"""
+GitHub Secret Management Tool for Lanterne Rouge.
+
+This script manages GitHub repository secrets by using the GitHub API.
+It can update secrets like the STRAVA_REFRESH_TOKEN in GitHub actions.
+"""
+
 # Standard library imports
-import os
-import sys
 import base64
 import json
-import binascii
+import os
+import sys
 
 # Third-party library imports
 import requests
-from nacl import encoding, public
 from dotenv import load_dotenv
+from nacl import encoding, public
 
 load_dotenv()
 
@@ -31,7 +38,7 @@ headers = {
     "User-Agent": "update-github-secret-script"
 }
 url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/secrets/public-key"
-resp = requests.get(url, headers=headers)
+resp = requests.get(url, headers=headers, timeout=10)
 resp.raise_for_status()
 key_data = resp.json()
 
@@ -47,7 +54,7 @@ payload = {
     "encrypted_value": encrypted_base64,
     "key_id": key_data["key_id"]
 }
-put_resp = requests.put(put_url, headers=headers, data=json.dumps(payload))
+put_resp = requests.put(put_url, headers=headers, data=json.dumps(payload), timeout=10)
 put_resp.raise_for_status()
 
 print(f"✅ Successfully updated a secret in {repo_owner}/{repo_name}")

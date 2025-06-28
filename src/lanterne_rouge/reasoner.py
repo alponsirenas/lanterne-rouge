@@ -3,8 +3,8 @@ Decide if today's workout should be adjusted based on readiness, CTL,
 ATL, and TSB.
 """
 
-from .mission_config import MissionConfig
 from .ai_clients import generate_workout_adjustment
+from .mission_config import MissionConfig
 
 
 def decide_adjustment(
@@ -40,23 +40,24 @@ def decide_adjustment(
     # 1. Basic Readiness Checks
     if readiness_score is not None and readiness_score < cfg.constraints.min_readiness:
         recommendations.append(
-            f"⚠️ Readiness is low (<{cfg.constraints.min_readiness}). Consider reducing intensity or volume."
-        )
+            f"⚠️ Readiness is low (<{cfg.constraints.min_readiness}). "
+            "Consider reducing intensity or volume.")
 
     # 2. TSB (Form) Checks
     if tsb <= cfg.constraints.min_tsb * 2:
         recommendations.append(
-            "🚨 Form is very negative (TSB < -20). Strongly recommend easier or recovery day."
+            "🚨 Form is very negative (TSB < -20). "
+            "Strongly recommend easier or recovery day."
         )
     elif tsb < cfg.constraints.min_tsb:
         recommendations.append(
             "⚠️ Form is moderately negative (TSB < "
-            f"{cfg.constraints.min_tsb}). Decrease today’s intensity or overall volume to allow recovery."
-        )
+            f"{cfg.constraints.min_tsb}). "
+            "Decrease today's intensity or overall volume to allow recovery.")
     elif tsb > 10:
         recommendations.append(
-            "✅ Form is highly positive (TSB > 10). Excellent day for intensity or "
-            "longer ride."
+            "✅ Form is highly positive (TSB > 10). "
+            "Excellent day for intensity or longer ride."
         )
 
     # 3. CTL Trend (Optional Extension Later)
@@ -75,7 +76,6 @@ def decide_adjustment(
         recommendations.append(
             f"⚠️ HRV balance is low (<{cfg.constraints.min_readiness}). Favor recovery."
         )
-
 
     # Default recommendation
     if not recommendations:

@@ -1,30 +1,44 @@
+"""
+Tour Coach - Core module for the Lanterne Rouge training plan application.
+
+This module provides the main functionality for generating training recommendations
+based on athlete data from Strava and wellness data from Oura.
+"""
+
 # This script generates a daily update for the Tour Coach program, including
 # workout plans, readiness scores, and recommendations based on the user's
 # data from Oura and Strava.
 
-from dotenv import load_dotenv
-from lanterne_rouge.mission_config import MissionConfig, load_config, bootstrap
-import sys
 import os
-from pathlib import Path
-from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb, CTL_TC, ATL_TC
-from lanterne_rouge.reasoner import decide_adjustment
-from lanterne_rouge.plan_generator import generate_workout_plan
-from lanterne_rouge.peloton_matcher import match_peloton_class
-from lanterne_rouge.memory_bus import load_memory, log_observation, log_decision, log_reflection
-from lanterne_rouge.ai_clients import generate_workout_adjustment
 from datetime import datetime
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+from lanterne_rouge.ai_clients import generate_workout_adjustment
+from lanterne_rouge.memory_bus import (
+    load_memory,
+    log_decision,
+    log_observation,
+    log_reflection,
+)
+from lanterne_rouge.mission_config import MissionConfig, bootstrap
+from lanterne_rouge.monitor import ATL_TC, CTL_TC, get_ctl_atl_tsb, get_oura_readiness
+from lanterne_rouge.peloton_matcher import match_peloton_class
+from lanterne_rouge.plan_generator import generate_workout_plan
+from lanterne_rouge.reasoner import decide_adjustment
 
 load_dotenv()
 
 
 # Helper function to get the agent version
 def get_version():
+    """Get the current version of the Lanterne Rouge agent from the VERSION file."""
     try:
-        with open("VERSION", "r") as f:
+        with open(Path(__file__).resolve().parents[2] / "VERSION", encoding="utf-8") as f:
             return f.read().strip()
     except FileNotFoundError:
-        return "Unknown"
+        return "0.0.0-dev"
 
 
 # Helper: first non-empty line from list of strings
@@ -34,7 +48,6 @@ def first_line(lines: list[str]) -> str | None:
         if ln.strip():
             return ln.strip().lstrip("- ").strip()
     return None
-
 
 
 def run(cfg: MissionConfig | None = None):
@@ -48,7 +61,7 @@ def run(cfg: MissionConfig | None = None):
 
     # 1. Pull today's data
     readiness_score, hrv_balance, readiness_day = get_oura_readiness()
-    
+
     # Get CTL, ATL, TSB with additional debug output
     print("\n===== BANNISTER MODEL DEBUG =====")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d')}")
@@ -151,7 +164,7 @@ def run(cfg: MissionConfig | None = None):
     os.makedirs("output", exist_ok=True)
 
     # Write to file
-    with open("output/tour_coach_update.txt", "w") as f:
+    with open("output/tour_coach_update.txt", "w", encoding="utf-8") as f:
         f.write(summary)
 
     # Log reflection (summary) to memory

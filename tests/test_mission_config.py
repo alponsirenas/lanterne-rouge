@@ -1,14 +1,21 @@
-from datetime import date
-from lanterne_rouge.reasoner import decide_adjustment
-import sqlite3
+"""Tests for the mission_config module functionality."""
 import json
+import os
+import sqlite3
+import sys
+from datetime import date
+
+# Add the src directory to Python path to find lanterne_rouge package
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from lanterne_rouge.mission_config import (
+    Constraints,
     MissionConfig,
     Targets,
-    Constraints,
     cache_to_sqlite,
     load_config,
 )
+from lanterne_rouge.reasoner import decide_adjustment
 
 # Dummy mission config for tests
 _dummy_cfg = MissionConfig(
@@ -32,16 +39,18 @@ _dummy_cfg = MissionConfig(
 
 
 def test_high_readiness_good_tsb():
+    """Test that high readiness and positive TSB leads to increase recommendations."""
     readiness = 70
     ctl = 80
     atl = 50
     tsb = 20
     adj = decide_adjustment(readiness, {}, ctl, atl, tsb, _dummy_cfg)
-    # expect an “increase” style recommendation in the returned list
+    # expect an "increase" style recommendation in the returned list
     assert any("increase" in m.lower() or "positive" in m.lower() for m in adj)
 
 
 def test_low_readiness_warning():
+    """Test that low readiness leads to decrease/reduce recommendations."""
     readiness = 50
     ctl = 80
     atl = 50
@@ -52,6 +61,7 @@ def test_low_readiness_warning():
 
 
 def test_high_fatigue_warning():
+    """Test that high fatigue (negative TSB) leads to decrease/reduce recommendations."""
     readiness = 70
     ctl = 80
     atl = 70
@@ -62,6 +72,7 @@ def test_high_fatigue_warning():
 
 
 def test_cache_to_sqlite(tmp_path):
+    """Test the sqlite caching functionality for mission config."""
     db_file = tmp_path / "mc.db"
     cache_to_sqlite(_dummy_cfg, db_file)
 
@@ -77,6 +88,7 @@ def test_cache_to_sqlite(tmp_path):
 
 
 def test_load_and_cache_mission_config(tmp_path):
+    """Test loading and caching a mission config from a TOML file."""
     # Create a temporary mission config file
     mission_config_content = """
     id = "test"

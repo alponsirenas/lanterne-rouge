@@ -1,6 +1,9 @@
+"""Tests for the reasoner module functionality."""
+
 from datetime import date
+
+from lanterne_rouge.mission_config import Constraints, MissionConfig, Targets
 from lanterne_rouge.reasoner import decide_adjustment
-from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
 # Dummy mission config for tests
 _dummy_cfg = MissionConfig(
@@ -24,36 +27,48 @@ _dummy_cfg = MissionConfig(
 
 
 def test_low_readiness_triggers_warning():
+    """Test that low readiness triggers appropriate warning messages."""
     messages = decide_adjustment(50, {"hrv_balance": 80}, 60, 55, 0, _dummy_cfg)
     assert any("Readiness is low" in m for m in messages)
 
 
 def test_very_negative_tsb_recommends_recovery():
+    """Test that very negative TSB recommends recovery."""
     messages = decide_adjustment(80, {}, 60, 70, -25, _dummy_cfg)
     assert any("Form is very negative" in m for m in messages)
 
 
 def test_moderately_negative_tsb_reduces_intensity():
+    """Test that moderately negative TSB recommends reducing intensity."""
     messages = decide_adjustment(80, {}, 60, 70, -15, _dummy_cfg)
     assert any("Form is moderately negative" in m for m in messages)
 
 
 def test_positive_tsb_encourages_intensity():
+    """Test that positive TSB encourages intensity."""
     messages = decide_adjustment(80, {}, 70, 60, 15, _dummy_cfg)
     assert any("Form is highly positive" in m for m in messages)
 
 
 def test_default_message_when_all_good():
+    """Test that default message is returned when all metrics look good."""
     messages = decide_adjustment(80, {"hrv_balance": 90}, 60, 60, 0, _dummy_cfg)
     assert messages == ["✅ All metrics look good. Proceed with planned workout."]
 
 
 def test_decide_adjustment_uses_mission_config():
-    messages = decide_adjustment(80, {"hrv_balance": 90}, 60, 60, 0, _dummy_cfg)
-    assert messages == ["✅ All metrics look good. Proceed with planned workout."]
+    """Test that decide_adjustment uses mission config constraints."""
+    mock_cfg = _dummy_cfg._replace(constraints=_dummy_cfg.constraints._replace(min_readiness=90))
+    messages = decide_adjustment(80, {}, 60, 60, 0, mock_cfg)
+    assert any("Readiness is below the threshold" in m for m in messages)
 
 
 def test_multiple_assertions():
+    """Test for multiple assertions in the messages based on different metrics."""
+    # Low readiness and high fatigue should trigger multiple warnings
+    messages = decide_adjustment(60, {}, 60, 70, -20, _dummy_cfg)
+    assert len(messages) > 1, "Should have multiple warnings"
+
     messages = decide_adjustment(50, {"hrv_balance": 60}, 30, 40, -20, _dummy_cfg)
     assert any("Readiness is low" in m for m in messages)
     assert any("Form is very negative" in m for m in messages)

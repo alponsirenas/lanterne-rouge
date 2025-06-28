@@ -15,8 +15,8 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-from lanterne_rouge.strava_api import strava_get
 from lanterne_rouge.mission_config import get_athlete_ftp
+from lanterne_rouge.strava_api import strava_get
 
 # --------------------------------------------------------------------------- #
 #  Environment
@@ -163,7 +163,7 @@ def _calculate_power_tss(activity: dict) -> float:
     return tss
 
 
-def _process_activities_to_daily_tss(activities, start_day):
+def _calc_daily_tss(activities, start_day):
     """
     Process activities to compute daily TSS (Training Stress Score).
 
@@ -253,7 +253,7 @@ def _calculate_bannister_values(tss_series, date_range):
         daily_values.append((date_range[i], new_ctl, new_atl))
 
         # Log every 10 days and the last 5 days for debugging
-        if i % 10 == 0 or i >= len(tss_series) - 5:
+        if not i % 10 or i >= len(tss_series) - 5:
             print(
                 f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, "
                 f"CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})"
@@ -296,7 +296,7 @@ def get_ctl_atl_tsb(days: int = 90):
     # --------------------------------------------------------------------- #
     # 1.  Aggregate TSS per local day
     # --------------------------------------------------------------------- #
-    daily_tss = _process_activities_to_daily_tss(activities, start_day)
+    daily_tss = _calc_daily_tss(activities, start_day)
 
     # Create a sorted list of dates from start_day to today
     date_range = [

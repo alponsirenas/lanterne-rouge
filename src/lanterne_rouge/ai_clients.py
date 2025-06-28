@@ -1,13 +1,14 @@
-
 """
 AI client interfaces for Lanterne Rouge.
 
 This module provides utilities for interacting with AI models like OpenAI,
 adapting responses for workout adjustments, and handling structured output.
 """
-import os
 import json
+import os
+
 import openai
+
 from lanterne_rouge.memory_bus import fetch_recent_memories
 
 # Models that natively support the `response_format={"type": "json_object"}` parameter
@@ -23,6 +24,7 @@ _MODELS_WITH_JSON_SUPPORT = {
     "gpt-4o-2024-05-13",
 }
 
+
 def _model_supports_json(model: str) -> bool:
     """
     Return True if the specified model supports the structured JSON response
@@ -30,9 +32,10 @@ def _model_supports_json(model: str) -> bool:
     accepted by the model to avoid HTTP 400 errors.
     """
     # Check if model is in our explicit list or has specific prefixes that indicate JSON support
-    return (model in _MODELS_WITH_JSON_SUPPORT or 
-            model.endswith("-json") or 
+    return (model in _MODELS_WITH_JSON_SUPPORT or
+            model.endswith("-json") or
             model.startswith(("gpt-4-turbo", "gpt-4o")))
+
 
 # Initialize OpenAI API key from environment
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -64,12 +67,14 @@ def generate_workout_adjustment(
             default from ``call_llm`` will be used.
 
     Returns:
-        List of GPT-written adjustment recommendation lines. Each line has leading hyphens and whitespace stripped.
+        List of GPT-written adjustment recommendation lines.
+        Each line has leading hyphens and whitespace stripped.
     """
     # Build a structured 'plan' dict out of your mission config
     try:
         current_plan = mission_cfg.dict()
-    except Exception:
+    except (AttributeError, TypeError) as e:
+        print(f"Warning: Could not convert mission config to dict: {e}")
         current_plan = {}
 
     # Aggregate all metrics together
@@ -114,12 +119,12 @@ def generate_workout_adjustment(
     try:
         # Always call with force_json=False to avoid API compatibility issues
         raw_response = call_llm(messages, model=model, force_json=False)
-        
+
         # Try to parse the response - first check if it's a bullet list
         if raw_response.lstrip().startswith("-"):
             lines = parse_llm_list(raw_response)
             return lines
-            
+
         # Then try to parse as JSON if it looks like JSON
         if raw_response.strip().startswith("{") and raw_response.strip().endswith("}"):
             try:
@@ -127,21 +132,22 @@ def generate_workout_adjustment(
                 if isinstance(parsed, list):
                     lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
                     return lines
-                elif isinstance(parsed, dict) and "recommendations" in parsed:
+                if isinstance(parsed, dict) and "recommendations" in parsed:
                     if isinstance(parsed["recommendations"], list):
-                        lines = [str(line).strip("- \t") for line in parsed["recommendations"] if str(line).strip()]
+                        lines = [str(line).strip("- \t")
+                                 for line in parsed["recommendations"] if str(line).strip()]
                         return lines
             except json.JSONDecodeError:
                 pass  # Failed to parse as JSON, continue to fallback
-                
+
         # Try generic parsing of any free-text response
         lines = parse_llm_list(raw_response)
         if lines:
             return lines
-            
+
         # If all else fails, provide a generic recommendation
         return ["Plan looks good. Continue with scheduled workout."]
-        
+
     except Exception as e:
         print(f"Error generating workout adjustment: {e}")
         return ["Unable to generate recommendations. Proceed with scheduled workout."]
@@ -189,7 +195,8 @@ def call_llm(
     """
     # Resolve model
     if model is None:
-        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")  # Default to a model that can handle JSON
+        # Default to a model that can handle JSON
+        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
 
     # Set up request parameters
     response_kwargs = {
@@ -207,16 +214,16 @@ def call_llm(
         # Use the new OpenAI client API
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(**response_kwargs)
-        
+
         # Get the content from the response
         content = response.choices[0].message.content
-        
+
         # Handle empty responses
         if content is None or content.strip() == "":
             return "- No valid response received from the model."
-        
+
         return content
-    
+
     except Exception as e:
         print(f"❌ OpenAI request failed: {e}")
         return "- Error: Could not get a response from the LLM."

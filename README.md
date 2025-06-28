@@ -13,7 +13,36 @@ Lanterne Rouge integrates data from your Oura Ring and Strava to understand your
 By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
 
 All observations and decisions are stored in a lightweight SQLite database (`memory/lanterne.db`).
-This memory lets the LLM‑powered planner reference recent history when crafting each day’s workout.
+This memory lets the LLM‑powered planner reference recent history when crafting each day's workout.
+
+## Code Quality and Development
+
+Lanterne Rouge follows Python best practices and uses linting to maintain code quality. Our initial pylint score of 6.86/10 has been improved to 8.57/10, and we continue to work on further enhancements.
+
+### Linting Workflow
+
+1. **Auto-fix common linting issues:**
+   ```bash
+   python scripts/fix_lint_issues.py
+   ```
+   This script handles:
+   - Trailing whitespace
+   - Import order
+   - Line length
+   - Unused imports
+   - f-strings without interpolation
+   - Missing encoding in file operations
+
+2. **Check for remaining issues:**
+   ```bash
+   pylint src/ scripts/ tests/
+   ```
+
+3. **For detailed linting guidance:**
+   See [LINTING_GUIDELINES.md](./LINTING_GUIDELINES.md) for comprehensive instructions on fixing common issues and maintaining code quality.
+
+3. **Read the linting guidelines:**
+   See [LINTING_GUIDELINES.md](LINTING_GUIDELINES.md) for details on addressing remaining issues.
 
 ## Getting Started
 

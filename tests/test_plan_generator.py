@@ -1,12 +1,18 @@
-import pytest
-from datetime import date
-from unittest.mock import patch, MagicMock
-import openai
+"""Tests for the plan_generator module functionality."""
 import os
+import sys
+from datetime import date
+from unittest.mock import MagicMock, patch
+
+import openai
+import pytest
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from lanterne_rouge.plan_generator import generate_workout_plan
+from lanterne_rouge.mission_config import Constraints, MissionConfig, Targets
 
 os.environ["OPENAI_API_KEY"] = "test-key"
-from lanterne_rouge.plan_generator import generate_workout_plan
-from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
 
 # Dummy mission config for tests
 _dummy_cfg = MissionConfig(
@@ -28,14 +34,16 @@ _dummy_cfg = MissionConfig(
     ),
 )
 
+
 @patch("lanterne_rouge.plan_generator.openai.OpenAI")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_openai_client):
+    """Test the happy path for generate_workout_plan with valid OpenAI response."""
     # Setup the mock OpenAI client
     mock_client = MagicMock()
     mock_openai_client.return_value = mock_client
-    
+
     # Create mock completion response
     mock_completion = MagicMock()
     mock_choice = MagicMock()
@@ -44,10 +52,10 @@ def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_ope
     mock_choice.message = mock_message
     mock_completion.choices = [mock_choice]
     mock_client.chat.completions.create.return_value = mock_completion
-    
+
     # Run test
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
-    
+    plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
+
     # Assertions
     assert isinstance(plan, dict)
     assert "workouts" in plan
@@ -59,26 +67,30 @@ def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_ope
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_openai_client):
+    """Test handling of OpenAI errors in generate_workout_plan."""
     # Setup the mock OpenAI client to raise an error
     mock_client = MagicMock()
     mock_openai_client.return_value = mock_client
     mock_client.chat.completions.create.side_effect = openai.OpenAIError("Test error")
-    
+
     # Run test
     plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
-    
+
     # Assertions
     assert plan == {}
+
 
 @patch("lanterne_rouge.plan_generator.print")
 @patch("lanterne_rouge.plan_generator.openai.OpenAI")
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, mock_openai_client, mock_print):
+def test_generate_workout_plan_prints_messages(
+        mock_readiness, mock_ctl_atl, mock_openai_client, mock_print):
+    """Test that generate_workout_plan prints appropriate messages."""
     # Setup the mock OpenAI client
     mock_client = MagicMock()
     mock_openai_client.return_value = mock_client
-    
+
     # Create mock completion response
     mock_completion = MagicMock()
     mock_choice = MagicMock()
@@ -87,10 +99,10 @@ def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, moc
     mock_choice.message = mock_message
     mock_completion.choices = [mock_choice]
     mock_client.chat.completions.create.return_value = mock_completion
-    
+
     # Run test
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
-    
+    plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
+
     # Assertions
     assert isinstance(plan, dict)
     assert plan["workouts"] == ["test_plan"]
@@ -103,10 +115,11 @@ def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, moc
 @patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
 @patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
 def test_generate_workout_plan_missing_workouts(mock_readiness, mock_ctl_atl, mock_openai_client):
+    """Test that generate_workout_plan raises ValueError when workouts key is missing."""
     # Setup the mock OpenAI client
     mock_client = MagicMock()
     mock_openai_client.return_value = mock_client
-    
+
     # Create mock completion response with missing required keys
     mock_completion = MagicMock()
     mock_choice = MagicMock()
@@ -115,7 +128,7 @@ def test_generate_workout_plan_missing_workouts(mock_readiness, mock_ctl_atl, mo
     mock_choice.message = mock_message
     mock_completion.choices = [mock_choice]
     mock_client.chat.completions.create.return_value = mock_completion
-    
+
     # Run test and check that it raises a ValueError
     with pytest.raises(ValueError):
         generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})

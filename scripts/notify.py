@@ -1,7 +1,8 @@
-import smtplib
-from email.mime.text import MIMEText
 import os
 import re
+import smtplib
+from email.mime.text import MIMEText
+
 from dotenv import load_dotenv
 
 # Optional: Twilio fallback
@@ -13,6 +14,7 @@ except ImportError:
 
 load_dotenv()
 
+
 def send_email(subject, body, to_email):
     msg = MIMEText(body)
     msg['Subject'] = subject
@@ -23,6 +25,7 @@ def send_email(subject, body, to_email):
         server.login(os.getenv("EMAIL_ADDRESS"), os.getenv("EMAIL_PASS"))
         server.send_message(msg)
         print("Email sent successfully")
+
 
 def send_sms_via_email(body: str, to_number: str) -> None:
     """
@@ -55,6 +58,7 @@ def send_sms_via_email(body: str, to_number: str) -> None:
     send_email(subject, body, to_number_email)
     print("SMS sent successfully")
 
+
 def send_sms_via_twilio(body, to_number):
     if not TWILIO_AVAILABLE:
         print("Twilio not installed. SMS not sent.")
@@ -67,6 +71,7 @@ def send_sms_via_twilio(body, to_number):
     )
     print("SMS sent successfully")
     return message.sid
+
 
 def send_sms(body, to_number, use_twilio=False):
     if use_twilio:

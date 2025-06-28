@@ -1,11 +1,12 @@
 """Plan generator for Lanterne Rouge workouts"""
-import os
 import json
 import logging
+import os
+
 import openai
 
 from lanterne_rouge.mission_config import MissionConfig
-from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
+from lanterne_rouge.monitor import get_ctl_atl_tsb, get_oura_readiness
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +14,11 @@ logger = logging.getLogger(__name__)
 def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
     """
     Use OpenAI to generate today's workout plan based on mission and current metrics.
-    
+
     Args:
         mission_cfg: The mission configuration
         memory: Dictionary containing memory entries
-        
+
     Returns:
         A dict conforming to workout_plan.schema.json.
     """
@@ -33,7 +34,8 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
         f"Mission configuration:\n{mission_cfg.model_dump_json()}\n"
         f"Recent memory entries:\n{json.dumps(memory)}\n"
         f"Current metrics:\n{json.dumps(metrics)}\n"
-        "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object. "
+        "Generate a workout_plan JSON matching workout_plan.schema.json. "
+        "Return only the JSON object. "
         "You MUST reply with a JSON object that contains a 'today' object and an "
         "'adjustments' array as required by the schema. "
         "The schema requires: today.type, today.duration_minutes, today.intensity "
@@ -45,7 +47,7 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
     try:
         # Initialize OpenAI client
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        
+
         # Define response kwargs with a model that properly supports JSON generation
         model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
         response_kwargs = {
@@ -56,22 +58,23 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
             ],
             "temperature": 0.7,
         }
-        
+
         # Only add response_format for compatible models
         # Re-using the same logic as in ai_clients.py for model compatibility
         is_json_compatible = (
-            model.startswith(("gpt-4-turbo", "gpt-4o", "gpt-4-1106", "gpt-4-0125")) 
+            model.startswith(("gpt-4-turbo", "gpt-4o", "gpt-4-1106", "gpt-4-0125"))
             or model in ("gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125")
         )
         if is_json_compatible and not model.startswith("gpt-4-vision"):
             response_kwargs["response_format"] = {"type": "json_object"}
-            
+
         resp = client.chat.completions.create(**response_kwargs)
         # Parse and return
         plan = json.loads(resp.choices[0].message.content)
         # Check for required keys based on the test expectations
         if ("today" not in plan or "adjustments" not in plan) and "workouts" not in plan:
-            raise ValueError("LLM response missing required keys ('today', 'adjustments', or 'workouts')")
+            raise ValueError(
+                "LLM response missing required keys ('today', 'adjustments', or 'workouts')")
         print("Workout plan generated successfully")
         return plan
     except (openai.OpenAIError, openai.APIError, openai.APIConnectionError) as e:  # pragma: no cover - depends on API
@@ -84,12 +87,13 @@ def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
                 # Access the mock response directly for testing
                 plan = json.loads(mock_resp.choices[0].message.content)
                 return plan
-        except (AttributeError, IndexError, json.JSONDecodeError):
+        except (AttributeError, IndexError, json.JSONDecodeError) as err:
             # More specific exception handling
+            logger.debug("Failed to process mock response: %s", err)
             pass
         return {}
     except ValueError:
         raise
-    except Exception as e:  # Fallback for unexpected issues
-        logger.error("❌ OpenAI request failed: %s", e)
+    except (KeyError, TypeError) as e:  # More specific exceptions for unexpected issues
+        logger.error("❌ OpenAI request failed with data error: %s", e)
         return {}

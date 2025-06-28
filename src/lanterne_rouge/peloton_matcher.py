@@ -1,4 +1,8 @@
 # peloton-matcher.py
+"""
+Utility module to match workout types to appropriate Peloton classes.
+Provides mapping between structured workout types and suggested Peloton classes.
+"""
 
 def match_peloton_class(workout_type):
     """

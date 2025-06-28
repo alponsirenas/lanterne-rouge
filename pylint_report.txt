@@ -1,0 +1,905 @@
+************* Module test_mission_config
+tests/test_mission_config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_mission_config.py:34:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:44:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:54:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:64:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:79:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_mission_config.py:3:0: C0411: standard import "sqlite3" should be placed before first party import "lanterne_rouge.reasoner.decide_adjustment"  (wrong-import-order)
+tests/test_mission_config.py:4:0: C0411: standard import "json" should be placed before first party import "lanterne_rouge.reasoner.decide_adjustment"  (wrong-import-order)
+************* Module test_bannister
+tests/test_bannister.py:25:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:29:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:37:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:40:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:46:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:64:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:69:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:73:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:75:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:96:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:99:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:106:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:109:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:116:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:119:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:127:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:131:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:135:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:138:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:141:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:145:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister.py:150:0: C0304: Final newline missing (missing-final-newline)
+tests/test_bannister.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_bannister.py:80:0: R0914: Too many local variables (25/15) (too-many-locals)
+tests/test_bannister.py:2:0: C0411: standard import "os" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:3:0: C0411: standard import "json" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:4:0: C0411: standard import "math" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:5:0: C0411: standard import "datetime" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:6:0: C0411: standard import "datetime.datetime" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:7:0: C0411: standard import "pathlib.Path" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister.py:3:0: W0611: Unused import json (unused-import)
+tests/test_bannister.py:4:0: W0611: Unused import math (unused-import)
+tests/test_bannister.py:5:0: W0611: Unused import datetime (unused-import)
+tests/test_bannister.py:6:0: W0611: Unused timedelta imported from datetime (unused-import)
+tests/test_bannister.py:10:0: W0611: Unused CTL_TC imported from src.lanterne_rouge.monitor (unused-import)
+tests/test_bannister.py:10:0: W0611: Unused ATL_TC imported from src.lanterne_rouge.monitor (unused-import)
+************* Module test_bannister_fix
+tests/test_bannister_fix.py:29:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:33:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:41:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:44:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:51:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:55:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:57:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:63:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:67:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:76:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:82:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:89:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:92:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:101:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:109:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:114:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:116:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:130:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:134:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:146:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:151:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:156:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:160:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:165:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:170:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_bannister_fix.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_bannister_fix.py:15:0: R0914: Too many local variables (23/15) (too-many-locals)
+tests/test_bannister_fix.py:15:0: R0912: Too many branches (17/12) (too-many-branches)
+tests/test_bannister_fix.py:15:0: R0915: Too many statements (56/50) (too-many-statements)
+tests/test_bannister_fix.py:171:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+tests/test_bannister_fix.py:2:0: C0411: standard import "os" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:3:0: C0411: standard import "json" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:4:0: C0411: standard import "math" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:5:0: C0411: standard import "datetime" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:6:0: C0411: standard import "datetime.datetime" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:7:0: C0411: standard import "pathlib.Path" should be placed before third party import "pandas" (wrong-import-order)
+tests/test_bannister_fix.py:3:0: W0611: Unused import json (unused-import)
+************* Module test_ai_clients
+tests/test_ai_clients.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_ai_clients.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:22:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:39:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_ai_clients.py:2:0: C0411: standard import "unittest.mock.MagicMock" should be placed before third party import "pytest" (wrong-import-order)
+tests/test_ai_clients.py:1:0: W0611: Unused import pytest (unused-import)
+************* Module test_reasoner
+tests/test_reasoner.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_reasoner.py:26:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:31:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:36:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:41:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:46:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:51:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_reasoner.py:56:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module test_plan_generator
+tests/test_plan_generator.py:38:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:47:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:66:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:69:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:77:0: C0301: Line too long (109/100) (line-too-long)
+tests/test_plan_generator.py:81:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:90:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:109:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:118:0: C0303: Trailing whitespace (trailing-whitespace)
+tests/test_plan_generator.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+tests/test_plan_generator.py:8:0: C0413: Import "from lanterne_rouge.plan_generator import generate_workout_plan" should be placed at the top of the module (wrong-import-position)
+tests/test_plan_generator.py:9:0: C0413: Import "from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints" should be placed at the top of the module (wrong-import-position)
+tests/test_plan_generator.py:34:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:34:42: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:34:58: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:61:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:61:44: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:61:60: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:77:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:77:47: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:77:63: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:105:0: C0116: Missing function or method docstring (missing-function-docstring)
+tests/test_plan_generator.py:105:48: W0613: Unused argument 'mock_readiness' (unused-argument)
+tests/test_plan_generator.py:105:64: W0613: Unused argument 'mock_ctl_atl' (unused-argument)
+tests/test_plan_generator.py:2:0: C0411: standard import "datetime.date" should be placed before third party import "pytest" (wrong-import-order)
+tests/test_plan_generator.py:3:0: C0411: standard import "unittest.mock.patch" should be placed before third party import "pytest" (wrong-import-order)
+tests/test_plan_generator.py:5:0: C0411: standard import "os" should be placed before third party imports "pytest", "openai" (wrong-import-order)
+************* Module scripts.test_power_tss
+scripts/test_power_tss.py:28:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:31:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:35:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:39:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:44:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:46:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:49:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:53:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:63:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:67:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:74:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:88:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:93:0: C0301: Line too long (163/100) (line-too-long)
+scripts/test_power_tss.py:95:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:97:0: C0301: Line too long (104/100) (line-too-long)
+scripts/test_power_tss.py:99:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_power_tss.py:100:0: C0301: Line too long (247/100) (line-too-long)
+scripts/test_power_tss.py:17:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/test_power_tss.py:18:0: C0413: Import "from lanterne_rouge.monitor import _calculate_power_tss" should be placed at the top of the module (wrong-import-position)
+scripts/test_power_tss.py:19:0: C0413: Import "from lanterne_rouge.mission_config import get_athlete_ftp" should be placed at the top of the module (wrong-import-position)
+scripts/test_power_tss.py:21:0: R0914: Too many local variables (17/15) (too-many-locals)
+scripts/test_power_tss.py:27:42: W1508: os.getenv default type is builtins.int. Expected str or None. (invalid-envvar-default)
+scripts/test_power_tss.py:33:4: C0415: Import outside toplevel (subprocess.run) (import-outside-toplevel)
+scripts/test_power_tss.py:34:4: W1510: 'subprocess.run' used without explicitly defining the value for 'check'. (subprocess-run-check)
+scripts/test_power_tss.py:8:0: W0611: Unused import json (unused-import)
+scripts/test_power_tss.py:9:0: W0611: Unused import csv (unused-import)
+scripts/test_power_tss.py:10:0: W0611: Unused Path imported from pathlib (unused-import)
+scripts/test_power_tss.py:11:0: W0611: Unused datetime imported from datetime (unused-import)
+scripts/test_power_tss.py:11:0: W0611: Unused timedelta imported from datetime (unused-import)
+scripts/test_power_tss.py:12:0: W0611: Unused pandas imported as pd (unused-import)
+************* Module scripts.compare_data_sources
+scripts/compare_data_sources.py:30:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:36:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:38:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:45:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:49:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:58:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:61:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:67:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:74:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:79:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:83:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:97:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:103:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:107:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:110:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:116:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:118:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:120:0: C0301: Line too long (115/100) (line-too-long)
+scripts/compare_data_sources.py:124:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:127:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:130:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:135:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:141:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:143:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:147:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:149:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:151:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:155:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:159:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:161:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:164:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:171:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:176:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:181:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:183:0: C0301: Line too long (114/100) (line-too-long)
+scripts/compare_data_sources.py:184:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_data_sources.py:20:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/compare_data_sources.py:21:0: C0413: Import "from lanterne_rouge.monitor import CTL_TC, ATL_TC" should be placed at the top of the module (wrong-import-position)
+scripts/compare_data_sources.py:55:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/compare_data_sources.py:62:0: R0914: Too many local variables (19/15) (too-many-locals)
+scripts/compare_data_sources.py:94:12: W0702: No exception type(s) specified (bare-except)
+scripts/compare_data_sources.py:62:0: R0912: Too many branches (15/12) (too-many-branches)
+scripts/compare_data_sources.py:14:0: C0411: standard import "datetime.datetime" should be placed before third party import "pandas" (wrong-import-order)
+scripts/compare_data_sources.py:15:0: C0411: standard import "pathlib.Path" should be placed before third party import "pandas" (wrong-import-order)
+************* Module scripts.compare_db_vs_calc
+scripts/compare_db_vs_calc.py:31:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:34:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:37:0: C0301: Line too long (101/100) (line-too-long)
+scripts/compare_db_vs_calc.py:40:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:44:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:48:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:62:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:64:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:70:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:75:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:79:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:96:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:99:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:105:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:107:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:110:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:118:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:124:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:126:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:131:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:137:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:142:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:144:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:149:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:152:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:159:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/compare_db_vs_calc.py:18:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/compare_db_vs_calc.py:19:0: C0413: Import "from lanterne_rouge.monitor import CTL_TC, ATL_TC" should be placed at the top of the module (wrong-import-position)
+scripts/compare_db_vs_calc.py:53:0: R0914: Too many local variables (17/15) (too-many-locals)
+scripts/compare_db_vs_calc.py:90:12: W0702: No exception type(s) specified (bare-except)
+scripts/compare_db_vs_calc.py:127:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+************* Module scripts.update_athlete_ftp
+scripts/update_athlete_ftp.py:30:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:35:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:42:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:45:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:51:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:62:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:73:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:75:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/update_athlete_ftp.py:22:0: C0413: Import "from lanterne_rouge.mission_config import get_current_mission, MissionConfig" should be placed at the top of the module (wrong-import-position)
+scripts/update_athlete_ftp.py:63:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/update_athlete_ftp.py:22:0: W0611: Unused get_current_mission imported from lanterne_rouge.mission_config (unused-import)
+scripts/update_athlete_ftp.py:22:0: W0611: Unused MissionConfig imported from lanterne_rouge.mission_config (unused-import)
+************* Module scripts.__init__
+scripts/__init__.py:1:0: C0305: Trailing newlines (trailing-newlines)
+************* Module scripts.notify
+scripts/notify.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/notify.py:16:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:58:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:58:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+scripts/notify.py:71:0: C0116: Missing function or method docstring (missing-function-docstring)
+scripts/notify.py:72:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+************* Module scripts.manage_memory_db
+scripts/manage_memory_db.py:23:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:33:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:38:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:42:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:44:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:47:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:62:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:67:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:69:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:72:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:81:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:102:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:106:0: C0301: Line too long (105/100) (line-too-long)
+scripts/manage_memory_db.py:109:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:117:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:125:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:132:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:135:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:143:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:145:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:150:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:153:61: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:155:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:161:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:163:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/manage_memory_db.py:60:12: W0702: No exception type(s) specified (bare-except)
+scripts/manage_memory_db.py:99:10: W0612: Unused variable 'db_path' (unused-variable)
+scripts/manage_memory_db.py:141:4: C0415: Import outside toplevel (argparse) (import-outside-toplevel)
+scripts/manage_memory_db.py:11:0: W0611: Unused datetime imported from datetime (unused-import)
+************* Module scripts.daily_run
+scripts/daily_run.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/daily_run.py:8:0: C0413: Import "from scripts.run_tour_coach import run_daily_logic" should be placed at the top of the module (wrong-import-position)
+scripts/daily_run.py:9:0: C0413: Import "from scripts.notify import send_email, send_sms" should be placed at the top of the module (wrong-import-position)
+scripts/daily_run.py:10:0: C0413: Import "from lanterne_rouge.strava_api import refresh_strava_token" should be placed at the top of the module (wrong-import-position)
+scripts/daily_run.py:11:0: C0413: Import "import subprocess" should be placed at the top of the module (wrong-import-position)
+scripts/daily_run.py:15:24: W0621: Redefining name 'summary' from outer scope (line 23) (redefined-outer-name)
+scripts/daily_run.py:32:4: C0103: Constant name "subject" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/daily_run.py:42:4: C0103: Constant name "reasoning_log_path" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/daily_run.py:50:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/daily_run.py:53:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/daily_run.py:11:0: C0411: standard import "subprocess" should be placed before third party import "dotenv.load_dotenv" and first party imports "scripts.run_tour_coach.run_daily_logic", "scripts.notify.send_email", "lanterne_rouge.strava_api.refresh_strava_token"  (wrong-import-order)
+************* Module scripts.update_github_secret
+scripts/update_github_secret.py:24:0: C0301: Line too long (103/100) (line-too-long)
+scripts/update_github_secret.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/update_github_secret.py:18:0: C0103: Constant name "secret_name" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:33:0: C0103: Constant name "url" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:34:7: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+scripts/update_github_secret.py:45:0: C0103: Constant name "put_url" doesn't conform to UPPER_CASE naming style (invalid-name)
+scripts/update_github_secret.py:50:11: W3101: Missing timeout argument for method 'requests.put' can cause your program to hang indefinitely (missing-timeout)
+scripts/update_github_secret.py:6:0: W0611: Unused import binascii (unused-import)
+************* Module scripts.run_tour_coach
+scripts/run_tour_coach.py:30:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/run_tour_coach.py:33:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/run_tour_coach.py:43:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/run_tour_coach.py:48:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/run_tour_coach.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+scripts/run_tour_coach.py:5:0: C0413: Import "from lanterne_rouge import tour_coach" should be placed at the top of the module (wrong-import-position)
+scripts/run_tour_coach.py:6:0: C0413: Import "from pathlib import Path" should be placed at the top of the module (wrong-import-position)
+scripts/run_tour_coach.py:7:0: C0413: Import "from lanterne_rouge.mission_config import bootstrap" should be placed at the top of the module (wrong-import-position)
+scripts/run_tour_coach.py:8:0: C0413: Import "import streamlit as st" should be placed at the top of the module (wrong-import-position)
+scripts/run_tour_coach.py:9:0: C0413: Import "from lanterne_rouge.ai_clients import generate_workout_adjustment" should be placed at the top of the module (wrong-import-position)
+scripts/run_tour_coach.py:6:0: C0411: standard import "pathlib.Path" should be placed before first party import "lanterne_rouge.tour_coach"  (wrong-import-order)
+scripts/run_tour_coach.py:8:0: C0411: third party import "streamlit" should be placed before first party imports "lanterne_rouge.tour_coach", "lanterne_rouge.mission_config.bootstrap"  (wrong-import-order)
+scripts/run_tour_coach.py:9:0: C0412: Imports from package lanterne_rouge are not grouped (ungrouped-imports)
+************* Module scripts.export_strava_for_testing
+scripts/export_strava_for_testing.py:28:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:31:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:35:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:37:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:42:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:48:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:51:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:60:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:65:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:71:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:81:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:89:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:100:0: C0301: Line too long (102/100) (line-too-long)
+scripts/export_strava_for_testing.py:104:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/export_strava_for_testing.py:17:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/export_strava_for_testing.py:30:28: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/export_strava_for_testing.py:53:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+scripts/export_strava_for_testing.py:90:19: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/export_strava_for_testing.py:19:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+scripts/export_strava_for_testing.py:10:0: W0611: Unused import json (unused-import)
+************* Module scripts.test_tsb_parameters
+scripts/test_tsb_parameters.py:26:0: C0301: Line too long (134/100) (line-too-long)
+scripts/test_tsb_parameters.py:27:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:31:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:37:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:42:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:48:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:53:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:63:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:66:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:68:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:74:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:76:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:80:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:89:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:95:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:99:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:106:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:117:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:122:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:127:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:131:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:136:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/test_tsb_parameters.py:22:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/test_tsb_parameters.py:24:0: R0914: Too many local variables (27/15) (too-many-locals)
+scripts/test_tsb_parameters.py:61:12: W0702: No exception type(s) specified (bare-except)
+scripts/test_tsb_parameters.py:24:0: R0912: Too many branches (14/12) (too-many-branches)
+scripts/test_tsb_parameters.py:24:0: R0915: Too many statements (51/50) (too-many-statements)
+scripts/test_tsb_parameters.py:17:0: W0611: Unused Path imported from pathlib (unused-import)
+************* Module scripts.diagnose_bannister
+scripts/diagnose_bannister.py:39:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:52:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:60:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:68:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:71:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:73:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:76:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:80:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:85:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:98:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:102:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:105:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:111:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:113:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:120:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:123:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:129:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:135:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:139:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:141:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:146:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:155:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:160:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:163:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:166:0: C0301: Line too long (111/100) (line-too-long)
+scripts/diagnose_bannister.py:168:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:172:0: C0301: Line too long (109/100) (line-too-long)
+scripts/diagnose_bannister.py:173:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:175:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:178:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:187:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:191:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:195:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:198:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:209:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:214:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:219:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:223:32: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:227:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:234:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:241:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:245:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:248:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:252:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:255:0: C0303: Trailing whitespace (trailing-whitespace)
+scripts/diagnose_bannister.py:19:0: C0413: Import "from lanterne_rouge.monitor import get_ctl_atl_tsb, CTL_TC, ATL_TC, K_CTL, K_ATL" should be placed at the top of the module (wrong-import-position)
+scripts/diagnose_bannister.py:20:0: C0413: Import "from lanterne_rouge.strava_api import strava_get" should be placed at the top of the module (wrong-import-position)
+scripts/diagnose_bannister.py:29:0: R0914: Too many local variables (22/15) (too-many-locals)
+scripts/diagnose_bannister.py:57:15: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/diagnose_bannister.py:95:12: W0702: No exception type(s) specified (bare-except)
+scripts/diagnose_bannister.py:142:10: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/diagnose_bannister.py:29:0: R0912: Too many branches (22/12) (too-many-branches)
+scripts/diagnose_bannister.py:29:0: R0915: Too many statements (66/50) (too-many-statements)
+scripts/diagnose_bannister.py:154:8: W0621: Redefining name 'Path' from outer scope (line 14) (redefined-outer-name)
+scripts/diagnose_bannister.py:176:11: W0718: Catching too general exception Exception (broad-exception-caught)
+scripts/diagnose_bannister.py:153:8: C0415: Import outside toplevel (sqlite3) (import-outside-toplevel)
+scripts/diagnose_bannister.py:154:8: W0404: Reimport 'Path' (imported line 14) (reimported)
+scripts/diagnose_bannister.py:154:8: C0415: Import outside toplevel (pathlib.Path) (import-outside-toplevel)
+scripts/diagnose_bannister.py:230:14: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+scripts/diagnose_bannister.py:13:0: C0411: standard import "datetime.datetime" should be placed before third party import "pandas" (wrong-import-order)
+scripts/diagnose_bannister.py:14:0: C0411: standard import "pathlib.Path" should be placed before third party import "pandas" (wrong-import-order)
+scripts/diagnose_bannister.py:10:0: W0611: Unused import csv (unused-import)
+scripts/diagnose_bannister.py:11:0: W0611: Unused import math (unused-import)
+************* Module src.lanterne_rouge.strava_api
+src/lanterne_rouge/strava_api.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/strava_api.py:23:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/strava_api.py:46:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:88:8: W0621: Redefining name 'tokens' from outer scope (line 24) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:99:45: W0621: Redefining name 'f' from outer scope (line 23) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:75:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:76:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:86:15: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:87:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+src/lanterne_rouge/strava_api.py:99:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/strava_api.py:122:29: W0621: Redefining name 'STRAVA_REFRESH_TOKEN' from outer scope (line 17) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:112:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:118:15: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:122:29: C0103: Variable name "STRAVA_REFRESH_TOKEN" doesn't conform to snake_case naming style (invalid-name)
+src/lanterne_rouge/strava_api.py:124:19: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:122:29: W0612: Unused variable 'STRAVA_REFRESH_TOKEN' (unused-variable)
+src/lanterne_rouge/strava_api.py:156:29: W0621: Redefining name 'STRAVA_REFRESH_TOKEN' from outer scope (line 17) (redefined-outer-name)
+src/lanterne_rouge/strava_api.py:145:4: W0603: Using the global statement (global-statement)
+src/lanterne_rouge/strava_api.py:152:15: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:156:29: C0103: Variable name "STRAVA_REFRESH_TOKEN" doesn't conform to snake_case naming style (invalid-name)
+src/lanterne_rouge/strava_api.py:158:19: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/strava_api.py:156:29: W0612: Unused variable 'STRAVA_REFRESH_TOKEN' (unused-variable)
+src/lanterne_rouge/strava_api.py:4:0: C0411: standard import "os" should be placed before third party import "requests" (wrong-import-order)
+src/lanterne_rouge/strava_api.py:5:0: C0411: standard import "json" should be placed before third party import "requests" (wrong-import-order)
+************* Module intervals_calendar
+src/lanterne_rouge/archive/intervals_calendar.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/archive/intervals_calendar.py:32:0: C0103: Constant name "api_key_with_colon" doesn't conform to UPPER_CASE naming style (invalid-name)
+src/lanterne_rouge/archive/intervals_calendar.py:59:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/archive/intervals_calendar.py:51:19: W3101: Missing timeout argument for method 'requests.get' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/archive/intervals_calendar.py:52:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+src/lanterne_rouge/archive/intervals_calendar.py:100:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/archive/intervals_calendar.py:84:19: W3101: Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely (missing-timeout)
+src/lanterne_rouge/archive/intervals_calendar.py:92:19: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/archive/intervals_calendar.py:4:0: C0411: standard import "os" should be placed before third party import "requests" (wrong-import-order)
+src/lanterne_rouge/archive/intervals_calendar.py:6:0: C0411: standard import "base64" should be placed before third party imports "requests", "dotenv.load_dotenv" (wrong-import-order)
+************* Module src.lanterne_rouge.reasoner
+src/lanterne_rouge/reasoner.py:43:0: C0301: Line too long (109/100) (line-too-long)
+src/lanterne_rouge/reasoner.py:54:0: C0301: Line too long (106/100) (line-too-long)
+src/lanterne_rouge/reasoner.py:10:0: R0913: Too many arguments (7/5) (too-many-arguments)
+src/lanterne_rouge/reasoner.py:10:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+************* Module src.lanterne_rouge.plan_generator
+src/lanterne_rouge/plan_generator.py:36:0: C0301: Line too long (103/100) (line-too-long)
+src/lanterne_rouge/plan_generator.py:48:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/plan_generator.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/plan_generator.py:63:83: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/plan_generator.py:68:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/plan_generator.py:74:0: C0301: Line too long (106/100) (line-too-long)
+src/lanterne_rouge/plan_generator.py:77:0: C0301: Line too long (118/100) (line-too-long)
+src/lanterne_rouge/plan_generator.py:13:0: R0914: Too many local variables (16/15) (too-many-locals)
+src/lanterne_rouge/plan_generator.py:93:11: W0718: Catching too general exception Exception (broad-exception-caught)
+************* Module src.lanterne_rouge.peloton_matcher
+src/lanterne_rouge/peloton_matcher.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module src.lanterne_rouge.__init__
+src/lanterne_rouge/__init__.py:1:0: C0305: Trailing newlines (trailing-newlines)
+************* Module src.lanterne_rouge.tour_coach
+src/lanterne_rouge/tour_coach.py:51:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/tour_coach.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/tour_coach.py:22:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/tour_coach.py:24:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/tour_coach.py:40:0: R0914: Too many local variables (24/15) (too-many-locals)
+src/lanterne_rouge/tour_coach.py:154:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/tour_coach.py:40:0: R0915: Too many statements (52/50) (too-many-statements)
+src/lanterne_rouge/tour_coach.py:7:0: C0411: standard import "sys" should be placed before third party import "dotenv.load_dotenv" and first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+src/lanterne_rouge/tour_coach.py:8:0: C0411: standard import "os" should be placed before third party import "dotenv.load_dotenv" and first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+src/lanterne_rouge/tour_coach.py:9:0: C0411: standard import "pathlib.Path" should be placed before third party import "dotenv.load_dotenv" and first party import "lanterne_rouge.mission_config.MissionConfig"  (wrong-import-order)
+src/lanterne_rouge/tour_coach.py:16:0: C0411: standard import "datetime.datetime" should be placed before third party import "dotenv.load_dotenv" and first party imports "lanterne_rouge.mission_config.MissionConfig", "lanterne_rouge.monitor.get_oura_readiness", "lanterne_rouge.reasoner.decide_adjustment" (...) "lanterne_rouge.peloton_matcher.match_peloton_class", "lanterne_rouge.memory_bus.load_memory", "lanterne_rouge.ai_clients.generate_workout_adjustment"  (wrong-import-order)
+src/lanterne_rouge/tour_coach.py:6:0: W0611: Unused load_config imported from lanterne_rouge.mission_config (unused-import)
+src/lanterne_rouge/tour_coach.py:7:0: W0611: Unused import sys (unused-import)
+************* Module src.lanterne_rouge.memory_bus
+src/lanterne_rouge/memory_bus.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+src/lanterne_rouge/memory_bus.py:27:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:55:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/memory_bus.py:65:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module src.lanterne_rouge.ai_clients
+src/lanterne_rouge/ai_clients.py:33:49: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:34:38: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:67:0: C0301: Line too long (115/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:117:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:122:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:132:0: C0301: Line too long (116/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:136:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:141:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:144:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:179:0: C0301: Line too long (106/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:192:0: C0301: Line too long (107/100) (line-too-long)
+src/lanterne_rouge/ai_clients.py:210:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:213:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:217:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:219:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/ai_clients.py:41:0: R0913: Too many arguments (8/5) (too-many-arguments)
+src/lanterne_rouge/ai_clients.py:41:0: R0917: Too many positional arguments (7/5) (too-many-positional-arguments)
+src/lanterne_rouge/ai_clients.py:41:0: R0914: Too many local variables (18/15) (too-many-locals)
+src/lanterne_rouge/ai_clients.py:72:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/ai_clients.py:145:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/ai_clients.py:127:16: R1705: Unnecessary "elif" after "return", remove the leading "el" from "elif" (no-else-return)
+src/lanterne_rouge/ai_clients.py:220:11: W0718: Catching too general exception Exception (broad-exception-caught)
+************* Module src.lanterne_rouge.mission_config
+src/lanterne_rouge/mission_config.py:58:0: C0301: Line too long (107/100) (line-too-long)
+src/lanterne_rouge/mission_config.py:75:0: C0301: Line too long (122/100) (line-too-long)
+src/lanterne_rouge/mission_config.py:119:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:125:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:128:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:138:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:143:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:149:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:152:0: C0303: Trailing whitespace (trailing-whitespace)
+src/lanterne_rouge/mission_config.py:75:29: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+src/lanterne_rouge/mission_config.py:75:80: R1732: Consider using 'with' for resource-allocating operations (consider-using-with)
+src/lanterne_rouge/mission_config.py:130:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/mission_config.py:137:4: C0415: Import outside toplevel (json) (import-outside-toplevel)
+src/lanterne_rouge/mission_config.py:158:11: W0718: Catching too general exception Exception (broad-exception-caught)
+src/lanterne_rouge/mission_config.py:165:0: C0116: Missing function or method docstring (missing-function-docstring)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_mission_config:[13:34]
+==test_reasoner:[5:26]
+_dummy_cfg = MissionConfig(
+    id="test",
+    athlete_id="strava:0",
+    start_date=date(2025, 1, 1),
+    goal_event="test_event",
+    goal_date=date(2025, 12, 31),
+    targets=Targets(
+        ctl_peak=100,
+        long_ride_minutes=100,
+        stage_climb_minutes=60,
+        threshold_interval_min=20,
+    ),
+    constraints=Constraints(
+        min_readiness=65,
+        max_rhr=999,
+        min_tsb=-10,
+    ),
+)
+
+
+def test_low_readiness_triggers_warning(): (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[67:90]
+==scripts.test_tsb_parameters:[40:61]
+    start_day = today - timedelta(days=days)
+    daily_tss = {}
+
+    # Aggregate TSS per local day
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[75:98]
+==scripts.compare_db_vs_calc:[71:93]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except:
+                print(f"Could not parse date: {start_local}")
+                continue
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[75:94]
+==scripts.test_tsb_parameters:[44:61]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[195:214]
+==test_bannister_fix:[131:151]
+    wellness_df = pd.read_csv(wellness_path)
+    wellness_df['date'] = pd.to_datetime(wellness_df['date'])
+
+    # Filter to target date if specified
+    if target_date:
+        target_dt = pd.to_datetime(target_date)
+        wellness_row = wellness_df[wellness_df['date'] == target_dt]
+        if len(wellness_row) == 0:
+            print(f"No wellness data found for date {target_date}")
+            return
+    else:
+        # Use the most recent date
+        wellness_row = wellness_df.sort_values('date', ascending=False).iloc[0:1]
+        target_date = wellness_row['date'].iloc[0].strftime('%Y-%m-%d')
+
+    # Get intervals.icu values
+    icu_ctl = wellness_row['ctl'].iloc[0]
+    icu_atl = wellness_row['atl'].iloc[0]
+    icu_tsb = icu_ctl - icu_atl
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[68:87]
+==src.lanterne_rouge.monitor:[176:194]
+    daily_tss = {}
+
+    # Aggregate TSS per local day
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Parse date
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[80:98]
+==scripts.diagnose_bannister:[82:99]
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except:
+                print(f"Could not parse date: {start_local}")
+                continue
+
+        # Skip if outside range (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[75:91]
+==src.lanterne_rouge.monitor:[178:194]
+    for act in activities:
+        if not isinstance(act, dict):
+            continue
+
+        start_local = act.get("start_date_local")
+        if not start_local:
+            continue
+
+        # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_bannister:[22:41]
+==test_bannister_fix:[26:45]
+    test_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    data_path = test_dir / activities_file
+
+    try:
+        # Process the activities CSV
+        activities_df = pd.read_csv(data_path)
+
+        # Make sure we have date information
+        if 'start_date_local' in activities_df.columns:
+            activities_df['date'] = pd.to_datetime(activities_df['start_date_local'])
+        elif 'date' not in activities_df.columns:
+            raise ValueError("No date column found in the activities CSV")
+        else:
+            activities_df['date'] = pd.to_datetime(activities_df['date'])
+
+        # Sort by date
+        activities_df = activities_df.sort_values('date')
+
+        # Initialize the CTL and ATL series (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[82:95]
+==scripts.test_tsb_parameters:[50:61]
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            try:
+                act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
+            except: (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[125:143]
+==scripts.compare_db_vs_calc:[108:126]
+    date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
+
+    # Create training load series
+    tss_series = [daily_tss.get(day, 0) for day in date_range]
+
+    # Print recent training loads
+    print("\nRecent daily training loads:")
+    for i in range(-10, 0):
+        print(f"  {date_range[i]}: {tss_series[i]}")
+
+    # Calculate CTL/ATL
+    ctl = atl = 0.0
+    for tss in tss_series:
+        ctl = ctl * (1 - K_CTL) + tss * K_CTL
+        atl = atl * (1 - K_ATL) + tss * K_ATL
+
+    tsb = ctl - atl
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_data_sources:[104:118]
+==scripts.compare_db_vs_calc:[93:108]
+        if act_dt < start_day:
+            continue
+
+        # Get day key
+        day_key = act_dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+        # Prioritize icu_training_load
+        if 'icu_training_load' in act and act['icu_training_load'] is not None:
+            effort = float(act['icu_training_load'])
+        else:
+            effort = act.get("relative_effort") or act.get("suffer_score") or 0
+
+        daily_tss[day_key] = daily_tss.get(day_key, 0) + effort
+ (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.diagnose_bannister:[82:92]
+==src.lanterne_rouge.monitor:[183:194]
+        if not start_local:
+            continue
+
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[35:42]
+==scripts.manage_memory_db:[104:111]
+        cursor = conn.execute(
+            "SELECT timestamp, data FROM memory WHERE type='observation' ORDER BY timestamp DESC LIMIT 1"
+        )
+        row = cursor.fetchone()
+
+        if not row:
+            print("No observation found in the database.") (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[26:35]
+==scripts.manage_memory_db:[18:25]
+    db_path = Path(__file__).resolve().parents[1] / "memory" / "lanterne.db"
+    if not db_path.exists():
+        print(f"Memory database not found at {db_path}")
+        return None
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+
+    # Get the latest observation (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==test_bannister:[75:97]
+==test_bannister_fix:[116:132]
+    except Exception as e:
+        print(f"Error processing activities CSV: {str(e)}")
+        raise
+
+def test_ctl_atl_against_intervals_snapshot():
+    """
+    Test our Bannister implementation against reference values from intervals.icu.
+
+    This test validates that our Bannister model implementation produces CTL/ATL values
+    that closely match the reference values from intervals.icu (stored in wellness CSV).
+
+    Note: Due to differences in implementation details between intervals.icu and our model,
+    we allow for a higher error threshold for ATL which is more volatile (shorter time constant).
+    """
+    # Get the full path to the test data file
+    test_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    wellness_path = test_dir / 'athlete_i296483_wellness.csv'
+
+    # Read reference values from wellness CSV
+    wellness_df = pd.read_csv(wellness_path)
+
+    # Make sure we only work with rows that have valid CTL/ATL values (duplicate-code)
+src/lanterne_rouge/mission_config.py:1:0: R0801: Similar lines in 2 files
+==scripts.compare_db_vs_calc:[91:101]
+==scripts.test_tsb_parameters:[61:70]
+                continue
+
+        if act_dt < start_day:
+            continue
+
+        day_key = act_dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+        # Get TSS with scaling factor
+        if 'icu_training_load' in act and act['icu_training_load'] is not None: (duplicate-code)
+
+-----------------------------------
+Your code has been rated at 6.86/10
+
