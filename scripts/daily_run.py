@@ -7,12 +7,41 @@ import sys
 from dotenv import load_dotenv
 
 # Add the project root directory to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, PROJECT_ROOT)
+print(f"Added Python path: {PROJECT_ROOT}")
 
+# Also add src directory explicitly to ensure module can be found
+SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+if os.path.exists(SRC_DIR):
+    sys.path.insert(0, SRC_DIR)
+    print(f"Added src directory to path: {SRC_DIR}")
+
+print(f"Current Python path: {sys.path}")
+
+# Load environment variables
 load_dotenv()
 
+# Verify lanterne_rouge module can be found
+try:
+    import importlib.util
+    module_path = os.path.join(SRC_DIR, 'lanterne_rouge', '__init__.py')
+    if os.path.exists(module_path):
+        print(f"Found lanterne_rouge module at {module_path}")
+    else:
+        print(f"Warning: lanterne_rouge module not found at {module_path}")
+        print(f"Contents of {os.path.dirname(module_path)}: {os.listdir(os.path.dirname(module_path)) if os.path.exists(os.path.dirname(module_path)) else 'Directory not found'}")
+except Exception as e:
+    print(f"Error checking module path: {e}")
+
 # Import after dotenv and path setup
-from lanterne_rouge.strava_api import refresh_strava_token
+try:
+    from lanterne_rouge.strava_api import refresh_strava_token
+    print("Successfully imported lanterne_rouge module")
+except ModuleNotFoundError as e:
+    print(f"Error importing lanterne_rouge module: {e}")
+    print(f"Available modules in src: {os.listdir(SRC_DIR) if os.path.exists(SRC_DIR) else 'src directory not found'}")
+    raise
 from scripts.notify import send_email, send_sms
 from scripts.run_tour_coach import run_daily_logic
 
