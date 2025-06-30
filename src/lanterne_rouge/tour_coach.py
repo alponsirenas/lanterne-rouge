@@ -3,10 +3,11 @@
 # data from Oura and Strava.
 
 from dotenv import load_dotenv
-from lanterne_rouge.mission_config import MissionConfig, load_config
+from lanterne_rouge.mission_config import MissionConfig, load_config, bootstrap
 import sys
 import os
-from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
+from pathlib import Path
+from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb, CTL_TC, ATL_TC
 from lanterne_rouge.reasoner import decide_adjustment
 from lanterne_rouge.plan_generator import generate_workout_plan
 from lanterne_rouge.peloton_matcher import match_peloton_class
@@ -38,18 +39,22 @@ def first_line(lines: list[str]) -> str | None:
 
 def run(cfg: MissionConfig | None = None):
     """Generate the daily Tour Coach summary."""
-    # Load mission configuration lazily
-    if cfg is None:
-        cfg = load_config(
-            os.getenv("MISSION_CONFIG_PATH", "missions/tdf_sim_2025.toml")
-        )
+    # Always reload mission configuration to ensure latest FTP value is used
+    config_path = os.getenv("MISSION_CONFIG_PATH", "missions/tdf_sim_2025.toml")
+    cfg = bootstrap(Path(config_path))  # Bootstrap both loads and caches to DB
 
     # Load agent memory
     memory = load_memory()
 
     # 1. Pull today's data
     readiness_score, hrv_balance, readiness_day = get_oura_readiness()
+    
+    # Get CTL, ATL, TSB with additional debug output
+    print("\n===== BANNISTER MODEL DEBUG =====")
+    print(f"Date: {datetime.now().strftime('%Y-%m-%d')}")
+    print(f"Time Constants: CTL={CTL_TC} days, ATL={ATL_TC} days")
     ctl, atl, tsb = get_ctl_atl_tsb()
+    print("================================\n")
 
     # Log today's observations to memory
     log_observation({

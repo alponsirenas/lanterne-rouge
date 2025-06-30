@@ -1,179 +1,278 @@
 # monitor.py
+"""
+Observation‑layer utilities for Lanterne Rouge.
 
-import os
-import requests
-import json
+* Pulls Oura readiness (detailed contributors logged separately)
+* Pulls Strava activities and computes CTL / ATL / TSB
+* All metrics are returned as floats rounded to one decimal
+"""
+
 import csv
+import json
+import math
+import os
 from datetime import datetime, timedelta
+from pathlib import Path
+
+import requests
 from dotenv import load_dotenv
+
 from lanterne_rouge.strava_api import strava_get
+from lanterne_rouge.mission_config import get_athlete_ftp
 
-# Load environment variables
+# --------------------------------------------------------------------------- #
+#  Environment
+# --------------------------------------------------------------------------- #
+
 load_dotenv()
-
 OURA_TOKEN = os.getenv("OURA_TOKEN")
-# Optional for future use
-USER_FTP = int(os.getenv("USER_FTP", 250))
+
+# Function to get the current FTP from mission config
+def get_current_ftp():
+    """Get the current athlete FTP value from mission config."""
+    return get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
+
+# Output folder
+OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
+OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 
 
-def record_readiness_contributors(day_entry):
+# --------------------------------------------------------------------------- #
+#  Oura Readiness helpers
+# --------------------------------------------------------------------------- #
+def record_readiness_contributors(day_entry: dict) -> None:
     """
-    Save Oura readiness score and detailed contributors to a CSV file for future analysis.
+    Persist a full contributor snapshot to CSV (`output/readiness_score_log.csv`).
+
+    Keeps a wide schema but sparsely populated if Oura adds new fields.
     """
-    filename = "output/readiness_score_log.csv"
-    contributors = day_entry.get('contributors', {})
+    filename = OUTPUT_DIR / "readiness_score_log.csv"
+    contributors = day_entry.get("contributors", {})
 
-    # Ensure output directory exists
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-
-    # Base row with day and readiness score
+    # Base row
     row = {
         "day": day_entry.get("day"),
         "readiness_score": day_entry.get("score"),
+        **contributors,
     }
 
-    # Dynamically include all contributor fields
-    for key, value in contributors.items():
-        row[key] = value if value is not None else "NA"
-
-    # Fieldnames in order: day, readiness_score, then sorted contributor keys
     fieldnames = ["day", "readiness_score"] + sorted(contributors.keys())
+    file_exists = filename.exists()
 
-    file_exists = os.path.isfile(filename)
-
-    with open(filename, mode='a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    with filename.open("a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         if not file_exists:
             writer.writeheader()
         writer.writerow(row)
 
-    print("✅ Successfully saved detailed readiness data.")
+    print("✅  Saved detailed readiness contributors.")
 
 
 def get_oura_readiness():
     """
-    Pull today's Readiness Score and HRV Balance Score from Oura API.
-    Return readiness_score, hrv_balance, and readiness_day.
+    Return (readiness_score:int | None, hrv_balance:int | None, readiness_day:str | None)
     """
+    # Use naive datetime objects consistently
+    today = datetime.now().replace(tzinfo=None).date()
+    start_date = today - timedelta(days=6)
+
+    url = "https://api.ouraring.com/v2/usercollection/daily_readiness"
+    headers = {"Authorization": f"Bearer {OURA_TOKEN}"}
+    params = {"start_date": start_date.isoformat(), "end_date": today.isoformat()}
+
     try:
-        today = datetime.now().date()
-        start_date = today - timedelta(days=6)
-
-        url = "https://api.ouraring.com/v2/usercollection/daily_readiness"
-        headers = {"Authorization": f"Bearer {OURA_TOKEN}"}
-        params = {
-            "start_date": start_date.isoformat(),
-            "end_date": today.isoformat()
-        }
-
-        response = requests.get(url, headers=headers, params=params)
-
-        if response.status_code == 200:
-            full_response = response.json()
-            print(
-                "🧠 Raw Oura API Response:",
-                json.dumps(
-                    full_response,
-                    indent=2
-                )
-            )  # Debugging
-
-            data = full_response.get('data', [])
-
-            if not data:
-                print("⚠️ No readiness data returned in last 7 days.")
-                return None, None, None
-
-            # Sort by day, newest first
-            data_sorted = sorted(data, key=lambda x: x['day'], reverse=True)
-
-            for day_entry in data_sorted:
-                readiness_score = day_entry.get('score')
-                contributors = day_entry.get('contributors', {})
-                hrv_balance = contributors.get('hrv_balance')
-
-                if readiness_score is not None:
-                    print(f"✅ Using readiness score from {day_entry['day']}")
-                    record_readiness_contributors(day_entry)
-                    return readiness_score, hrv_balance, day_entry.get('day')
-
-            print("❌ No valid readiness and HRV balance data found in past 7 days.")
-            return None, None, None
-
-        else:
-            try:
-                error_info = response.json()
-                error_message = error_info.get('message', response.text)
-            except Exception:
-                error_message = response.text
-
-            print(
-                f"❌ Oura API error {response.status_code}: {error_message}"
-            )
-            return None, None, None
-
-    except Exception as e:
-        print(f"Error fetching readiness and HRV balance from Oura: {e}")
+        r = requests.get(url, headers=headers, params=params, timeout=10)
+        r.raise_for_status()
+    except Exception as exc:
+        print(f"❌  Oura API error: {exc}")
         return None, None, None
 
+    data = r.json().get("data", [])
+    if not data:
+        print("⚠️  No Oura readiness data in the past 7 days.")
+        return None, None, None
 
-def get_ctl_atl_tsb():
-    """
-    Pull activities from Strava, calculate CTL (Fitness), ATL (Fatigue), and TSB (Form).
-    """
-    print("🔍 Pulling activities from Strava for CTL/ATL/TSB calculation...")
+    # Most‑recent day first
+    for entry in sorted(data, key=lambda x: x["day"], reverse=True):
+        score = entry.get("score")
+        hrv_balance = entry.get("contributors", {}).get("hrv_balance")
+        if score is not None:
+            record_readiness_contributors(entry)
+            return score, hrv_balance, entry["day"]
 
-    activities = strava_get(
-        "athlete/activities?per_page=200"
-    )
+    return None, None, None
+
+
+# --------------------------------------------------------------------------- #
+#  Strava CTL / ATL / TSB (Bannister model)
+# --------------------------------------------------------------------------- #
+CTL_TC = 42  # days - Standard time constant for Chronic Training Load
+ATL_TC = 7   # days - Standard time constant for Acute Training Load
+# Using the formula λ = 2/(N+1) as specified in TrainingPeaks documentation
+K_CTL = 2 / (CTL_TC + 1)  # Lambda for CTL (Fitness)
+K_ATL = 2 / (ATL_TC + 1)  # Lambda for ATL (Fatigue)
+
+
+def _bucket_to_local_midnight(dt: datetime) -> str:
+    """Return YYYY‑MM‑DD key representing the athlete's *local* training day."""
+    return dt.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d")
+
+
+def _calculate_power_tss(activity: dict) -> float:
+    """
+    Calculate TSS using power data if available.
+    
+    Formula: TSS = (duration_seconds × NP × IF) / (FTP × 3600) × 100, where IF = NP/FTP
+    
+    Returns calculated TSS value or 0 if power data is insufficient.
+    """
+    # Get current FTP value - force reload from mission config each time
+    ftp = get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
+    
+    # Extract power metrics from activity
+    weighted_avg_watts = activity.get("weighted_average_watts")  # This is NP (Normalized Power)
+    avg_watts = activity.get("average_watts")
+    duration_seconds = activity.get("moving_time") or activity.get("elapsed_time")
+    
+    # Check if we have required fields
+    if not all([duration_seconds, ftp]):
+        return 0
+    
+    # For NP, prefer weighted_average_watts over average_watts
+    normalized_power = weighted_avg_watts or avg_watts
+    
+    # If no power data available, can't calculate power-based TSS
+    if not normalized_power:
+        return 0
+    
+    # Calculate Intensity Factor (IF)
+    intensity_factor = normalized_power / ftp
+    
+    # Calculate TSS
+    tss = (duration_seconds * normalized_power * intensity_factor) / (ftp * 3600) * 100
+    
+    # Log if debug enabled
+    print(f"DEBUG: Power-based TSS: {tss:.1f} (NP={normalized_power}, IF={intensity_factor:.2f}, Duration={duration_seconds}s, FTP={ftp})")
+    
+    return tss
+
+
+def get_ctl_atl_tsb(days: int = 90):
+    """
+    Compute CTL, ATL, TSB using Bannister's impulse‑response model.
+
+    Returns (ctl:float, atl:float, tsb:float) rounded to 1 decimal place.
+    """
+    print("🔍  Pulling activities from Strava for CTL/ATL/TSB…")
+    activities = strava_get("athlete/activities?per_page=200")
     if not activities:
-        print("⚠️ No activities returned from Strava. Skipping CTL/ATL/TSB calc.")
+        print("⚠️  No activities from Strava; CTL/ATL/TSB unavailable.")
         return None, None, None
 
-    today = datetime.now()
-    days = 45
+    # Use naive datetimes consistently to avoid timezone comparison issues
+    today = datetime.now().replace(tzinfo=None)
     start_day = today - timedelta(days=days)
+    daily_tss: dict[str, float] = {}
 
-    daily_tss = {}
+    # Debug info
+    print(f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)")
+    print(f"DEBUG: Found {len(activities)} activities from Strava")
 
-    for activity in activities:
-        if not isinstance(activity, dict):
+    # --------------------------------------------------------------------- #
+    # 1.  Aggregate TSS per local day
+    # --------------------------------------------------------------------- #
+    for act in activities:
+        if not isinstance(act, dict):
             continue
 
-        activity_date = datetime.strptime(
-            activity["start_date_local"],
-            "%Y-%m-%dT%H:%M:%SZ"
-        )
-        if activity_date < start_day:
+        start_local = act.get("start_date_local")
+        if not start_local:
             continue
 
-        date_key = activity_date.strftime("%Y-%m-%d")
-        effort_score = (
-            activity.get("relative_effort")
-            or activity.get("suffer_score")
-            or 0
-        )
+        # Strava returns ISO 8601 local with *no* Z suffix, e.g., 2025‑06‑23T18:05:07
+        try:
+            act_dt = datetime.fromisoformat(start_local)
+            # Strip timezone info if present to make it naive for consistent comparison
+            if act_dt.tzinfo is not None:
+                act_dt = act_dt.replace(tzinfo=None)
+        except ValueError:
+            # Fallback for legacy "Z" suffix
+            act_dt = datetime.strptime(start_local, "%Y-%m-%dT%H:%M:%SZ")
 
-        if date_key in daily_tss:
-            daily_tss[date_key] += effort_score
-        else:
-            daily_tss[date_key] = effort_score
+        if act_dt < start_day:
+            continue
 
-    tss_series = []
-    for day_offset in range(days):
-        day = (start_day + timedelta(days=day_offset)).strftime("%Y-%m-%d")
-        tss_series.append(daily_tss.get(day, 0))
+        day_key = _bucket_to_local_midnight(act_dt)
+        
+        # Priority 1: Calculate power-based TSS if power data is available
+        tss = _calculate_power_tss(act)
+        
+        # Priority 2: Use Strava's native relative_effort or suffer_score if no power data
+        if tss <= 0:
+            tss = act.get("relative_effort") or act.get("suffer_score") or 0
+            print(f"DEBUG: Using Strava heart rate-based score: {tss}")
+            
+        # Priority 3: Fall back to icu_training_load only if no other metric is available
+        if tss <= 0 and 'icu_training_load' in act and act['icu_training_load'] is not None:
+            tss = float(act['icu_training_load'])
+            print(f"DEBUG: Using intervals.icu training load: {tss}")
+            
+        daily_tss[day_key] = daily_tss.get(day_key, 0) + tss
 
-    ctl = 0
-    atl = 0
-    ctl_constant = 1 / 42
-    atl_constant = 1 / 7
+    # Create a sorted list of dates from start_day to today
+    date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
+    
+    # Create a list of training loads for each day, replacing missing days with 0
+    tss_series = [daily_tss.get(day, 0) for day in date_range]
 
-    for tss in tss_series:
-        ctl += ctl_constant * (tss - ctl)
-        atl += atl_constant * (tss - atl)
+    # Debug: Print the most recent training loads
+    print("\nDEBUG: Recent daily training loads (most recent 10 days):")
+    recent_days = min(10, len(date_range))
+    for i in range(-recent_days, 0):
+        print(f"DEBUG: {date_range[i]}: {tss_series[i]}")
 
+    # --------------------------------------------------------------------- #
+    # 2.  Exponential moving averages - using formula that matches intervals.icu
+    # --------------------------------------------------------------------- #
+    
+    # Initialize CTL and ATL with better starting values
+    # Use the average of first 14 days of data as a starting point (if available)
+    init_period = min(14, len(tss_series))
+    if init_period > 0:
+        avg_tss = sum(tss_series[:init_period]) / init_period
+        ctl = atl = avg_tss
+    else:
+        ctl = atl = 0.0
+    
+    # Debug: Print intermediate calculation steps
+    print(f"\nDEBUG: Starting with initial values: CTL={ctl:.1f}, ATL={atl:.1f}")
+    print("\nDEBUG: Bannister model calculation steps:")
+    
+    # Keep track of daily CTL/ATL values to access yesterday's values at the end
+    daily_values = []
+    
+    for i, tss in enumerate(tss_series):
+        # Calculate new values
+        new_ctl = ctl * (1 - K_CTL) + tss * K_CTL
+        new_atl = atl * (1 - K_ATL) + tss * K_ATL
+        
+        # Store daily values
+        daily_values.append((date_range[i], new_ctl, new_atl))
+        
+        # Log every 10 days and the last 5 days for debugging
+        if i % 10 == 0 or i >= len(tss_series) - 5:
+            print(f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})")
+        
+        # Update values
+        ctl = new_ctl
+        atl = new_atl
+
+    # Calculate TSB using today's CTL and ATL values
+    # TSB = Today's Fitness (CTL) - Today's Fatigue (ATL)
     tsb = ctl - atl
-
-    print(f"✅ Calculated: CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
-    return ctl, atl, tsb
+    print(f"DEBUG: Using today's values for TSB: CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
+    
+    print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
+    
+    # Return the final values
+    return round(ctl, 1), round(atl, 1), round(tsb, 1)

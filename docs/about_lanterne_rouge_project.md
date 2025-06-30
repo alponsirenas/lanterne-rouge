@@ -66,8 +66,10 @@ We're currently in **v0.3.1**, focused on:
 2. **GPT-driven workout generator**  
    - Draft and integrate prompts that produce Workout of the Day based on current CTL/ATL/TSB and mission targets.
 
-3. **Finalize Bannister model and tests**  
-   - Implement `ctl_atl_tsb()` in `monitor.py` with full test coverage.
+3. **Finalize Bannister model and tests** ✅  
+   - Implemented `get_ctl_atl_tsb()` in `monitor.py` with full test coverage.
+   - Optimized Bannister model to match intervals.icu calculations for accurate fitness/fatigue metrics.
+   - Extended lookback period to 90 days for better CTL/ATL accuracy.
 
 4. **Evaluate n8n orchestration**  
    - Prototype an n8n workflow that glues together Oura, Strava, GPT reasoning, and notifications.

@@ -20,3 +20,6 @@ threshold_interval_min = 20
 min_readiness = 70
 max_rhr       = 56
 min_tsb       = -15
+
+[athlete]
+ftp           = 128         # Athlete's Functional Threshold Power in watts

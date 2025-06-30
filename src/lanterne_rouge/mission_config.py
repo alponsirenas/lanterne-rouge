@@ -36,6 +36,10 @@ class Constraints(BaseModel):
     max_rhr: int
     min_tsb: int
 
+class AthleteData(BaseModel):
+    """Athlete-specific data needed for calculations."""
+    ftp: int = Field(250, description="Functional Threshold Power in watts")
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Pydantic Model
 # ──────────────────────────────────────────────────────────────────────────────
@@ -51,6 +55,7 @@ class MissionConfig(BaseModel):
 
     targets: Targets
     constraints: Constraints
+    athlete: AthleteData = Field(default_factory=AthleteData, description="Athlete-specific data like FTP")
 
     # ─── Model-level config (Pydantic v2) ────────────────────────────────
     model_config = ConfigDict(
@@ -100,6 +105,59 @@ def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "memory/lanterne.d
     )
     con.commit()
     con.close()
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Data Access
+# ──────────────────────────────────────────────────────────────────────────────
+
+def get_current_mission(db_path: str | Path = "memory/lanterne.db") -> MissionConfig | None:
+    """Retrieve the most recent mission config from SQLite."""
+    db_path = Path(db_path)
+    if not db_path.exists():
+        return None
+    
+    try:
+        con = sqlite3.connect(db_path)
+        con.row_factory = sqlite3.Row
+        row = con.execute("SELECT json FROM mission_config ORDER BY id DESC LIMIT 1").fetchone()
+        con.close()
+        
+        if row is None:
+            return None
+            
+        return MissionConfig.model_validate_json(row["json"])
+    except Exception as e:
+        print(f"Error retrieving mission config: {e}")
+        return None
+
+
+def get_athlete_ftp(db_path: str | Path = "memory/lanterne.db", default_ftp: int = 250) -> int:
+    """Retrieve the athlete's FTP from the mission config or return default value."""
+    import json  # Add import here to ensure json is available
+    
+    try:
+        db_path = Path(db_path)
+        if not db_path.exists():
+            return default_ftp
+    
+        # Connect directly to the database to ensure we get the latest value
+        con = sqlite3.connect(db_path)
+        con.row_factory = sqlite3.Row
+        row = con.execute("SELECT json FROM mission_config ORDER BY id DESC LIMIT 1").fetchone()
+        con.close()
+        
+        if row is None:
+            return default_ftp
+            
+        # Extract FTP from JSON
+        config_data = json.loads(row["json"])
+        if "athlete" in config_data and "ftp" in config_data["athlete"]:
+            return config_data["athlete"]["ftp"]
+        return default_ftp
+    except Exception as e:
+        print(f"Error retrieving athlete FTP: {e}")
+        return default_ftp
 
 
 # Convenience – load + cache in one call
