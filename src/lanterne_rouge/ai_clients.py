@@ -33,8 +33,8 @@ def _model_supports_json(model: str) -> bool:
     accepted by the model to avoid HTTP 400 errors.
     """
     # Check if model is in our explicit list or has specific prefixes that indicate JSON support
-    return (model in _MODELS_WITH_JSON_SUPPORT or 
-            model.endswith("-json") or 
+    return (model in _MODELS_WITH_JSON_SUPPORT or
+            model.endswith("-json") or
             model.startswith(("gpt-4-turbo", "gpt-4o")))
 
 # Initialize OpenAI API key from environment
@@ -117,12 +117,12 @@ def generate_workout_adjustment(
     try:
         # Always call with force_json=False to avoid API compatibility issues
         raw_response = call_llm(messages, model=model, force_json=False)
-        
+
         # Try to parse the response - first check if it's a bullet list
         if raw_response.lstrip().startswith("-"):
             lines = parse_llm_list(raw_response)
             return lines
-            
+
         # Then try to parse as JSON if it looks like JSON
         if raw_response.strip().startswith("{") and raw_response.strip().endswith("}"):
             try:
@@ -130,24 +130,27 @@ def generate_workout_adjustment(
                 if isinstance(parsed, list):
                     lines = [str(line).strip("- \t") for line in parsed if str(line).strip()]
                     return lines
-                elif isinstance(parsed, dict) and "recommendations" in parsed:
+                if isinstance(parsed, dict) and "recommendations" in parsed:
                     if isinstance(parsed["recommendations"], list):
                         lines = [str(line).strip("- \t") for line in parsed["recommendations"] if str(line).strip()]
                         return lines
             except json.JSONDecodeError:
                 pass  # Failed to parse as JSON, continue to fallback
-                
+
         # Try generic parsing of any free-text response
         lines = parse_llm_list(raw_response)
         if lines:
             return lines
-            
+
         # If all else fails, provide a generic recommendation
         return ["Plan looks good. Continue with scheduled workout."]
-        
-    except Exception as e:
+
+    except (ValueError, json.JSONDecodeError) as e:
         print(f"Error generating workout adjustment: {e}")
         return ["Unable to generate recommendations. Proceed with scheduled workout."]
+    except Exception as e:
+        print(f"Unexpected error in workout adjustment: {e}")
+        return ["System error encountered. Proceed with scheduled workout."]
 
 
 def parse_llm_list(raw_response: str) -> list[str]:
@@ -210,16 +213,16 @@ def call_llm(
         # Use the new OpenAI client API
         client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(**response_kwargs)
-        
+
         # Get the content from the response
         content = response.choices[0].message.content
-        
+
         # Handle empty responses
         if content is None or content.strip() == "":
             return "- No valid response received from the model."
-        
+
         return content
-    
+
     except Exception as e:
         print(f"❌ OpenAI request failed: {e}")
         return "- Error: Could not get a response from the LLM."
@@ -227,7 +230,7 @@ def call_llm(
 
 class CommunicationAgent:
     """Generates natural language summaries of training recommendations."""
-    
+
     def generate_summary(
         self,
         decision,  # TrainingDecision
@@ -237,43 +240,43 @@ class CommunicationAgent:
         current_date: date
     ) -> str:
         """Generate a complete, empathetic training summary."""
-        
+
         # Get training context
         phase = config.training_phase(current_date)
         next_phase_start = config.next_phase_start(current_date)
         days_to_next_phase = (next_phase_start - current_date).days if next_phase_start else None
         days_to_goal = (config.goal_date - current_date).days
-        
+
         # Build sections
         sections = []
-        
+
         # 1. Training Phase Context
         phase_section = self._generate_phase_context(phase, days_to_next_phase, days_to_goal)
         sections.append(phase_section)
-        
+
         # 2. Current Metrics
         metrics_section = self._generate_metrics_summary(metrics)
         sections.append(metrics_section)
-        
+
         # 3. Today's Reasoning
         reasoning_section = self._generate_reasoning_summary(decision)
         sections.append(reasoning_section)
-        
+
         # 4. Workout Plan
         workout_section = self._generate_workout_summary(workout)
         sections.append(workout_section)
-        
+
         return "\n\n".join(sections)
-    
+
     def _generate_phase_context(self, phase: str, days_to_next: int, days_to_goal: int) -> str:
         """Generate training phase context."""
         lines = [f"🏆 Training Phase: {phase}"]
-        
+
         if days_to_next:
             lines.append(f"📅 Days until next phase: {days_to_next}")
-        
+
         lines.append(f"🎯 Days to goal: {days_to_goal}")
-        
+
         # Add phase-specific context
         if phase == "Base":
             lines.append("Building your aerobic foundation with steady, sustainable efforts.")
@@ -283,9 +286,9 @@ class CommunicationAgent:
             lines.append("Sharpening your fitness for peak performance.")
         elif phase == "Taper":
             lines.append("Maintaining fitness while reducing fatigue for the big day.")
-        
+
         return "\n".join(lines)
-    
+
     def _generate_metrics_summary(self, metrics: Dict[str, Any]) -> str:
         """Generate current metrics summary."""
         lines = ["📊 Current Fitness Metrics:"]
@@ -293,18 +296,18 @@ class CommunicationAgent:
         lines.append(f"• CTL (Fitness): {metrics.get('ctl', 'N/A')}")
         lines.append(f"• ATL (Fatigue): {metrics.get('atl', 'N/A')}")
         lines.append(f"• TSB (Form): {metrics.get('tsb', 'N/A')}")
-        
+
         return "\n".join(lines)
-    
+
     def _generate_reasoning_summary(self, decision) -> str:
         """Generate reasoning summary."""
         lines = ["🧠 Today's Training Logic:"]
         lines.append(f"• Decision: {decision.action.title()}")
         lines.append(f"• Reasoning: {decision.reason}")
         lines.append(f"• Recommended Intensity: {decision.intensity_recommendation.title()}")
-        
+
         return "\n".join(lines)
-    
+
     def _generate_workout_summary(self, workout) -> str:
         """Generate workout summary with zones."""
         lines = ["🚴 Today's Workout Plan:"]
@@ -312,12 +315,12 @@ class CommunicationAgent:
         lines.append(f"• Description: {workout.description}")
         lines.append(f"• Duration: {workout.duration_minutes} minutes")
         lines.append(f"• Estimated Load: {workout.estimated_load}")
-        
+
         if workout.zones:
             lines.append("• Time in Zones:")
             for zone, minutes in workout.zones.items():
                 lines.append(f"  - {zone}: {minutes} min")
-        
+
         return "\n".join(lines)
 
 

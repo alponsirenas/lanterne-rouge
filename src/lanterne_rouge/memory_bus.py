@@ -1,3 +1,9 @@
+"""
+Memory module for Lanterne Rouge.
+
+This module provides functionality for storing, retrieving, and managing
+observations and memories for the AI reasoning system.
+"""
 import datetime
 from pathlib import Path
 import sqlite3
@@ -20,11 +26,13 @@ _conn.close()
 
 
 def _get_conn():
+    """Get a connection to the SQLite database with row factory set."""
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
 
 def load_memory():
+    """Load all memories from the database in chronological order."""
     conn = _get_conn()
     cursor = conn.execute("SELECT timestamp, type, data FROM memory ORDER BY timestamp")
     mem = {"observations": [], "decisions": [], "reflections": []}
@@ -43,6 +51,11 @@ def load_memory():
     return mem
 
 def log_observation(data):
+    """Log an observation to the memory database.
+
+    Args:
+        data: The observation data to log (will be JSON serialized)
+    """
     ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
     conn = _get_conn()
     conn.execute(
@@ -53,6 +66,11 @@ def log_observation(data):
     conn.close()
 
 def log_decision(data):
+    """Log a decision to the memory database.
+
+    Args:
+        data: The decision data to log (will be JSON serialized)
+    """
     ts = datetime.datetime.now().isoformat()
     conn = _get_conn()
     conn.execute(
@@ -63,6 +81,11 @@ def log_decision(data):
     conn.close()
 
 def log_reflection(data):
+    """Log a reflection to the memory database.
+
+    Args:
+        data: The reflection data to log (will be JSON serialized)
+    """
     ts = datetime.datetime.now().isoformat()
     conn = _get_conn()
     conn.execute(

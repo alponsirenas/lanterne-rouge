@@ -114,9 +114,10 @@ The model uses a 90-day lookback period to allow for accurate CTL calculation, s
 
 Testing the Bannister model implementation involves comparing our calculations against intervals.icu reference values using:
 
-1. Unit tests with fixed data in `tests/test_bannister.py`
-2. A standalone test script `tests/test_bannister_fix.py` for detailed comparison
-3. The new diagnostic tools described below
+1. Our primary test script `tests/test_bannister_fix.py` for detailed comparison with reference data
+2. The new diagnostic tools described below
+
+Note: A previous version of the test can be found in `tests/archive/test_bannister.py`
 
 ## Diagnostic Tools
 
@@ -167,7 +168,7 @@ The model is validated against intervals.icu reference values using test data st
 - `tests/i296483_activities.csv`: Historical activity data
 - `tests/athlete_i296483_wellness.csv`: Reference CTL/ATL values from intervals.icu
 
-The test in `tests/test_bannister.py` verifies that our implementation produces values that closely match the reference values.
+The test in `tests/test_bannister_fix.py` verifies that our implementation produces values that closely match the reference values.
 
 ## Typical Values
 

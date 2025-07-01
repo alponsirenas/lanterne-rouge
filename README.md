@@ -61,10 +61,12 @@ Follow these steps to set up Lanterne Rouge:
 
    # OpenAI
    OPENAI_API_KEY=your_openai_api_key
-   # Optional: override the default model
+   # Optional: override the default model (default: gpt-4-turbo-preview)
    # Use a model that supports JSON response format such as:
-   # gpt-4-turbo-preview, gpt-4o, gpt-4-0125-preview, or gpt-3.5-turbo-1106
+   # gpt-4-turbo-preview, gpt-4o, gpt-4o-mini, gpt-4-0125-preview, or gpt-3.5-turbo-1106
    OPENAI_MODEL=gpt-4-turbo-preview
+   # Optional: control reasoning mode (default: true)
+   USE_LLM_REASONING=true
 
    # Notification settings
    EMAIL_ADDRESS=your_email_address_for_notifications
@@ -96,23 +98,23 @@ Follow these steps to set up Lanterne Rouge:
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-## Current Version: v0.3.1
+## Current Version: v0.4.0
 
 Release highlights:
-- Fixed OpenAI API compatibility issues with the latest API versions
-- Updated client initialization to use new OpenAI client interface
-- Enhanced model compatibility checks for response formats
-- Improved error handling and response parsing for API calls
-- Set appropriate default models that properly support JSON generation
-- Enhanced daily coaching and notifications for a more responsive training experience.
-- Introduction of the Reasoning Module v1.0 with large language model (LLM) integration for generating user-friendly explanations.
-- Added mission-specific configuration and improved integration with daily reasoning decisions.
-- Improved error handling, streamlined configuration, and updated documentation.
-- Expanded test coverage and upgraded dependencies (e.g., Streamlit 1.45.x).
+- **Complete refactoring to agent-based architecture** with LLM reasoning as default
+- **Enhanced output quality** with first-person, conversational communication style
+- **Fixed CTL, ATL, and TSB calculations** to match intervals.icu reference values
+- **Time-in-zone workout prescriptions** with detailed intensity recommendations
+- **Fixed readiness score handling** to work with scalar integer value instead of dict
+- **Added comprehensive diagnostic tools** for data validation and model testing
+- **Improved documentation** with detailed architecture and Bannister model explanations
+- **Enhanced configurability** with environment variables for LLM model and reasoning mode
+
+See the full [Release Notes for v0.4.0](RELEASE_NOTES_v0.4.0.md) for detailed information.
 
 ## Looking Ahead
 
-With version **v0.3.1**, Lanterne Rouge provides a solid foundation for AI-powered coaching, combining data-driven insights with mission-aware training recommendations.
+With version **v0.4.0**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, providing personalized, contextual, and empathetic training guidance.
 
 In our TO DO:
 - Refining recommendations and data visualization.

@@ -7,8 +7,8 @@ configurations from TOML files.
 import json
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-from datetime import datetime, date, timedelta
+from typing import Optional
+from datetime import date, timedelta
 
 import tomli as tomllib  # tomllib in 3.11+
 from pydantic import BaseModel, Field, ValidationError
@@ -34,19 +34,18 @@ class MissionConfig(BaseModel):
     goal_date: date
     athlete: AthleteConfig
     constraints: ConstraintsConfig = Field(default_factory=ConstraintsConfig)
-    
+
     def training_phase(self, today: date) -> str:
         """Determine current training phase based on date."""
         days_out = (self.goal_date - today).days
         if days_out > 42:
             return "Base"
-        elif 42 >= days_out > 21:
+        if 42 >= days_out > 21:
             return "Build"
-        elif 21 >= days_out > 7:
+        if 21 >= days_out > 7:
             return "Peak"
-        else:
-            return "Taper"
-    
+        return "Taper"
+
     def next_phase_start(self, today: date) -> date | None:
         """Calculate when the next training phase begins."""
         if today >= self.goal_date:
@@ -54,9 +53,9 @@ class MissionConfig(BaseModel):
         phase = self.training_phase(today)
         if phase == "Base":
             return self.goal_date - timedelta(days=42)
-        elif phase == "Build":
+        if phase == "Build":
             return self.goal_date - timedelta(days=21)
-        elif phase == "Peak":
+        if phase == "Peak":
             return self.goal_date - timedelta(days=7)
         return self.goal_date
 
@@ -103,10 +102,10 @@ def cache_to_sqlite(cfg: MissionConfig, db_path: str | Path = "memory/lanterne.d
 def get_cached_mission_config(db_path: str | Path = "memory/lanterne.db") -> MissionConfig | None:
     """
     Retrieve the most recent mission configuration from the SQLite cache.
-    
+
     Args:
         db_path: Path to the SQLite database file
-        
+
     Returns:
         MissionConfig object if found, None otherwise
     """

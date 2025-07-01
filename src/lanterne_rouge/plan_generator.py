@@ -1,17 +1,14 @@
 """Workout Planning Agent - Generates structured workout plans with time in zones."""
 from __future__ import annotations
 
-import os
-import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import date
 
-import openai
-
 from .mission_config import MissionConfig
-from .reasoner import TrainingDecision
+from .reasoner import TrainingDecision, ReasoningAgent
+from .monitor import get_oura_readiness, get_ctl_atl_tsb
 
 logger = logging.getLogger(__name__)
 
@@ -30,11 +27,11 @@ class WorkoutPlan:
 
 class WorkoutPlanner:
     """Generates structured workout plans based on training decisions."""
-    
+
     def __init__(self, config: MissionConfig):
         self.config = config
         self.workout_templates = self._load_workout_templates()
-    
+
     def _load_workout_templates(self) -> Dict[str, Dict[str, Any]]:
         """Load workout templates for different scenarios."""
         return {
@@ -67,7 +64,7 @@ class WorkoutPlanner:
                 "description": "High-intensity work to sharpen racing fitness"
             }
         }
-    
+
     def generate_workout(self, decision: TrainingDecision, training_phase: str) -> WorkoutPlan:
         """Generate a workout plan based on training decision and phase."""
         # Select base workout type based on decision and phase
@@ -89,15 +86,15 @@ class WorkoutPlanner:
         else:  # Taper
             template_key = "endurance"
             workout_type = "Taper Ride"
-        
+
         # Get template and create workout
         template = self.workout_templates[template_key]
-        
+
         # Adjust duration based on phase
         duration = template["duration"]
         if training_phase == "Taper":
             duration = int(duration * 0.8)  # Reduce by 20%
-        
+
         return WorkoutPlan(
             workout_type=workout_type,
             description=template["description"],
@@ -110,32 +107,32 @@ class WorkoutPlanner:
 
 
 # Legacy function for backward compatibility
-def generate_workout_plan(mission_cfg: MissionConfig, memory: dict) -> dict:
+# All imports now at the module level
+
+def generate_workout_plan(mission_cfg: MissionConfig, _: dict) -> dict:
     """
     Legacy function - use WorkoutPlanner.generate_workout() instead.
-    
+
     Generate today's workout plan based on mission and current metrics.
     Returns a dict conforming to workout_plan.schema.json.
     """
-    from .reasoner import ReasoningAgent
-    from .monitor import get_oura_readiness, get_ctl_atl_tsb
-    
+
     print("Generating workout plan...")
-    
+
     # Gather current metrics
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
     metrics = {"readiness": readiness, "ctl": ctl, "atl": atl, "tsb": tsb}
-    
+
     # Make decision using reasoning agent
     reasoning_agent = ReasoningAgent()
     decision = reasoning_agent.make_decision(metrics)
-    
+
     # Generate workout using planner
     planner = WorkoutPlanner(mission_cfg)
     training_phase = mission_cfg.training_phase(date.today())
     workout = planner.generate_workout(decision, training_phase)
-    
+
     # Convert to legacy format
     return {
         "today": {

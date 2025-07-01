@@ -1,8 +1,8 @@
 # strava_api.py
 
-import requests
 import os
 import json
+import requests
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -20,7 +20,7 @@ STRAVA_BASE_URL = "https://www.strava.com/api/v3"
 
 # Try to load updated tokens from tokens.json if it exists and USE_TOKEN_CACHE is True
 if USE_TOKEN_CACHE and os.path.exists("tokens.json"):
-    with open("tokens.json", "r") as f:
+    with open("tokens.json", "r", encoding="utf-8") as f:
         tokens = json.load(f)
     STRAVA_ACCESS_TOKEN = tokens["access_token"]
     STRAVA_REFRESH_TOKEN = tokens["refresh_token"]
@@ -83,7 +83,7 @@ def refresh_strava_token():
         "grant_type": "refresh_token",
         "refresh_token": STRAVA_REFRESH_TOKEN,
     }
-    response = requests.post(token_url, data=payload)
+    response = requests.post(token_url, data=payload, timeout=10)
     if response.status_code == 200:
         tokens = response.json()
         STRAVA_ACCESS_TOKEN = tokens['access_token']
@@ -96,13 +96,12 @@ def refresh_strava_token():
 
         # Save updated tokens to tokens.json if USE_TOKEN_CACHE is True
         if USE_TOKEN_CACHE:
-            with open("tokens.json", "w") as f:
+            with open("tokens.json", "w", encoding="utf-8") as f:
                 json.dump(tokens, f, indent=2)
 
         return STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN
-    else:
-        print(f"❌ Failed to refresh token: {response.text}")
-        return None, None
+    print(f"❌ Failed to refresh token: {response.text}")
+    return None, None
 
 
 def strava_get(endpoint):
@@ -115,13 +114,13 @@ def strava_get(endpoint):
     }
     url = f"{STRAVA_BASE_URL}/{endpoint}"
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=10)
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
         STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
 
     if response.status_code != 200:
         print(f"❌ Strava API error {response.status_code}: {response.text}")
@@ -149,12 +148,12 @@ def strava_post(endpoint, payload):
     }
     url = f"{STRAVA_BASE_URL}/{endpoint}"
 
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload, timeout=10)
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
         STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
         headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
 
     return response.json()
