@@ -55,11 +55,12 @@
 - **Updated ai_integration.md** with LLM integration approach
 
 ### Testing
-- **Added four new test scripts** demonstrating agent capabilities:
-  - tests/test_agent_output.py
-  - tests/test_agent_output_llm.py
-  - tests/test_default_mode.py
-  - tests/test_llm_reasoning.py
+- **Consolidated and improved test suite**:
+  - tests/test_reasoning_modes.py: New comprehensive test for reasoning modes
+  - tests/test_agent_output_llm.py: Tests LLM-based agent output with various scenarios
+  - **Updated core module tests** to match refactored code
+  - **Added test documentation** in tests/README.md
+  - **Archived legacy tests** in tests/archive/ with documentation
 
 ## ⚙️ Configuration Options
 

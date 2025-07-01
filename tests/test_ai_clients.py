@@ -1,8 +1,13 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from lanterne_rouge.ai_clients import generate_workout_adjustment
 
-@patch("lanterne_rouge.ai_clients.call_llm")
+# Add project to path
+from setup import setup_path
+setup_path()
+
+from src.lanterne_rouge.ai_clients import generate_workout_adjustment
+
+@patch("src.lanterne_rouge.ai_clients.call_llm")
 def test_generate_workout_adjustment_returns_list(mock_call_llm):
     mock_call_llm.return_value = "- Rest day\n- Easy ride"
     mission_cfg = MagicMock()
@@ -18,7 +23,7 @@ def test_generate_workout_adjustment_returns_list(mock_call_llm):
     assert isinstance(adj, list)
     assert adj == ["Rest day", "Easy ride"]
 
-@patch("lanterne_rouge.ai_clients.call_llm")
+@patch("src.lanterne_rouge.ai_clients.call_llm")
 def test_generate_workout_adjustment_raises_value_error(mock_call_llm):
     mock_call_llm.return_value = "Invalid JSON"
     mission_cfg = MagicMock()
@@ -33,7 +38,7 @@ def test_generate_workout_adjustment_raises_value_error(mock_call_llm):
             mission_cfg=mission_cfg,
         )
 
-@patch("lanterne_rouge.ai_clients.call_llm")
+@patch("src.lanterne_rouge.ai_clients.call_llm")
 def test_generate_workout_adjustment_invalid_json(mock_call_llm):
     mock_call_llm.return_value = "Invalid JSON"
     mission_cfg = MagicMock()

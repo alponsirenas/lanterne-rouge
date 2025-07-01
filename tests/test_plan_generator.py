@@ -1,91 +1,84 @@
+"""
+Tests for the plan_generator module.
+"""
 import pytest
 from datetime import date
 from unittest.mock import patch, MagicMock
-import openai
-import os
 
-os.environ["OPENAI_API_KEY"] = "test-key"
-from lanterne_rouge.plan_generator import generate_workout_plan
-from lanterne_rouge.mission_config import MissionConfig, Targets, Constraints
+# Add project to path
+from setup import setup_path
+setup_path()
 
-# Dummy mission config for tests
-_dummy_cfg = MissionConfig(
-    id="test",
-    athlete_id="strava:0",
-    start_date=date(2025, 1, 1),
-    goal_event="test_event",
-    goal_date=date(2025, 12, 31),
-    targets=Targets(
-        ctl_peak=100,
-        long_ride_minutes=100,
-        stage_climb_minutes=60,
-        threshold_interval_min=20,
-    ),
-    constraints=Constraints(
-        min_readiness=65,
-        max_rhr=999,
-        min_tsb=-10,
-    ),
-)
+from src.lanterne_rouge.plan_generator import WorkoutPlanner
+from src.lanterne_rouge.mission_config import MissionConfig, AthleteConfig, ConstraintsConfig
+from src.lanterne_rouge.reasoner import TrainingDecision
 
-@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
-@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
-@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_happy_path(mock_readiness, mock_ctl_atl, mock_openai):
-    openai.api_key = "test-key"
-    # Prepare a fake LLM response object
-    fake_message = MagicMock()
-    fake_message.content = '{"workouts": ["test_plan"]}'
-    fake_choice = MagicMock()
-    fake_choice.message = fake_message
-    mock_openai.return_value = MagicMock(choices=[fake_choice])
+def create_test_config():
+    """Create a test configuration."""
+    return MissionConfig(
+        id="test",
+        name="Test Mission",
+        athlete=AthleteConfig(ftp=250, weight_kg=70),
+        start_date=date(2025, 1, 1),
+        goal_date=date(2025, 12, 31),
+        constraints=ConstraintsConfig(
+            min_readiness=65,
+            min_tsb=-10,
+        )
+    )
 
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
-    assert isinstance(plan, dict)
-    assert "workouts" in plan
-    assert plan["workouts"] == ["test_plan"]
-    mock_openai.assert_called_once()
+def test_workout_planner_generate():
+    """Test the WorkoutPlanner.generate_workout method."""
+    config = create_test_config()
+    planner = WorkoutPlanner(config)
+    
+    # Test MAINTAIN decision in Base phase
+    decision = TrainingDecision(
+        action="maintain", 
+        reason="Test reason",
+        intensity_recommendation="moderate",
+        flags=[],
+        confidence=1.0
+    )
+    workout = planner.generate_workout(decision, "Base")
+    
+    # Verify workout structure
+    assert workout.workout_type is not None
+    assert workout.description is not None
+    assert workout.duration_minutes > 0
+    assert workout.estimated_load > 0
+    assert len(workout.zones) > 0
+    assert sum(workout.zones.values()) == workout.duration_minutes
+    
+    # Test RECOVER decision in Build phase
+    decision = TrainingDecision(
+        action="recover", 
+        reason="Test reason",
+        intensity_recommendation="low",
+        flags=["fatigue"],
+        confidence=1.0
+    )
+    workout = planner.generate_workout(decision, "Build")
+    
+    # Recovery workouts should be easier
+    assert workout.estimated_load < 80  # Lower load for recovery
+    assert workout.workout_type is not None
+    
+    # Test INCREASE decision in Peak phase
+    decision = TrainingDecision(
+        action="increase", 
+        reason="Test reason",
+        intensity_recommendation="high",
+        flags=["ready_for_load"],
+        confidence=1.0
+    )
+    workout = planner.generate_workout(decision, "Peak")
+    
+    # Increased intensity workouts should be harder
+    assert workout.estimated_load > 80  # Higher load for intense workouts
+    assert workout.workout_type is not None
 
-
-@patch("lanterne_rouge.plan_generator.openai.chat.completions.create", side_effect=openai.OpenAIError("boom"))
-@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
-@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_openai_error(mock_readiness, mock_ctl_atl, mock_openai):
-    openai.api_key = "test-key"
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
-    assert plan == {}
-
-@patch("lanterne_rouge.plan_generator.print")
-@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
-@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
-@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_prints_messages(mock_readiness, mock_ctl_atl, mock_openai, mock_print):
-    openai.api_key = "test-key"
-    # Prepare a fake LLM response object
-    fake_message = MagicMock()
-    fake_message.content = '{"workouts": ["test_plan"]}'
-    fake_choice = MagicMock()
-    fake_choice.message = fake_message
-    mock_openai.return_value = MagicMock(choices=[fake_choice])
-
-    plan = generate_workout_plan(_dummy_cfg, memory={"foo":"bar"})
-    assert isinstance(plan, dict)
-    assert plan["workouts"] == ["test_plan"]
-    mock_openai.assert_called_once()
-    mock_print.assert_any_call("Generating workout plan...")
-    mock_print.assert_any_call("Workout plan generated successfully")
-
-
-@patch("lanterne_rouge.plan_generator.openai.chat.completions.create")
-@patch("lanterne_rouge.plan_generator.get_ctl_atl_tsb", return_value=(50, 40, 10))
-@patch("lanterne_rouge.plan_generator.get_oura_readiness", return_value=(80, {}, "2025-01-01"))
-def test_generate_workout_plan_missing_workouts(mock_readiness, mock_ctl_atl, mock_openai):
-    openai.api_key = "test-key"
-    fake_message = MagicMock()
-    fake_message.content = '{"foo": "bar"}'
-    fake_choice = MagicMock()
-    fake_choice.message = fake_message
-    mock_openai.return_value = MagicMock(choices=[fake_choice])
-
-    with pytest.raises(ValueError):
-        generate_workout_plan(_dummy_cfg, memory={"foo": "bar"})
+if __name__ == "__main__":
+    # Run the tests
+    test_workout_planner_generate()
+    print("All plan_generator tests passed!")

@@ -1,0 +1,14 @@
+[MASTER]
+# Add project root to path
+init-hook='import sys; sys.path.append(".")'
+
+# Allow package imports from within the repo
+ignore-paths=^tests/
+
+[MESSAGES CONTROL]
+# Disable specific warnings that are not relevant for tests
+disable=C0413,E0401
+
+[FORMAT]
+# Match the same formatting rules as the rest of the project
+max-line-length=100
