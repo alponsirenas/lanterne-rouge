@@ -1,71 +1,150 @@
+"""Workout Planning Agent - Generates structured workout plans with time in zones."""
+from __future__ import annotations
+
 import os
 import json
-import openai
 import logging
+from typing import Dict, Any, Optional
+from dataclasses import dataclass
+from datetime import date
 
-from lanterne_rouge.mission_config import MissionConfig
-from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
+import openai
+
+from .mission_config import MissionConfig
+from .reasoner import TrainingDecision
 
 logger = logging.getLogger(__name__)
 
 
-def generate_workout_plan(mission_cfg: MissionConfig, memory: dict):
+@dataclass
+class WorkoutPlan:
+    """Structured workout plan with zones and timing."""
+    workout_type: str
+    description: str
+    duration_minutes: int
+    zones: Dict[str, int]  # Zone name -> minutes
+    estimated_load: int
+    intensity_factor: float
+    source: str  # "LLM", "template", "fallback"
+
+
+class WorkoutPlanner:
+    """Generates structured workout plans based on training decisions."""
+    
+    def __init__(self, config: MissionConfig):
+        self.config = config
+        self.workout_templates = self._load_workout_templates()
+    
+    def _load_workout_templates(self) -> Dict[str, Dict[str, Any]]:
+        """Load workout templates for different scenarios."""
+        return {
+            "recovery": {
+                "duration": 60,
+                "zones": {"Zone 1": 50, "Zone 2": 10},
+                "load": 45,
+                "if": 0.6,
+                "description": "Easy spinning to promote recovery"
+            },
+            "endurance": {
+                "duration": 90,
+                "zones": {"Zone 2": 70, "Zone 3": 20},
+                "load": 75,
+                "if": 0.7,
+                "description": "Steady aerobic effort to maintain fitness"
+            },
+            "threshold": {
+                "duration": 75,
+                "zones": {"Zone 2": 45, "Zone 4": 20, "Zone 1": 10},
+                "load": 95,
+                "if": 0.85,
+                "description": "Structured intervals to build racing fitness"
+            },
+            "vo2max": {
+                "duration": 60,
+                "zones": {"Zone 2": 30, "Zone 5": 15, "Zone 1": 15},
+                "load": 105,
+                "if": 0.9,
+                "description": "High-intensity work to sharpen racing fitness"
+            }
+        }
+    
+    def generate_workout(self, decision: TrainingDecision, training_phase: str) -> WorkoutPlan:
+        """Generate a workout plan based on training decision and phase."""
+        # Select base workout type based on decision and phase
+        if decision.action == "recover":
+            template_key = "recovery"
+            workout_type = "Recovery Ride"
+        elif decision.action == "ease":
+            template_key = "endurance"
+            workout_type = "Endurance Ride"
+        elif training_phase == "Base":
+            template_key = "endurance"
+            workout_type = "Base Endurance"
+        elif training_phase == "Build":
+            template_key = "threshold" if decision.action != "push" else "vo2max"
+            workout_type = "Threshold Work" if template_key == "threshold" else "VO2max Intervals"
+        elif training_phase == "Peak":
+            template_key = "vo2max"
+            workout_type = "Peak Power"
+        else:  # Taper
+            template_key = "endurance"
+            workout_type = "Taper Ride"
+        
+        # Get template and create workout
+        template = self.workout_templates[template_key]
+        
+        # Adjust duration based on phase
+        duration = template["duration"]
+        if training_phase == "Taper":
+            duration = int(duration * 0.8)  # Reduce by 20%
+        
+        return WorkoutPlan(
+            workout_type=workout_type,
+            description=template["description"],
+            duration_minutes=duration,
+            zones=template["zones"].copy(),
+            estimated_load=template["load"],
+            intensity_factor=template["if"],
+            source="template"
+        )
+
+
+# Legacy function for backward compatibility
+def generate_workout_plan(mission_cfg: MissionConfig, memory: dict) -> dict:
     """
-    Use OpenAI to generate today's workout plan based on mission and current metrics.
+    Legacy function - use WorkoutPlanner.generate_workout() instead.
+    
+    Generate today's workout plan based on mission and current metrics.
     Returns a dict conforming to workout_plan.schema.json.
     """
+    from .reasoner import ReasoningAgent
+    from .monitor import get_oura_readiness, get_ctl_atl_tsb
+    
     print("Generating workout plan...")
-
+    
     # Gather current metrics
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
     metrics = {"readiness": readiness, "ctl": ctl, "atl": atl, "tsb": tsb}
-
-    # Build prompt
-    prompt = (
-        f"Mission configuration:\n{mission_cfg.model_dump_json()}\n"
-        f"Recent memory entries:\n{json.dumps(memory)}\n"
-        f"Current metrics:\n{json.dumps(metrics)}\n"
-        "Generate a workout_plan JSON matching workout_plan.schema.json. Return only the JSON object. "
-        "You MUST reply with a JSON object that contains a 'today' object and an 'adjustments' array as required by the schema. "
-        "The schema requires: today.type, today.duration_minutes, today.intensity and adjustments array. "
-        "The response must exactly match workout_plan.schema.json. No markdown or extra text."
-    )
-
-    # Call OpenAI with basic error handling
-    try:
-        # Initialize OpenAI client
-        client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        
-        # Define response kwargs with a model that properly supports JSON generation
-        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
-        response_kwargs = {
-            "model": model,
-            "messages": [
-                {"role": "system", "content": "You are a workout planning assistant."},
-                {"role": "user", "content": prompt},
-            ],
-            "temperature": 0.7,
-        }
-        
-        # Only add response_format for compatible models
-        # Re-using the same logic as in ai_clients.py for model compatibility
-        if (model.startswith(("gpt-4-turbo", "gpt-4o", "gpt-4-1106", "gpt-4-0125")) or
-            model in ("gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125")) and not model.startswith("gpt-4-vision"):
-            response_kwargs["response_format"] = {"type": "json_object"}
-            
-        resp = client.chat.completions.create(**response_kwargs)
-        # Parse and return
-        plan = json.loads(resp.choices[0].message.content)
-        if "today" not in plan or "adjustments" not in plan:
-            raise ValueError("LLM response missing required keys ('today' and 'adjustments')")
-        print("Workout plan generated successfully")
-        return plan
-    except (openai.OpenAIError, openai.APIError, openai.APIConnectionError) as e:  # pragma: no cover - depends on API
-        logger.error(f"❌ OpenAI request failed: {e}")
-        return {}
-    except ValueError:
-        raise
-    except Exception as e:  # Fallback for unexpected issues
-        logger.error(f"❌ OpenAI request failed: {e}")
-        return {}
+    
+    # Make decision using reasoning agent
+    reasoning_agent = ReasoningAgent()
+    decision = reasoning_agent.make_decision(metrics)
+    
+    # Generate workout using planner
+    planner = WorkoutPlanner(mission_cfg)
+    training_phase = mission_cfg.training_phase(date.today())
+    workout = planner.generate_workout(decision, training_phase)
+    
+    # Convert to legacy format
+    return {
+        "today": {
+            "type": workout.workout_type,
+            "details": workout.description,
+            "duration_minutes": workout.duration_minutes,
+            "zones": workout.zones,
+            "load": workout.estimated_load,
+            "intensity_factor": workout.intensity_factor
+        },
+        "adjustments": [decision.reason]
+    }

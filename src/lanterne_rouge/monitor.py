@@ -17,8 +17,8 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-from lanterne_rouge.strava_api import strava_get
-from lanterne_rouge.mission_config import get_athlete_ftp
+from .strava_api import strava_get
+from .mission_config import get_athlete_ftp
 
 # --------------------------------------------------------------------------- #
 #  Environment

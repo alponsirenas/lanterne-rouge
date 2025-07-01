@@ -1,8 +1,17 @@
+"""
+Communication Agent and AI client interfaces for Lanterne Rouge.
 
+This module provides utilities for interacting with AI models like OpenAI,
+generating empathetic summaries, and handling structured output.
+"""
 import os
 import json
+from typing import Dict, Any
+from datetime import date
+
 import openai
-from lanterne_rouge.memory_bus import fetch_recent_memories
+
+from .memory_bus import fetch_recent_memories
 
 # Models that natively support the `response_format={"type": "json_object"}` parameter
 _MODELS_WITH_JSON_SUPPORT = {
@@ -214,3 +223,102 @@ def call_llm(
     except Exception as e:
         print(f"❌ OpenAI request failed: {e}")
         return "- Error: Could not get a response from the LLM."
+
+
+class CommunicationAgent:
+    """Generates natural language summaries of training recommendations."""
+    
+    def generate_summary(
+        self,
+        decision,  # TrainingDecision
+        workout,   # WorkoutPlan
+        metrics: Dict[str, Any],
+        config,    # MissionConfig
+        current_date: date
+    ) -> str:
+        """Generate a complete, empathetic training summary."""
+        
+        # Get training context
+        phase = config.training_phase(current_date)
+        next_phase_start = config.next_phase_start(current_date)
+        days_to_next_phase = (next_phase_start - current_date).days if next_phase_start else None
+        days_to_goal = (config.goal_date - current_date).days
+        
+        # Build sections
+        sections = []
+        
+        # 1. Training Phase Context
+        phase_section = self._generate_phase_context(phase, days_to_next_phase, days_to_goal)
+        sections.append(phase_section)
+        
+        # 2. Current Metrics
+        metrics_section = self._generate_metrics_summary(metrics)
+        sections.append(metrics_section)
+        
+        # 3. Today's Reasoning
+        reasoning_section = self._generate_reasoning_summary(decision)
+        sections.append(reasoning_section)
+        
+        # 4. Workout Plan
+        workout_section = self._generate_workout_summary(workout)
+        sections.append(workout_section)
+        
+        return "\n\n".join(sections)
+    
+    def _generate_phase_context(self, phase: str, days_to_next: int, days_to_goal: int) -> str:
+        """Generate training phase context."""
+        lines = [f"🏆 Training Phase: {phase}"]
+        
+        if days_to_next:
+            lines.append(f"📅 Days until next phase: {days_to_next}")
+        
+        lines.append(f"🎯 Days to goal: {days_to_goal}")
+        
+        # Add phase-specific context
+        if phase == "Base":
+            lines.append("Building your aerobic foundation with steady, sustainable efforts.")
+        elif phase == "Build":
+            lines.append("Developing racing fitness with structured interval work.")
+        elif phase == "Peak":
+            lines.append("Sharpening your fitness for peak performance.")
+        elif phase == "Taper":
+            lines.append("Maintaining fitness while reducing fatigue for the big day.")
+        
+        return "\n".join(lines)
+    
+    def _generate_metrics_summary(self, metrics: Dict[str, Any]) -> str:
+        """Generate current metrics summary."""
+        lines = ["📊 Current Fitness Metrics:"]
+        lines.append(f"• Readiness Score: {metrics.get('readiness_score', 'N/A')}")
+        lines.append(f"• CTL (Fitness): {metrics.get('ctl', 'N/A')}")
+        lines.append(f"• ATL (Fatigue): {metrics.get('atl', 'N/A')}")
+        lines.append(f"• TSB (Form): {metrics.get('tsb', 'N/A')}")
+        
+        return "\n".join(lines)
+    
+    def _generate_reasoning_summary(self, decision) -> str:
+        """Generate reasoning summary."""
+        lines = ["🧠 Today's Training Logic:"]
+        lines.append(f"• Decision: {decision.action.title()}")
+        lines.append(f"• Reasoning: {decision.reason}")
+        lines.append(f"• Recommended Intensity: {decision.intensity_recommendation.title()}")
+        
+        return "\n".join(lines)
+    
+    def _generate_workout_summary(self, workout) -> str:
+        """Generate workout summary with zones."""
+        lines = ["🚴 Today's Workout Plan:"]
+        lines.append(f"• Type: {workout.workout_type}")
+        lines.append(f"• Description: {workout.description}")
+        lines.append(f"• Duration: {workout.duration_minutes} minutes")
+        lines.append(f"• Estimated Load: {workout.estimated_load}")
+        
+        if workout.zones:
+            lines.append("• Time in Zones:")
+            for zone, minutes in workout.zones.items():
+                lines.append(f"  - {zone}: {minutes} min")
+        
+        return "\n".join(lines)
+
+
+# Keep existing functions for backward compatibility
