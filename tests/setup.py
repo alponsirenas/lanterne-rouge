@@ -5,7 +5,6 @@ Provides path configuration to import modules from src.
 """
 
 import sys
-import os
 from pathlib import Path
 
 def setup_path():
