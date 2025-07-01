@@ -35,10 +35,12 @@ def run_daily_logic():
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
     
+    # Create metrics dictionary for the recommendation generator
+    # Note: readiness_score is now a scalar integer, not a dictionary
     metrics = {
         "readiness_score": readiness,
         "ctl": ctl,
-        "atl": atl,
+        "atl": atl, 
         "tsb": tsb
     }
     
@@ -48,7 +50,7 @@ def run_daily_logic():
     # Return summary and extract metrics for logging
     log = {
         'date': str(date.today()),
-        'readiness': readiness,
+        'readiness': readiness,  # Readiness is now a scalar integer value 
         'ctl': ctl,
         'atl': atl,
         'tsb': tsb,
@@ -91,10 +93,10 @@ if __name__ == "__main__":
         writer = csv.DictWriter(file, fieldnames=headers)
         row = {
             "day": log.get('date', ''),
-            "readiness_score": log.get('readiness', {}).get('score', ''),
-            "activity_balance": log.get('readiness', {}).get('activity_balance', ''),
-            "body_temperature": log.get('readiness', {}).get('body_temperature', ''),
-            "hrv_balance": log.get('readiness', {}).get('hrv_balance', ''),
+            "readiness_score": log.get('readiness', ''),  # readiness is now a scalar value
+            "activity_balance": '',  # These fields no longer come from readiness dict
+            "body_temperature": '',  # They're now tracked separately in readiness_score_log.csv
+            "hrv_balance": '',       # which is maintained by record_readiness_contributors
             "previous_day_activity": log.get('previous_day_activity', ''),
             "previous_night": log.get('previous_night', ''),
             "recovery_index": log.get('recovery_index', ''),
