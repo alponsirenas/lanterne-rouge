@@ -8,8 +8,6 @@ Observation‑layer utilities for Lanterne Rouge.
 """
 
 import csv
-import json
-import math
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -71,7 +69,7 @@ def record_readiness_contributors(day_entry: dict) -> None:
 def get_oura_readiness():
     """
     Return a tuple of (readiness_score:int | None, hrv_balance:int | None, readiness_day:str | None)
-    
+
     Note: This function returns scalar values, not dictionaries. The full readiness data
     is processed by record_readiness_contributors() and saved to readiness_score_log.csv.
     """
@@ -124,39 +122,39 @@ def _bucket_to_local_midnight(dt: datetime) -> str:
 def _calculate_power_tss(activity: dict) -> float:
     """
     Calculate TSS using power data if available.
-    
+
     Formula: TSS = (duration_seconds × NP × IF) / (FTP × 3600) × 100, where IF = NP/FTP
-    
+
     Returns calculated TSS value or 0 if power data is insufficient.
     """
     # Get current FTP value - force reload from mission config each time
     ftp = get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
-    
+
     # Extract power metrics from activity
     weighted_avg_watts = activity.get("weighted_average_watts")  # This is NP (Normalized Power)
     avg_watts = activity.get("average_watts")
     duration_seconds = activity.get("moving_time") or activity.get("elapsed_time")
-    
+
     # Check if we have required fields
     if not all([duration_seconds, ftp]):
         return 0
-    
+
     # For NP, prefer weighted_average_watts over average_watts
     normalized_power = weighted_avg_watts or avg_watts
-    
+
     # If no power data available, can't calculate power-based TSS
     if not normalized_power:
         return 0
-    
+
     # Calculate Intensity Factor (IF)
     intensity_factor = normalized_power / ftp
-    
+
     # Calculate TSS
     tss = (duration_seconds * normalized_power * intensity_factor) / (ftp * 3600) * 100
-    
+
     # Log if debug enabled
     print(f"DEBUG: Power-based TSS: {tss:.1f} (NP={normalized_power}, IF={intensity_factor:.2f}, Duration={duration_seconds}s, FTP={ftp})")
-    
+
     return tss
 
 
@@ -206,25 +204,25 @@ def get_ctl_atl_tsb(days: int = 90):
             continue
 
         day_key = _bucket_to_local_midnight(act_dt)
-        
+
         # Priority 1: Calculate power-based TSS if power data is available
         tss = _calculate_power_tss(act)
-        
+
         # Priority 2: Use Strava's native relative_effort or suffer_score if no power data
         if tss <= 0:
             tss = act.get("relative_effort") or act.get("suffer_score") or 0
             print(f"DEBUG: Using Strava heart rate-based score: {tss}")
-            
+
         # Priority 3: Fall back to icu_training_load only if no other metric is available
         if tss <= 0 and 'icu_training_load' in act and act['icu_training_load'] is not None:
             tss = float(act['icu_training_load'])
             print(f"DEBUG: Using intervals.icu training load: {tss}")
-            
+
         daily_tss[day_key] = daily_tss.get(day_key, 0) + tss
 
     # Create a sorted list of dates from start_day to today
     date_range = [(start_day + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(days)]
-    
+
     # Create a list of training loads for each day, replacing missing days with 0
     tss_series = [daily_tss.get(day, 0) for day in date_range]
 
@@ -237,7 +235,7 @@ def get_ctl_atl_tsb(days: int = 90):
     # --------------------------------------------------------------------- #
     # 2.  Exponential moving averages - using formula that matches intervals.icu
     # --------------------------------------------------------------------- #
-    
+
     # Initialize CTL and ATL with better starting values
     # Use the average of first 14 days of data as a starting point (if available)
     init_period = min(14, len(tss_series))
@@ -246,26 +244,26 @@ def get_ctl_atl_tsb(days: int = 90):
         ctl = atl = avg_tss
     else:
         ctl = atl = 0.0
-    
+
     # Debug: Print intermediate calculation steps
     print(f"\nDEBUG: Starting with initial values: CTL={ctl:.1f}, ATL={atl:.1f}")
     print("\nDEBUG: Bannister model calculation steps:")
-    
+
     # Keep track of daily CTL/ATL values to access yesterday's values at the end
     daily_values = []
-    
+
     for i, tss in enumerate(tss_series):
         # Calculate new values
         new_ctl = ctl * (1 - K_CTL) + tss * K_CTL
         new_atl = atl * (1 - K_ATL) + tss * K_ATL
-        
+
         # Store daily values
         daily_values.append((date_range[i], new_ctl, new_atl))
-        
+
         # Log every 10 days and the last 5 days for debugging
         if i % 10 == 0 or i >= len(tss_series) - 5:
             print(f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})")
-        
+
         # Update values
         ctl = new_ctl
         atl = new_atl
@@ -274,8 +272,8 @@ def get_ctl_atl_tsb(days: int = 90):
     # TSB = Today's Fitness (CTL) - Today's Fatigue (ATL)
     tsb = ctl - atl
     print(f"DEBUG: Using today's values for TSB: CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
-    
+
     print(f"✅  Calculated CTL={ctl:.1f}, ATL={atl:.1f}, TSB={tsb:.1f}")
-    
+
     # Return the final values
     return round(ctl, 1), round(atl, 1), round(tsb, 1)

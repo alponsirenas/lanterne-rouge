@@ -1,4 +1,9 @@
-# peloton-matcher.py
+"""
+Peloton matcher module for Lanterne Rouge.
+
+This module provides functionality for matching workout types to specific Peloton classes,
+helping users find appropriate virtual training content.
+"""
 
 def match_peloton_class(workout_type):
     """
