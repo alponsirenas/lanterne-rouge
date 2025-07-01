@@ -17,8 +17,8 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-from lanterne_rouge.strava_api import strava_get
-from lanterne_rouge.mission_config import get_athlete_ftp
+from .strava_api import strava_get
+from .mission_config import get_athlete_ftp
 
 # --------------------------------------------------------------------------- #
 #  Environment
@@ -70,7 +70,10 @@ def record_readiness_contributors(day_entry: dict) -> None:
 
 def get_oura_readiness():
     """
-    Return (readiness_score:int | None, hrv_balance:int | None, readiness_day:str | None)
+    Return a tuple of (readiness_score:int | None, hrv_balance:int | None, readiness_day:str | None)
+    
+    Note: This function returns scalar values, not dictionaries. The full readiness data
+    is processed by record_readiness_contributors() and saved to readiness_score_log.csv.
     """
     # Use naive datetime objects consistently
     today = datetime.now().replace(tzinfo=None).date()

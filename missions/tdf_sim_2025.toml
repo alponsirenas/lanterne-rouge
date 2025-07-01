@@ -2,6 +2,7 @@
 # MissionConfig – Tour de France Indoor Simulation 2025
 # ----------------------------------------------------------------
 id          = "tdf-sim-2025"
+name        = "Tour de France Indoor Simulation 2025"
 
 # Resolved at runtime from an env var / secret:
 athlete_id  = "${STRAVA_ATHLETE_ID}"     # e.g. export STRAVA_ATHLETE_ID=1234567

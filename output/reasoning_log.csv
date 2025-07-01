@@ -145,3 +145,27 @@ day,readiness_score,activity_balance,body_temperature,hrv_balance,previous_day_a
 - **Threshold Interval Minutes**: Since threshold work is critical for improving power at lactate threshold and overall performance, include the 20-minute goal as part of today's workout. Consider doing 2 x 10-minute intervals at threshold intensity with adequate recovery between efforts to ensure quality.
 - **Recovery & Nutrition**: Given the intensity and volume of today's workout,
 "
+2025-07-01,76,,,,,,,,,"🏆 Training Phase: Taper
+📅 Days until next phase: 4
+🎯 Days to goal: 4
+Maintaining fitness while reducing fatigue for the big day.
+
+📊 Current Fitness Metrics:
+• Readiness Score: 76
+• CTL (Fitness): 33.8
+• ATL (Fatigue): 33.9
+• TSB (Form): -0.0
+
+🧠 Today's Training Logic:
+• Decision: Maintain
+• Reasoning: Looking at your current metrics and the recent trend in your training history, you're in a good spot right now with your readiness score at 76, which indicates that you're ready for training but should not push too hard, especially considering you're in the taper phase with your goal event just 4 days away. Your Training Stress Balance (TSB) is at -0.0, showing that your fatigue and fitness are perfectly balanced at the moment, which is ideal during a taper. However, since your Chronic Training Load (CTL) and Acute Training Load (ATL) are very close (33.8 and 33.9, respectively), it suggests that your current fitness level and recent fatigue are in harmony, which is great for maintaining your form leading up to your event. The focus now should be on maintaining your fitness without adding stress or fatigue that could hinder your performance on the big day. A moderate intensity will help keep your body in tune without overloading it.
+• Recommended Intensity: Moderate
+
+🚴 Today's Workout Plan:
+• Type: Taper Ride
+• Description: Steady aerobic effort to maintain fitness
+• Duration: 72 minutes
+• Estimated Load: 75
+• Time in Zones:
+  - Zone 2: 70 min
+  - Zone 3: 20 min"
