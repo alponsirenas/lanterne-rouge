@@ -38,7 +38,7 @@ def test_reasoning_agent_rule_based():
     }
     decision = agent.make_decision(metrics, config, date(2025, 6, 1))
     assert isinstance(decision, TrainingDecision)
-    assert decision.action in ["recover", "maintain", "increase", "ease"]
+    assert decision.action in ["recover", "maintain", "push", "ease"]
     assert decision.reason is not None
     assert decision.intensity_recommendation in ["low", "moderate", "high"]
     
