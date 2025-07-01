@@ -56,10 +56,10 @@
 
 ### Testing
 - **Added four new test scripts** demonstrating agent capabilities:
-  - test_agent_output.py
-  - test_agent_output_llm.py
-  - test_default_mode.py
-  - test_llm_reasoning.py
+  - tests/test_agent_output.py
+  - tests/test_agent_output_llm.py
+  - tests/test_default_mode.py
+  - tests/test_llm_reasoning.py
 
 ## ⚙️ Configuration Options
 
