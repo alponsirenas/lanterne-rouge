@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from dataclasses import dataclass
 from datetime import date
 
@@ -29,13 +29,13 @@ class TrainingDecision:
 
 class ReasoningAgent:
     """Makes structured training decisions based on athlete metrics.
-    
+
     Supports both rule-based and LLM-based reasoning modes.
     """
-    
+
     def __init__(self, use_llm: bool = True, model: str = None):
         """Initialize the reasoning agent.
-        
+
         Args:
             use_llm: If True, use LLM-based reasoning. If False, use rule-based reasoning. Default: True.
             model: Optional model name for LLM-based reasoning.
@@ -43,7 +43,7 @@ class ReasoningAgent:
         self.use_llm = use_llm
         self.model = model
         self.decision_rules = self._load_decision_rules()
-    
+
     def _load_decision_rules(self) -> Dict[str, Any]:
         """Load decision rules for training recommendations."""
         return {
@@ -62,42 +62,46 @@ class ReasoningAgent:
                 "max_weekly_increase": 0.1  # 10% per week
             }
         }
-    
-    def make_decision(self, metrics: Dict[str, Any], mission_config=None, current_date: date = None) -> TrainingDecision:
+
+    def make_decision(
+        self,
+        metrics: Dict[str, Any],
+        mission_config=None,
+        current_date: date = None
+    ) -> TrainingDecision:
         """Make a structured training decision based on current metrics.
-        
+
         Args:
             metrics: Dictionary of athlete metrics (readiness_score, tsb, ctl, atl, etc.)
             mission_config: Optional mission configuration for context
             current_date: Current date for training phase context
-            
+
         Returns:
             TrainingDecision with structured reasoning output
         """
         if self.use_llm and os.getenv("OPENAI_API_KEY"):
             return self._make_llm_decision(metrics, mission_config, current_date)
-        else:
-            return self._make_rule_based_decision(metrics, mission_config, current_date)
-    
+        return self._make_rule_based_decision(metrics, mission_config, current_date)
+
     def _make_rule_based_decision(self, metrics: Dict[str, Any], mission_config=None, current_date: date = None) -> TrainingDecision:
         """Make a rule-based training decision."""
         readiness = metrics.get('readiness_score', 75)
         tsb = metrics.get('tsb', 0)
-        ctl = metrics.get('ctl', 30)
-        atl = metrics.get('atl', 35)
-        
+        # CTL and ATL are logged but not currently used in decision logic
+        # They may be used for future enhancements
+
         flags = []
-        
+
         # Analyze readiness
         if readiness < self.decision_rules["readiness_thresholds"]["low"]:
             flags.append("low_readiness")
-        
+
         # Analyze TSB (Training Stress Balance)
         if tsb < self.decision_rules["tsb_thresholds"]["very_negative"]:
             flags.append("very_negative_tsb")
         elif tsb < self.decision_rules["tsb_thresholds"]["negative"]:
             flags.append("negative_tsb")
-        
+
         # Make decision based on flags
         if "low_readiness" in flags or "very_negative_tsb" in flags:
             return TrainingDecision(
@@ -107,7 +111,7 @@ class ReasoningAgent:
                 flags=flags,
                 confidence=0.9
             )
-        elif "negative_tsb" in flags:
+        if "negative_tsb" in flags:
             return TrainingDecision(
                 action="ease",
                 reason=f"TSB at {tsb:.1f} suggests moderate fatigue",
@@ -115,7 +119,7 @@ class ReasoningAgent:
                 flags=flags,
                 confidence=0.8
             )
-        elif tsb > self.decision_rules["tsb_thresholds"]["positive"]:
+        if tsb > self.decision_rules["tsb_thresholds"]["positive"]:
             return TrainingDecision(
                 action="push",
                 reason=f"TSB at {tsb:.1f} indicates good recovery state",
@@ -123,21 +127,25 @@ class ReasoningAgent:
                 flags=flags,
                 confidence=0.8
             )
-        else:
-            return TrainingDecision(
-                action="maintain",
-                reason="Metrics indicate steady training state",
-                intensity_recommendation="moderate",
-                flags=flags,
+        return TrainingDecision(
+            action="maintain",
+            reason="Metrics indicate steady training state",
+            intensity_recommendation="moderate",
+            flags=flags,
                 confidence=0.7
             )
-    
-    def _make_llm_decision(self, metrics: Dict[str, Any], mission_config=None, current_date: date = None) -> TrainingDecision:
+
+    def _make_llm_decision(
+        self,
+        metrics: Dict[str, Any],
+        mission_config=None,
+        current_date: date = None
+    ) -> TrainingDecision:
         """Make an LLM-based training decision."""
         try:
             # Get recent memories for context
             recent_memories = fetch_recent_memories(limit=5)
-            
+
             # Build training context
             training_context = ""
             if mission_config and current_date:
@@ -145,21 +153,22 @@ class ReasoningAgent:
                 next_phase_start = mission_config.next_phase_start(current_date)
                 days_to_next = (next_phase_start - current_date).days if next_phase_start else None
                 days_to_goal = (mission_config.goal_date - current_date).days
-                
+
                 training_context = f"""
 Training Phase: {phase}
 Days to next phase: {days_to_next}
 Days to goal: {days_to_goal}
 """
-            
+
             # Build system prompt
-            system_prompt = """You are an expert cycling coach AI speaking directly to your athlete. Analyze their metrics and training context to make a structured training decision.
+            system_prompt = """You are an expert cycling coach AI speaking directly to your athlete. \
+Analyze their metrics and training context to make a structured training decision.
 
 You must respond with a valid JSON object containing:
 {
   "action": "recover|ease|maintain|push",
-  "reason": "detailed explanation of your decision speaking directly to the athlete in first person (use 'you', 'your')",
-  "intensity_recommendation": "low|moderate|high", 
+  "reason": "detailed explanation speaking directly to the athlete (use 'you', 'your')",
+  "intensity_recommendation": "low|moderate|high",
   "flags": ["flag1", "flag2"],
   "confidence": 0.8
 }
@@ -177,7 +186,7 @@ Consider:
 - CTL (Chronic Training Load): Long-term fitness
 - ATL (Acute Training Load): Recent fatigue
 - Training phase and proximity to goals"""
-            
+
             # Build user prompt
             user_prompt = f"""My current metrics:
 {json.dumps(metrics, indent=2)}
@@ -188,15 +197,15 @@ My recent training history:
 {json.dumps(recent_memories, indent=2) if recent_memories else "No recent history available"}
 
 Please provide a structured training decision based on my metrics and context. Remember to speak to me directly and explain your reasoning in plain language."""
-            
+
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
-            
+
             # Call LLM with JSON mode
             response = call_llm(messages, model=self.model, force_json=True)
-            
+
             # Parse JSON response
             try:
                 decision_data = json.loads(response)
@@ -210,7 +219,7 @@ Please provide a structured training decision based on my metrics and context. R
             except json.JSONDecodeError:
                 # Fallback to rule-based if JSON parsing fails
                 return self._make_rule_based_decision(metrics, mission_config, current_date)
-                
+
         except Exception as e:
             print(f"Error in LLM decision making: {e}")
             # Fallback to rule-based decision

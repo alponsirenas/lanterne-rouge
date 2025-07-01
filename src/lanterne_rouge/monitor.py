@@ -28,7 +28,9 @@ OURA_TOKEN = os.getenv("OURA_TOKEN")
 # Function to get the current FTP from mission config
 def get_current_ftp():
     """Get the current athlete FTP value from mission config."""
-    return get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
+    user_ftp = os.getenv("USER_FTP")
+    default_ftp = int(user_ftp) if user_ftp is not None else 250
+    return get_athlete_ftp(default_ftp=default_ftp)
 
 # Output folder
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
@@ -84,8 +86,11 @@ def get_oura_readiness():
     try:
         r = requests.get(url, headers=headers, params=params, timeout=10)
         r.raise_for_status()
-    except Exception as exc:
-        print(f"❌  Oura API error: {exc}")
+    except requests.RequestException as exc:
+        print(f"❌  Oura API request error: {exc}")
+        return None, None, None
+    except ValueError as exc:
+        print(f"❌  Oura API value error: {exc}")
         return None, None, None
 
     data = r.json().get("data", [])
@@ -128,7 +133,9 @@ def _calculate_power_tss(activity: dict) -> float:
     Returns calculated TSS value or 0 if power data is insufficient.
     """
     # Get current FTP value - force reload from mission config each time
-    ftp = get_athlete_ftp(default_ftp=int(os.getenv("USER_FTP", 250)))
+    user_ftp = os.getenv("USER_FTP")
+    default_ftp = int(user_ftp) if user_ftp is not None else 250
+    ftp = get_athlete_ftp(default_ftp=default_ftp)
 
     # Extract power metrics from activity
     weighted_avg_watts = activity.get("weighted_average_watts")  # This is NP (Normalized Power)
@@ -153,7 +160,11 @@ def _calculate_power_tss(activity: dict) -> float:
     tss = (duration_seconds * normalized_power * intensity_factor) / (ftp * 3600) * 100
 
     # Log if debug enabled
-    print(f"DEBUG: Power-based TSS: {tss:.1f} (NP={normalized_power}, IF={intensity_factor:.2f}, Duration={duration_seconds}s, FTP={ftp})")
+    print(
+        f"DEBUG: Power-based TSS: {tss:.1f} "
+        f"(NP={normalized_power}, IF={intensity_factor:.2f}, "
+        f"Duration={duration_seconds}s, FTP={ftp})"
+    )
 
     return tss
 
@@ -176,7 +187,10 @@ def get_ctl_atl_tsb(days: int = 90):
     daily_tss: dict[str, float] = {}
 
     # Debug info
-    print(f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)")
+    print(
+        f"DEBUG: Today is {today.strftime('%Y-%m-%d')}, "
+        f"looking back to {start_day.strftime('%Y-%m-%d')} ({days} days)"
+    )
     print(f"DEBUG: Found {len(activities)} activities from Strava")
 
     # --------------------------------------------------------------------- #
@@ -262,7 +276,10 @@ def get_ctl_atl_tsb(days: int = 90):
 
         # Log every 10 days and the last 5 days for debugging
         if i % 10 == 0 or i >= len(tss_series) - 5:
-            print(f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})")
+            print(
+                f"DEBUG: Day {i+1} ({date_range[i]}): TSS={tss:.1f}, "
+                f"CTL={new_ctl:.1f} (from {ctl:.1f}), ATL={new_atl:.1f} (from {atl:.1f})"
+            )
 
         # Update values
         ctl = new_ctl
