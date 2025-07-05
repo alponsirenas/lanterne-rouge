@@ -1,0 +1,115 @@
+name: TDF Manual Stage Check
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      check_type:
+        description: 'Type of check to run'
+        required: true
+        default: 'evening'
+        type: choice
+        options:
+        - morning
+        - evening
+        - both
+
+jobs:
+  tdf-manual-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Morning Briefing
+        if: ${{ github.event.inputs.check_type == 'morning' || github.event.inputs.check_type == 'both' }}
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          TO_PHONE: ${{ secrets.TO_PHONE }}
+          OURA_TOKEN: ${{ secrets.OURA_TOKEN }}
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          REPO_OWNER: alponsirenas
+          REPO_NAME: lanterne-rouge
+          GH_PAT: ${{ secrets.GH_PAT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          USE_TWILIO: ${{ secrets.USE_TWILIO }}
+        run: |
+          echo "🌅 Running manual morning briefing..."
+          python scripts/morning_tdf_briefing.py
+
+      - name: Run Evening Check
+        if: ${{ github.event.inputs.check_type == 'evening' || github.event.inputs.check_type == 'both' }}
+        id: evening-check
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          TO_PHONE: ${{ secrets.TO_PHONE }}
+          OURA_TOKEN: ${{ secrets.OURA_TOKEN }}
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          REPO_OWNER: alponsirenas
+          REPO_NAME: lanterne-rouge
+          GH_PAT: ${{ secrets.GH_PAT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          USE_TWILIO: ${{ secrets.USE_TWILIO }}
+        run: |
+          echo "🎉 Running manual evening check..."
+          python scripts/evening_tdf_check.py
+          
+          # Check if points file was updated
+          if git diff --quiet HEAD -- output/tdf_points.json; then
+            echo "No new stage completed in this check"
+            echo "stage_completed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Stage completed! Points updated."
+            echo "stage_completed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit Updates
+        if: ${{ !cancelled() }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: |
+            output/tdf_points.json
+            output/*.txt
+            output/*.csv
+          author_name: lanterne-rouge-manual-bot
+          author_email: manual-bot@users.noreply.github.com
+          message: 'feat(tdf): manual check - ${{ github.event.inputs.check_type }} [skip ci]'
+
+      - name: Summary
+        run: |
+          echo "## 🏆 TDF Manual Check Complete" >> $GITHUB_STEP_SUMMARY
+          echo "**Check Type:** ${{ github.event.inputs.check_type }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ steps.evening-check.outputs.stage_completed }}" == "true" ]]; then
+            echo "✅ **Stage Completed!** Points have been updated." >> $GITHUB_STEP_SUMMARY
+            echo "Check your email/SMS for the detailed summary." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No new stage completion detected." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "You can run this workflow anytime:" >> $GITHUB_STEP_SUMMARY
+          echo "- After completing a workout" >> $GITHUB_STEP_SUMMARY
+          echo "- To get current points status" >> $GITHUB_STEP_SUMMARY
+          echo "- To send manual notifications" >> $GITHUB_STEP_SUMMARY
