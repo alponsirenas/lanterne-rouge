@@ -8,11 +8,15 @@ permissions:
 on:
   schedule:
     # Run multiple times during typical workout hours (PT timezone)
-    - cron: '0 22 * 7 *'   # 3PM PT - early afternoon workouts
-    - cron: '0 1 * 7 *'    # 6PM PT - evening workouts  
-    - cron: '0 4 * 7 *'    # 9PM PT - late workouts
-    - cron: '0 6 * 7 *'    # 11PM PT - final check
-  workflow_dispatch:      # Allow manual trigger
+    # 3PM PT - early afternoon workouts
+    - cron: '0 22 * 7 *'
+    # 6PM PT - evening workouts  
+    - cron: '0 1 * 7 *'
+    # 9PM PT - late workouts
+    - cron: '0 4 * 7 *'
+    # 11PM PT - final check
+    - cron: '0 6 * 7 *'
+  workflow_dispatch:
 
 jobs:
   tdf-evening-check:
@@ -63,10 +67,7 @@ jobs:
         if: steps.tdf-check.outputs.stage_completed == 'true'
         uses: EndBug/add-and-commit@v9
         with:
-          add: |
-            output/tdf_points.json
-            output/*.txt
-            output/*.csv
+          add: 'output/tdf_points.json output/*.txt output/*.csv'
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
           message: 'feat(tdf): stage completed - points updated [skip ci]'

@@ -7,8 +7,9 @@ permissions:
 
 on:
   schedule:
-    - cron: '0 13 * 7 *'  # 6AM PT = 13:00 UTC, only in July
-  workflow_dispatch:  # Allow manual trigger
+    # 6AM PT = 13:00 UTC, only in July
+    - cron: '0 13 * 7 *'
+  workflow_dispatch:
 
 jobs:
   tdf-morning-briefing:
@@ -46,10 +47,7 @@ jobs:
       - name: Commit TDF Points Data
         uses: EndBug/add-and-commit@v9
         with:
-          add: |
-            output/tdf_points.json
-            output/*.txt
-            output/*.csv
+          add: 'output/tdf_points.json output/*.txt output/*.csv'
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
           message: 'feat(tdf): morning briefing and points update [skip ci]'

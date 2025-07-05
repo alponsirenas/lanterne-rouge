@@ -35,7 +35,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Morning Briefing
-        if: ${{ github.event.inputs.check_type == 'morning' || github.event.inputs.check_type == 'both' }}
+        if: github.event.inputs.check_type == 'morning' || github.event.inputs.check_type == 'both'
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
@@ -55,7 +55,7 @@ jobs:
           python scripts/morning_tdf_briefing.py
 
       - name: Run Evening Check
-        if: ${{ github.event.inputs.check_type == 'evening' || github.event.inputs.check_type == 'both' }}
+        if: github.event.inputs.check_type == 'evening' || github.event.inputs.check_type == 'both'
         id: evening-check
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
@@ -85,13 +85,10 @@ jobs:
           fi
 
       - name: Commit Updates
-        if: ${{ !cancelled() }}
+        if: '!cancelled()'
         uses: EndBug/add-and-commit@v9
         with:
-          add: |
-            output/tdf_points.json
-            output/*.txt
-            output/*.csv
+          add: 'output/tdf_points.json output/*.txt output/*.csv'
           author_name: lanterne-rouge-manual-bot
           author_email: manual-bot@users.noreply.github.com
           message: 'feat(tdf): manual check - ${{ github.event.inputs.check_type }} [skip ci]'
