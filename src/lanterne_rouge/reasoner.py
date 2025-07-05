@@ -18,6 +18,8 @@ from .ai_clients import call_llm
 
 
 @dataclass
+
+
 class TrainingDecision:
     """Structured output from reasoning agent."""
     action: str  # "recover", "maintain", "push", "ease"
@@ -154,7 +156,7 @@ class ReasoningAgent:
                 days_to_next = (next_phase_start - current_date).days if next_phase_start else None
                 days_to_goal = (mission_config.goal_date - current_date).days
 
-                training_context = f"""
+                training_context = """
 Training Phase: {phase}
 Days to next phase: {days_to_next}
 Days to goal: {days_to_goal}
@@ -188,7 +190,7 @@ Consider:
 - Training phase and proximity to goals"""
 
             # Build user prompt
-            user_prompt = f"""My current metrics:
+            user_prompt = """My current metrics:
 {json.dumps(metrics, indent=2)}
 
 {training_context}
@@ -227,6 +229,8 @@ Please provide a structured training decision based on my metrics and context. R
 
 
 # Legacy function for backward compatibility
+
+
 def decide_adjustment(
     readiness_score: float,
     readiness_details: dict[str, float],

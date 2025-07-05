@@ -3,6 +3,7 @@
 import os
 import json
 import requests
+import threading
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -18,12 +19,17 @@ STRAVA_REFRESH_TOKEN = os.getenv("STRAVA_REFRESH_TOKEN")
 
 STRAVA_BASE_URL = "https://www.strava.com/api/v3"
 
+# Thread safety: Add locks to protect global variable access
+_token_lock = threading.Lock()
+_athlete_id_lock = threading.Lock()
+
 # Try to load updated tokens from tokens.json if it exists and USE_TOKEN_CACHE is True
 if USE_TOKEN_CACHE and os.path.exists("tokens.json"):
     with open("tokens.json", "r", encoding="utf-8") as f:
         tokens = json.load(f)
-    STRAVA_ACCESS_TOKEN = tokens["access_token"]
-    STRAVA_REFRESH_TOKEN = tokens["refresh_token"]
+    with _token_lock:
+        STRAVA_ACCESS_TOKEN = tokens["access_token"]
+        STRAVA_REFRESH_TOKEN = tokens["refresh_token"]
 
 
 # ---------------------------------------------------------------------------
@@ -42,53 +48,77 @@ def get_athlete_id() -> int:
 
     We fetch it once via `/athlete` and cache the result for the remainder of
     the Python process.  If the access token is expired, we auto‑refresh first.
+    Thread-safe implementation with proper locking.
     """
     global _ATHLETE_ID_CACHE, STRAVA_ACCESS_TOKEN
 
-    if _ATHLETE_ID_CACHE is not None:
-        return _ATHLETE_ID_CACHE
+    # Check cache first with lock protection
+    with _athlete_id_lock:
+        if _ATHLETE_ID_CACHE is not None:
+            return _ATHLETE_ID_CACHE
 
-    headers = {"Authorization": f"Bearer {STRAVA_ACCESS_TOKEN}"}
+    # Get current access token safely
+    with _token_lock:
+        current_token = STRAVA_ACCESS_TOKEN
+
+    headers = {"Authorization": f"Bearer {current_token}"}
     url = f"{STRAVA_BASE_URL}/athlete"
 
     response = requests.get(url, headers=headers, timeout=10)
 
     # Handle token expiry transparently
     if response.status_code == 401:
-        STRAVA_ACCESS_TOKEN, _ = refresh_strava_token()
-        if STRAVA_ACCESS_TOKEN is None:
+        refreshed_token, _ = refresh_strava_token()
+        if refreshed_token is None:
             raise RuntimeError("Failed to refresh Strava access token.")
-        headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
+        headers["Authorization"] = f"Bearer {refreshed_token}"
         response = requests.get(url, headers=headers, timeout=10)
 
     response.raise_for_status()
-    _ATHLETE_ID_CACHE = response.json()["id"]
-    print(f"✅ Fetched athlete ID {_ATHLETE_ID_CACHE} (cached)")
-    return _ATHLETE_ID_CACHE
+    athlete_id = response.json()["id"]
+
+    # Cache the result safely
+    with _athlete_id_lock:
+        _ATHLETE_ID_CACHE = athlete_id
+
+    print(f"✅ Fetched athlete ID {athlete_id} (cached)")
+    return athlete_id
 
 
 def refresh_strava_token():
     """
     Refresh the Strava Access Token using the Refresh Token and save to
-    tokens.json.
+    tokens.json. Thread-safe implementation with proper locking.
     """
     global STRAVA_ACCESS_TOKEN
     global STRAVA_REFRESH_TOKEN
 
     print("🔄 Refreshing Strava Access Token...")
+
+    # Get current tokens safely
+    with _token_lock:
+        current_client_id = STRAVA_CLIENT_ID
+        current_client_secret = STRAVA_CLIENT_SECRET
+        current_refresh_token = STRAVA_REFRESH_TOKEN
+
     token_url = "https://www.strava.com/oauth/token"
     payload = {
-        "client_id": STRAVA_CLIENT_ID,
-        "client_secret": STRAVA_CLIENT_SECRET,
+        "client_id": current_client_id,
+        "client_secret": current_client_secret,
         "grant_type": "refresh_token",
-        "refresh_token": STRAVA_REFRESH_TOKEN,
+        "refresh_token": current_refresh_token,
     }
     response = requests.post(token_url, data=payload, timeout=10)
     if response.status_code == 200:
         tokens = response.json()
-        STRAVA_ACCESS_TOKEN = tokens['access_token']
-        STRAVA_REFRESH_TOKEN = tokens['refresh_token']
+        new_access_token = tokens['access_token']
+        new_refresh_token = tokens['refresh_token']
         expires_at = tokens['expires_at']
+
+        # Update global tokens safely
+        with _token_lock:
+            STRAVA_ACCESS_TOKEN = new_access_token
+            STRAVA_REFRESH_TOKEN = new_refresh_token
 
         print(
             f"✅ Refreshed! New Access Token Expires At: {expires_at}"
@@ -99,7 +129,7 @@ def refresh_strava_token():
             with open("tokens.json", "w", encoding="utf-8") as f:
                 json.dump(tokens, f, indent=2)
 
-        return STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN
+        return new_access_token, new_refresh_token
     print(f"❌ Failed to refresh token: {response.text}")
     return None, None
 
@@ -107,10 +137,16 @@ def refresh_strava_token():
 def strava_get(endpoint):
     """
     Perform a GET request to Strava API with current Access Token.
+    Thread-safe implementation.
     """
     global STRAVA_ACCESS_TOKEN
+
+    # Get current token safely
+    with _token_lock:
+        current_token = STRAVA_ACCESS_TOKEN
+
     headers = {
-        "Authorization": f"Bearer {STRAVA_ACCESS_TOKEN}"
+        "Authorization": f"Bearer {current_token}"
     }
     url = f"{STRAVA_BASE_URL}/{endpoint}"
 
@@ -118,9 +154,10 @@ def strava_get(endpoint):
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
-        STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
-        headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
-        response = requests.get(url, headers=headers, timeout=10)
+        refreshed_access_token, refreshed_refresh_token = refresh_strava_token()
+        if refreshed_access_token:
+            headers["Authorization"] = f"Bearer {refreshed_access_token}"
+            response = requests.get(url, headers=headers, timeout=10)
 
     if response.status_code != 200:
         print(f"❌ Strava API error {response.status_code}: {response.text}")
@@ -140,10 +177,16 @@ def strava_get(endpoint):
 def strava_post(endpoint, payload):
     """
     Perform a POST request to Strava API with current Access Token.
+    Thread-safe implementation.
     """
     global STRAVA_ACCESS_TOKEN
+
+    # Get current token safely
+    with _token_lock:
+        current_token = STRAVA_ACCESS_TOKEN
+
     headers = {
-        "Authorization": f"Bearer {STRAVA_ACCESS_TOKEN}",
+        "Authorization": f"Bearer {current_token}",
         "Content-Type": "application/json"
     }
     url = f"{STRAVA_BASE_URL}/{endpoint}"
@@ -152,8 +195,9 @@ def strava_post(endpoint, payload):
 
     # If token expired, refresh and retry once
     if response.status_code == 401:
-        STRAVA_ACCESS_TOKEN, STRAVA_REFRESH_TOKEN = refresh_strava_token()
-        headers["Authorization"] = f"Bearer {STRAVA_ACCESS_TOKEN}"
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        refreshed_access_token, refreshed_refresh_token = refresh_strava_token()
+        if refreshed_access_token:
+            headers["Authorization"] = f"Bearer {refreshed_access_token}"
+            response = requests.post(url, headers=headers, json=payload, timeout=10)
 
     return response.json()
