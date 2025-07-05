@@ -17,6 +17,32 @@
 - **Minimum Readiness**: 70
 - **Minimum TSB**: -15 (fatigue management threshold)
 
+## Points System & Daily Ride Modes
+
+### Daily Ride Mode Options
+**GC Mode (Conservative)**: Focus on consistent completion, lower risk
+**Breakaway Mode (Aggressive)**: Higher intensity for bonus points, higher risk
+
+### Points Structure
+| Stage Type   | GC Mode (Base) | Breakaway Mode (Total) |
+|--------------|----------------|-------------------------|
+| Flat         | 5 pts          | 8 pts (5+3 bonus)      |
+| Hilly        | 7 pts          | 11 pts (7+4 bonus)     |
+| Mountain     | 10 pts         | 15 pts (10+5 bonus)    |
+| ITT          | 4 pts          | 6 pts (4+2 bonus)      |
+| Mountain ITT | 6 pts          | 9 pts (6+3 bonus)      |
+
+### Completion Bonuses
+- Complete all GC Mode stages: +25 points
+- Complete 10+ Breakaway stages: +15 points  
+- Complete 5 consecutive stages: +5 points
+- Complete all mountain stages in Breakaway Mode: +10 points
+- Complete final week (Stages 16-21): +10 points
+
+### Daily Workflow
+**Morning**: AI recommends ride mode based on readiness, TSB, and fatigue state  
+**Evening**: Calculate points earned, update total, track bonus progress
+
 ## Phase 1: Pre-Event Preparation (Today - July 4, 2025)
 
 ### Immediate Assessment (Days 1-3)
@@ -48,37 +74,67 @@
 
 3. **Coaching communication**:
    - LLM-generated daily summary in first-person, conversational tone
+   - **Recommended ride mode**: GC Mode vs. Breakaway Mode based on readiness/fatigue
    - Specific workout prescription with time-in-zone guidance
-   - Motivation and context for the day's focus
+   - Points opportunity and strategic context for the day's focus
+
+#### Ride Mode Selection Strategy
+
+**GC Mode** (Conservative, Consistent):
+- **When to recommend**: TSB < -10, readiness < 75, consecutive high-load days
+- **Focus**: Stage completion, CTL maintenance, fatigue management
+- **Risk level**: Low - prioritizes finishing over performance
+- **Points**: Base points only (5-10 per stage depending on type)
+
+**Breakaway Mode** (Aggressive, High Reward):
+- **When to recommend**: TSB > -5, readiness > 80, fresh from rest day
+- **Focus**: Performance gains, bonus points, tactical opportunities
+- **Risk level**: Higher - increased intensity for greater reward
+- **Points**: Base + bonus points (8-15 per stage depending on type)
 
 #### Stage Categories and Coaching Approach
 
-**Climbing Stages** (8-10 stages expected):
-- **Target**: Zone 3-4 sustained efforts, 60-minute duration
+**Mountain Stages** (8-10 stages expected):
+- **GC Mode**: Zone 3 sustained efforts, 60-minute duration (10 pts)
+- **Breakaway Mode**: Zone 3-4 with surges, KOM efforts (15 pts)
 - **Coaching focus**: Pacing strategy, fatigue tolerance, mental resilience
 - **Key metrics**: Power consistency, heart rate drift, perceived exertion
-- **Recovery protocol**: Enhanced focus on sleep and nutrition
 
-**Endurance Stages** (10-12 stages expected):
-- **Target**: Zone 2 efforts, up to 75 minutes
-- **Coaching focus**: Aerobic efficiency, fuel management
-- **Key metrics**: Metabolic efficiency, cadence consistency
-- **Recovery protocol**: Active recovery emphasis
+**Hilly Stages** (8-10 stages expected):
+- **GC Mode**: Zone 2-3 rolling efforts, up to 75 minutes (7 pts)
+- **Breakaway Mode**: Zone 3-4 with punchy climbs, sprint efforts (11 pts)
+- **Coaching focus**: Power variability, tactical positioning
+- **Key metrics**: Power spikes, recovery between efforts
 
-**Threshold Stages** (3-5 stages expected):
-- **Target**: Zone 4-5 intervals, 20+ minutes total work
-- **Coaching focus**: Neuromuscular power, lactate tolerance
-- **Key metrics**: Peak power output, recovery between intervals
-- **Recovery protocol**: Complete rest days following
+**Flat Stages** (3-5 stages expected):
+- **GC Mode**: Zone 2 steady efforts, endurance focus (5 pts)
+- **Breakaway Mode**: Zone 2-4 with sprint intervals (8 pts)
+- **Coaching focus**: Aerobic efficiency, sprint power development
+- **Key metrics**: Sustained power, sprint peak output
+
+**Time Trial Stages** (2-3 stages expected):
+- **Individual TT**: GC Mode 4 pts, Breakaway Mode 6 pts
+- **Mountain TT**: GC Mode 6 pts, Breakaway Mode 9 pts
+- **Coaching focus**: Pacing precision, threshold power maintenance
+- **Key metrics**: Power consistency, aerodynamic efficiency
 
 #### Evening Review (8:00-10:00 PM)
 1. **Performance analysis**:
    - Workout completion assessment
+   - **Stage points calculation**: Mode completed + bonus eligibility
+   - **Total points update**: Running total with bonus tracking
    - Data quality validation
    - Fatigue accumulation tracking
 
-2. **Plan adaptation**:
+2. **Points summary**:
+   - Points earned today (base + any bonuses)
+   - Current total points
+   - Progress toward bonus thresholds (consecutive stages, mode-specific achievements)
+   - Strategic recommendations for upcoming stages
+
+3. **Plan adaptation**:
    - Next-day preparation based on current state
+   - Next-day ride mode pre-assessment
    - Weekly trend analysis
    - Mission progress evaluation
 
@@ -115,6 +171,9 @@
 
 **Performance Indicators**:
 - Stage completion rate (target: 100%)
+- **Points earned per stage**: Track daily points and mode selection
+- **Total points accumulation**: Running total with bonus tracking
+- **Ride mode accuracy**: How often AI recommendations align with optimal choices
 - Power consistency within prescribed zones
 - Heart rate response stability
 - Perceived exertion alignment with prescribed intensity
@@ -175,15 +234,25 @@
 
 ### Secondary Objectives (Performance Optimization)
 1. **Quality completion**: >80% of stages completed at prescribed intensity
-2. **Readiness management**: Average readiness score >75
-3. **Recovery efficiency**: TSB recovery to positive values within 48 hours of rest days
-4. **Adaptation demonstration**: Improved power output or efficiency by week 3
+2. **Points optimization**: Achieve >150 total points (average ~7 points per stage)
+3. **Strategic ride mode selection**: AI recommendations lead to optimal points/risk balance
+4. **Readiness management**: Average readiness score >75
+5. **Recovery efficiency**: TSB recovery to positive values within 48 hours of rest days
+6. **Adaptation demonstration**: Improved power output or efficiency by week 3
 
 ### Tertiary Objectives (System Learning)
 1. **AI coaching refinement**: Documented improvements in decision-making accuracy
-2. **Data insights**: New correlations between readiness metrics and performance
-3. **Protocol optimization**: Refined coaching strategies for future events
-4. **User experience enhancement**: Improved communication and engagement patterns
+2. **Bonus achievement targets**: Earn at least 2 of the 5 possible completion bonuses
+3. **Data insights**: New correlations between readiness metrics and performance
+4. **Protocol optimization**: Refined coaching strategies for future events
+5. **User experience enhancement**: Improved communication and engagement patterns
+
+### Bonus Achievement Strategy
+- **5 consecutive stages bonus** (+5 pts): Target early in Week 1 when fresh
+- **10+ Breakaway stages bonus** (+15 pts): Balanced throughout event based on readiness
+- **All mountain stages in Breakaway mode** (+10 pts): Aggressive strategy when conditions allow
+- **Final week completion** (+10 pts): Conservative approach to ensure finishing
+- **All GC Mode stages** (+25 pts): Fallback strategy if health/fatigue demands conservative approach
 
 ## Risk Management
 
@@ -242,12 +311,44 @@
 - Database integrity (`memory/lanterne.db`)
 - Agent execution success rates
 - Data quality validation
+- **Points calculation accuracy**: Verify daily scoring matches stage type and mode
+- **Bonus tracking integrity**: Ensure consecutive stage counts and achievement flags are accurate
 
 ### Performance Optimization
 - LLM response quality assessment
 - Decision-making latency monitoring
 - Memory system efficiency
 - User interface responsiveness
+- **Ride mode recommendation accuracy**: Track success rate of AI mode suggestions
+
+### Required Technology Enhancements
+
+**Points Tracking System**:
+- Add `stage_points` and `total_points` fields to daily observations
+- Track `ride_mode_selected` (GC/Breakaway) and `stage_type` in memory bus
+- Implement bonus tracking: consecutive stages, mode-specific achievements
+- Create points calculation logic based on stage completion and mode
+
+**Enhanced AI Decision Making**:
+- Extend reasoning module to include ride mode recommendations
+- Factor in points strategy (conservative vs. aggressive) based on current standings
+- Include bonus opportunity assessment in daily recommendations
+
+**User Interface Updates**:
+- Morning coaching: Display recommended ride mode with rationale
+- Evening summary: Show points earned, total points, bonus progress
+- Weekly dashboard: Points trends, mode selection patterns, strategic insights
+
+**Database Schema Extensions**:
+```sql
+-- Add to daily observations table
+stage_type VARCHAR(20),           -- 'flat', 'hilly', 'mountain', 'itt', 'mtn_itt'
+ride_mode VARCHAR(20),            -- 'gc', 'breakaway'
+stage_points INTEGER,             -- Points earned this stage
+total_points INTEGER,             -- Running total
+consecutive_stages INTEGER,       -- Count for bonus tracking
+breakaway_stages_completed INTEGER -- Count for bonus tracking
+```
 
 ## Post-Event Analysis Plan
 
