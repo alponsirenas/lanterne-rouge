@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import date
@@ -13,7 +14,6 @@ from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
 from lanterne_rouge.tour_coach import TourCoach
 from lanterne_rouge.mission_config import bootstrap
-import subprocess
 
 load_dotenv()
 
@@ -21,42 +21,42 @@ def run_daily_logic():
     """Execute the new agent-based Tour Coach logic for the day."""
     # Load mission configuration
     mission_cfg = bootstrap(Path("missions/tdf_sim_2025.toml"))
-    
+
     # Determine reasoning mode from environment
     use_llm_reasoning = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
     llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
-    
+
     # Initialize the Tour Coach orchestrator with configurable reasoning
     coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm_reasoning, llm_model=llm_model)
-    
+
     # Get current metrics (similar to run_tour_coach function)
     from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
-    
+
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
-    
+
     # Create metrics dictionary for the recommendation generator
     # Note: readiness_score is now a scalar integer, not a dictionary
     metrics = {
         "readiness_score": readiness,
         "ctl": ctl,
-        "atl": atl, 
+        "atl": atl,
         "tsb": tsb
     }
-    
+
     # Run the daily logic to get the complete summary
     summary = coach.generate_daily_recommendation(metrics)
-    
+
     # Return summary and extract metrics for logging
     log = {
         'date': str(date.today()),
-        'readiness': readiness,  # Readiness is now a scalar integer value 
+        'readiness': readiness,  # Readiness is now a scalar integer value
         'ctl': ctl,
         'atl': atl,
         'tsb': tsb,
         'reasoning_mode': 'LLM' if use_llm_reasoning else 'Rule-based'
     }
-    
+
     return summary, log
 
 if __name__ == "__main__":
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     send_sms(summary, sms_recipient, use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
     print(summary)
 
-    # Save metrics to reasoning log  
+    # Save metrics to reasoning log
     reasoning_log_path = "output/reasoning_log.csv"
     import csv
     headers = [

@@ -26,6 +26,8 @@ load_dotenv()
 OURA_TOKEN = os.getenv("OURA_TOKEN")
 
 # Function to get the current FTP from mission config
+
+
 def get_current_ftp():
     """Get the current athlete FTP value from mission config."""
     user_ftp = os.getenv("USER_FTP")
@@ -40,6 +42,8 @@ OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 # --------------------------------------------------------------------------- #
 #  Oura Readiness helpers
 # --------------------------------------------------------------------------- #
+
+
 def record_readiness_contributors(day_entry: dict) -> None:
     """
     Persist a full contributor snapshot to CSV (`output/readiness_score_log.csv`).

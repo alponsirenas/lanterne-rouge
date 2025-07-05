@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+
+
 class WorkoutPlan:
     """Structured workout plan with zones and timing."""
     workout_type: str

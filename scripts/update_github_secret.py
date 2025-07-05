@@ -3,7 +3,6 @@ import os
 import sys
 import base64
 import json
-import binascii
 
 # Third-party library imports
 import requests

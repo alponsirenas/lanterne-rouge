@@ -37,6 +37,7 @@ def _model_supports_json(model: str) -> bool:
             model.endswith("-json") or
             model.startswith(("gpt-4-turbo", "gpt-4o")))
 
+
 # Initialize OpenAI API key from environment
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -67,7 +68,8 @@ def generate_workout_adjustment(
             default from ``call_llm`` will be used.
 
     Returns:
-        List of GPT-written adjustment recommendation lines. Each line has leading hyphens and whitespace stripped.
+        List of GPT-written adjustment recommendation lines. 
+        Each line has leading hyphens and whitespace stripped.
     """
     # Build a structured 'plan' dict out of your mission config
     try:
@@ -132,7 +134,11 @@ def generate_workout_adjustment(
                     return lines
                 if isinstance(parsed, dict) and "recommendations" in parsed:
                     if isinstance(parsed["recommendations"], list):
-                        lines = [str(line).strip("- \t") for line in parsed["recommendations"] if str(line).strip()]
+                        lines = [
+                            str(line).strip("- \t") 
+                            for line in parsed["recommendations"] 
+                            if str(line).strip()
+                        ]
                         return lines
             except json.JSONDecodeError:
                 pass  # Failed to parse as JSON, continue to fallback
@@ -195,7 +201,8 @@ def call_llm(
     """
     # Resolve model
     if model is None:
-        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")  # Default to a model that can handle JSON
+        # Default to a model that can handle JSON
+        model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
 
     # Set up request parameters
     response_kwargs = {

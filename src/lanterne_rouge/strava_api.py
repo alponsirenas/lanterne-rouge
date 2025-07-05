@@ -76,11 +76,11 @@ def get_athlete_id() -> int:
 
     response.raise_for_status()
     athlete_id = response.json()["id"]
-    
+
     # Cache the result safely
     with _athlete_id_lock:
         _ATHLETE_ID_CACHE = athlete_id
-        
+
     print(f"✅ Fetched athlete ID {athlete_id} (cached)")
     return athlete_id
 
@@ -94,7 +94,7 @@ def refresh_strava_token():
     global STRAVA_REFRESH_TOKEN
 
     print("🔄 Refreshing Strava Access Token...")
-    
+
     # Get current tokens safely
     with _token_lock:
         current_client_id = STRAVA_CLIENT_ID
@@ -140,11 +140,11 @@ def strava_get(endpoint):
     Thread-safe implementation.
     """
     global STRAVA_ACCESS_TOKEN
-    
+
     # Get current token safely
     with _token_lock:
         current_token = STRAVA_ACCESS_TOKEN
-        
+
     headers = {
         "Authorization": f"Bearer {current_token}"
     }
@@ -180,11 +180,11 @@ def strava_post(endpoint, payload):
     Thread-safe implementation.
     """
     global STRAVA_ACCESS_TOKEN
-    
+
     # Get current token safely
     with _token_lock:
         current_token = STRAVA_ACCESS_TOKEN
-        
+
     headers = {
         "Authorization": f"Bearer {current_token}",
         "Content-Type": "application/json"

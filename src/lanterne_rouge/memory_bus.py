@@ -44,13 +44,14 @@ def _get_db_connection():
 
 def _get_conn():
     """Get a connection to the SQLite database with row factory set.
-    
+
     Note: This is kept for backward compatibility but should be avoided.
     Use _get_db_connection() context manager instead.
     """
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def load_memory():
     """Load all memories from the database in chronological order."""
@@ -74,6 +75,7 @@ def load_memory():
                 continue
     return mem
 
+
 def log_observation(data):
     """Log an observation to the memory database.
 
@@ -91,6 +93,7 @@ def log_observation(data):
     except (sqlite3.Error, json.JSONEncodeError) as e:
         print(f"Error logging observation: {e}")
         raise
+
 
 def log_decision(data):
     """Log a decision to the memory database.
@@ -110,6 +113,7 @@ def log_decision(data):
     except (sqlite3.Error, json.JSONEncodeError) as e:
         print(f"Error logging decision: {e}")
         raise
+
 
 def log_reflection(data):
     """Log a reflection to the memory database.
@@ -144,7 +148,7 @@ def fetch_recent_memories(limit: int):
                 (limit,)
             )
             rows = cursor.fetchall()
-            
+
             # parse JSON data and return entries, skipping corrupted ones
             result = []
             for row in rows:
