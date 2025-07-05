@@ -98,23 +98,21 @@ Follow these steps to set up Lanterne Rouge:
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-## Current Version: v0.4.0
+## Current Version: v0.5.0
 
 Release highlights:
-- **Complete refactoring to agent-based architecture** with LLM reasoning as default
-- **Enhanced output quality** with first-person, conversational communication style
-- **Fixed CTL, ATL, and TSB calculations** to match intervals.icu reference values
-- **Time-in-zone workout prescriptions** with detailed intensity recommendations
-- **Fixed readiness score handling** to work with scalar integer value instead of dict
-- **Added comprehensive diagnostic tools** for data validation and model testing
-- **Improved documentation** with detailed architecture and Bannister model explanations
-- **Enhanced configurability** with environment variables for LLM model and reasoning mode
+- **TDF Points System** - 21-stage gamified Tour de France simulation
+- **Automated workflows** - Morning briefings and evening points tracking
+- **Smart ride mode recommendations** - GC vs Breakaway based on physiology
+- **Achievement bonuses** - 5 bonus categories with strategic gameplay
+- **GitHub Actions integration** - Complete automation with 4 new workflows
+- **Backwards compatibility** - Existing coaching system unchanged
 
-See the full [Release Notes for v0.4.0](RELEASE_NOTES_v0.4.0.md) for detailed information.
+See the full [Release Notes for v0.5.0](RELEASE_NOTES_v0.5.0.md) for detailed information.
 
 ## Looking Ahead
 
-With version **v0.4.0**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, providing personalized, contextual, and empathetic training guidance.
+With version **v0.5.0**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, now enhanced with the gamified TDF Points System for engaging, goal-oriented training experiences.
 
 In our TO DO:
 - Refining recommendations and data visualization.

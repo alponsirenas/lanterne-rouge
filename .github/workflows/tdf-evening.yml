@@ -1,0 +1,80 @@
+name: TDF Evening Check
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+on:
+  schedule:
+    # Run multiple times during typical workout hours (PT timezone)
+    # 3PM PT - early afternoon workouts
+    - cron: '0 22 * 7 *'
+    # 6PM PT - evening workouts  
+    - cron: '0 1 * 7 *'
+    # 9PM PT - late workouts
+    - cron: '0 4 * 7 *'
+    # 11PM PT - final check
+    - cron: '0 6 * 7 *'
+  workflow_dispatch:
+
+jobs:
+  tdf-evening-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check for New TDF Stage Completion
+        id: tdf-check
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          TO_PHONE: ${{ secrets.TO_PHONE }}
+          OURA_TOKEN: ${{ secrets.OURA_TOKEN }}
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          REPO_OWNER: alponsirenas
+          REPO_NAME: lanterne-rouge
+          GH_PAT: ${{ secrets.GH_PAT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          USE_TWILIO: ${{ secrets.USE_TWILIO }}
+        run: |
+          echo "Running TDF evening check..."
+          python scripts/evening_tdf_check.py
+          
+          # Check if points file was updated (indicates new stage completed)
+          if git diff --quiet HEAD -- output/tdf_points.json; then
+            echo "No new stage completed"
+            echo "stage_completed=false" >> $GITHUB_OUTPUT
+          else
+            echo "New stage completed!"
+            echo "stage_completed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit TDF Points Update
+        if: steps.tdf-check.outputs.stage_completed == 'true'
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'output/tdf_points.json output/*.txt output/*.csv'
+          author_name: lanterne-rouge-tdf-bot
+          author_email: tdf-bot@users.noreply.github.com
+          message: 'feat(tdf): stage completed - points updated [skip ci]'
+
+      - name: Create Stage Completion Summary
+        if: steps.tdf-check.outputs.stage_completed == 'true'
+        run: |
+          echo "🎉 TDF Stage Completed!" >> $GITHUB_STEP_SUMMARY
+          echo "Points have been updated automatically." >> $GITHUB_STEP_SUMMARY
+          echo "Check your email/SMS for the detailed summary." >> $GITHUB_STEP_SUMMARY
