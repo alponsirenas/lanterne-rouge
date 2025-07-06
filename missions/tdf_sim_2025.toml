@@ -9,7 +9,7 @@ athlete_id  = "${STRAVA_ATHLETE_ID}"     # e.g. export STRAVA_ATHLETE_ID=1234567
 
 start_date  = 2025-01-01                 # first day of the block
 goal_event  = "Tour de France Indoor Simulation 2025"  
-goal_date   = 2025-07-20
+goal_date   = 2025-07-27
 
 [targets]
 ctl_peak               = 55        # Adjusted from 80 to reflect sustainable completion
