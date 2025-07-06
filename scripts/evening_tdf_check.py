@@ -145,6 +145,16 @@ def main():
     print("🏆 LLM-Powered TDF Evening Check")
     print("=" * 45)
     
+    # Debug: Show LLM configuration
+    use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
+    llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+    has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
+    
+    print(f"🤖 LLM Mode: {'ENABLED' if use_llm else 'DISABLED'}")
+    print(f"🧠 Model: {llm_model}")
+    print(f"🔑 OpenAI API Key: {'SET' if has_openai_key else 'MISSING'}")
+    print()
+    
     try:
         # Load mission configuration
         mission_cfg = bootstrap("missions/tdf_sim_2025.toml")

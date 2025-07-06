@@ -224,6 +224,7 @@ Please provide a structured training decision based on my metrics and context. R
 
             # Call LLM with JSON mode
             response = call_llm(messages, model=self.model, force_json=True)
+            print(f"✅ LLM Response received from {self.model or 'default model'} for training decision")
 
             # Parse JSON response
             try:
@@ -437,6 +438,7 @@ Please provide both a training decision AND a ride mode recommendation for today
 
             # Call LLM with JSON mode
             response = call_llm(messages, model=self.model, force_json=True)
+            print(f"✅ LLM Response received from {self.model or 'default model'} for TDF decision")
 
             # Parse JSON response
             try:

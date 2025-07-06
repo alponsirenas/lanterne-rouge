@@ -76,7 +76,17 @@ def generate_briefing():
 
 def main():
     """Main function to run morning TDF briefing."""
-    print("� Generating LLM-Powered TDF Morning Briefing...")
+    print("🏆 Generating LLM-Powered TDF Morning Briefing...")
+    
+    # Debug: Show LLM configuration
+    use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
+    llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+    has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
+    
+    print(f"🤖 LLM Mode: {'ENABLED' if use_llm else 'DISABLED'}")
+    print(f"🧠 Model: {llm_model}")
+    print(f"🔑 OpenAI API Key: {'SET' if has_openai_key else 'MISSING'}")
+    print()
     
     briefing = generate_briefing()
     
