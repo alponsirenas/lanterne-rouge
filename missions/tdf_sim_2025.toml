@@ -7,9 +7,9 @@ name        = "Tour de France Indoor Simulation 2025"
 # Resolved at runtime from an env var / secret:
 athlete_id  = "${STRAVA_ATHLETE_ID}"     # e.g. export STRAVA_ATHLETE_ID=1234567
 
-start_date  = 2025-03-01                 # first day of the block
-goal_event  = "Tour de France Indoor Simulation 2025"
-goal_date   = 2025-07-05
+start_date  = 2025-01-01                 # first day of the block
+goal_event  = "Tour de France Indoor Simulation 2025"  
+goal_date   = 2025-07-20
 
 [targets]
 ctl_peak               = 55        # Adjusted from 80 to reflect sustainable completion

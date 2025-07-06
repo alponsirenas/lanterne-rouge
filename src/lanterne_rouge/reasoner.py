@@ -173,7 +173,7 @@ class ReasoningAgent:
                 days_to_next = (next_phase_start - current_date).days if next_phase_start else None
                 days_to_goal = (mission_config.goal_date - current_date).days
 
-                training_context = """
+                training_context = f"""
 Training Phase: {phase}
 Days to next phase: {days_to_next}
 Days to goal: {days_to_goal}
@@ -207,7 +207,7 @@ Consider:
 - Training phase and proximity to goals"""
 
             # Build user prompt
-            user_prompt = """My current metrics:
+            user_prompt = f"""My current metrics:
 {json.dumps(metrics, indent=2)}
 
 {training_context}
@@ -417,7 +417,7 @@ COMMUNICATION STYLE:
 - Explain WHY this strategy helps their TDF campaign
 - Balance performance with safety"""
 
-            # Build user prompt
+            # Build user prompt  
             user_prompt = f"""My current metrics:
 {json.dumps(metrics, indent=2)}
 
