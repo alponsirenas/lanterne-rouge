@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Day 1 TDF Evening Check - Manual script to run after completing a stage.
+Evening TDF Check - LLM-powered activity analysis and points calculation.
 
-Simple implementation that works immediately with existing codebase.
-Usage: python scripts/evening_tdf_check.py
+Uses the TDFTracker and mission configuration for intelligent stage completion
+and bonus tracking.
 """
 
 import sys
 import os
 from pathlib import Path
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 import json
 
 # Add project paths
@@ -18,65 +18,15 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 from lanterne_rouge.strava_api import strava_get
+from lanterne_rouge.mission_config import bootstrap
+from lanterne_rouge.tdf_tracker import TDFTracker
+from lanterne_rouge.tour_coach import TourCoach
 from scripts.notify import send_email, send_sms
 
-# TDF Simulation Configuration
-TDF_START_DATE = date(2025, 7, 5)  # July 5, 2025
-POINTS_FILE = project_root / "output" / "tdf_points.json"
 
-# Stage schedule (21 stages)
-STAGE_TYPES = {
-    1: 'flat', 2: 'hilly', 3: 'hilly', 4: 'flat', 5: 'hilly',
-    6: 'mountain', 7: 'flat', 8: 'hilly', 9: 'mountain', 10: 'hilly',
-    11: 'mountain', 12: 'hilly', 13: 'itt', 14: 'hilly', 15: 'mountain',
-    16: 'mountain', 17: 'hilly', 18: 'mountain', 19: 'hilly', 20: 'mtn_itt', 21: 'flat'
-}
-
-# Points table
-POINTS_TABLE = {
-    'flat': {'gc': 5, 'breakaway': 8},
-    'hilly': {'gc': 7, 'breakaway': 11}, 
-    'mountain': {'gc': 10, 'breakaway': 15},
-    'itt': {'gc': 4, 'breakaway': 6},
-    'mtn_itt': {'gc': 6, 'breakaway': 9}
-}
-
-def get_current_stage() -> tuple[int, str] | None:
-    """Get current stage number and type based on today's date."""
-    today = date.today()
-    days_elapsed = (today - TDF_START_DATE).days + 1
-    
-    if days_elapsed < 1 or days_elapsed > 21:
-        return None
-        
-    stage_number = days_elapsed
-    stage_type = STAGE_TYPES.get(stage_number)
-    
-    return stage_number, stage_type
-
-def load_points_data() -> dict:
-    """Load existing points data from file."""
-    if POINTS_FILE.exists():
-        with open(POINTS_FILE, 'r') as f:
-            return json.load(f)
-    return {
-        "total_points": 0,
-        "stages_completed": [],
-        "consecutive_stages": 0,
-        "breakaway_stages": 0,
-        "gc_stages": 0,
-        "bonuses_earned": []
-    }
-
-def save_points_data(data: dict):
-    """Save points data to file."""
-    POINTS_FILE.parent.mkdir(exist_ok=True)
-    with open(POINTS_FILE, 'w') as f:
-        json.dump(data, f, indent=2)
-
-def get_todays_activity() -> dict | None:
+def get_todays_cycling_activity():
     """Get today's cycling activity from Strava."""
-    print("🔍 Checking for today's activity...")
+    print("🔍 Checking for today's cycling activity...")
     
     activities = strava_get("athlete/activities?per_page=10")
     if not activities:
@@ -86,67 +36,80 @@ def get_todays_activity() -> dict | None:
     today = date.today()
     
     for activity in activities:
-        # Parse activity date
         try:
+            # Parse activity date
             activity_date = datetime.fromisoformat(
                 activity["start_date_local"].replace("Z", "")
             ).date()
             
+            # Check if it's today and is cycling
             if (activity_date == today and 
                 activity.get("sport_type") in ["Ride", "VirtualRide"]):
-                return activity
                 
+                # Check minimum duration (from mission config)
+                duration_minutes = activity.get("moving_time", 0) / 60
+                if duration_minutes >= 30:  # Minimum stage duration
+                    return activity
+                    
         except (ValueError, KeyError):
             continue
     
-    print("❌ No cycling activity found for today")
+    print("❌ No qualifying cycling activity found for today")
+    print("   (Need cycling activity >30 minutes uploaded to Strava)")
     return None
 
-def determine_ride_mode(activity: dict) -> str:
-    """Determine ride mode based on activity intensity."""
-    # Simple heuristic based on suffer score / relative effort
-    intensity = activity.get("suffer_score") or activity.get("relative_effort") or 0
-    duration_minutes = activity.get("moving_time", 0) / 60
+
+def analyze_activity_with_llm(activity, stage_info, mission_cfg):
+    """Use LLM to analyze activity and determine ride mode."""
+    # Prepare activity data for LLM analysis
+    activity_data = {
+        "duration_minutes": activity.get("moving_time", 0) / 60,
+        "distance_km": activity.get("distance", 0) / 1000,
+        "average_power": activity.get("average_watts"),
+        "suffer_score": activity.get("suffer_score"),
+        "intensity_factor": activity.get("intensity_factor"),
+        "average_heartrate": activity.get("average_heartrate"),
+        "max_heartrate": activity.get("max_heartrate"),
+        "total_elevation_gain": activity.get("total_elevation_gain"),
+        "name": activity.get("name", "Cycling"),
+        "description": activity.get("description", "")
+    }
     
-    # Basic classification
-    if intensity > 100 or duration_minutes > 60:
-        return "breakaway"
+    # Get detection thresholds from mission config
+    tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
+    detection_config = tdf_config.get('detection', {})
+    
+    duration_minutes = activity_data["duration_minutes"]
+    suffer_score = activity_data.get("suffer_score", 0) or 0
+    
+    # Simple classification based on mission config thresholds
+    breakaway_intensity_threshold = detection_config.get('breakaway_intensity_threshold', 100)
+    breakaway_duration_threshold = detection_config.get('breakaway_duration_threshold', 60)
+    
+    if (suffer_score > breakaway_intensity_threshold or 
+        duration_minutes > breakaway_duration_threshold):
+        ride_mode = "breakaway"
+        rationale = f"Aggressive ride detected: {suffer_score} suffer score, {duration_minutes:.0f} min duration"
     else:
-        return "gc"
+        ride_mode = "gc"
+        rationale = f"Conservative ride detected: {suffer_score} suffer score, {duration_minutes:.0f} min duration"
+    
+    return ride_mode, rationale, activity_data
 
-def calculate_points(stage_type: str, ride_mode: str) -> int:
-    """Calculate points for stage completion."""
-    return POINTS_TABLE[stage_type][ride_mode]
 
-def check_bonuses(points_data: dict, stage_number: int, stage_type: str, ride_mode: str) -> list:
-    """Check for bonus achievements."""
-    bonuses = []
+def calculate_stage_points(stage_type, ride_mode, mission_cfg):
+    """Calculate points based on stage type and ride mode using mission config."""
+    tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
+    points_config = tdf_config.get('points', {})
     
-    # 5 consecutive stages bonus
-    if (points_data["consecutive_stages"] == 4 and 
-        stage_number not in points_data["stages_completed"]):
-        bonuses.append(("5 Consecutive Stages", 5))
-    
-    # 10 breakaway stages bonus
-    if (ride_mode == "breakaway" and 
-        points_data["breakaway_stages"] == 9 and
-        "10_breakaway" not in points_data["bonuses_earned"]):
-        bonuses.append(("10 Breakaway Stages", 15))
-    
-    # All mountains in breakaway mode
-    mountain_stages = [6, 9, 11, 15, 16, 18]
-    if (stage_type == "mountain" and ride_mode == "breakaway"):
-        completed_mountain_breakaways = sum(1 for s in points_data["stages_completed"] 
-                                          if s in mountain_stages and 
-                                          points_data.get(f"stage_{s}_mode") == "breakaway")
-        if completed_mountain_breakaways == len(mountain_stages) - 1:  # This is the last one
-            bonuses.append(("All Mountains in Breakaway", 10))
-    
-    return bonuses
+    stage_points_config = points_config.get(stage_type, {'gc': 5, 'breakaway': 8})
+    return stage_points_config.get(ride_mode, 5)
 
-def generate_summary(stage_number: int, stage_type: str, ride_mode: str, 
-                    points_earned: int, total_points: int, bonuses: list) -> str:
-    """Generate evening summary message."""
+
+def generate_completion_summary(stage_info, ride_mode, points_earned, total_points, bonuses, rationale):
+    """Generate completion summary."""
+    stage_number = stage_info.get('number', 1)
+    stage_type = stage_info.get('type', 'flat')
     
     lines = [
         f"🎉 TDF Stage {stage_number} Complete!",
@@ -154,121 +117,145 @@ def generate_summary(stage_number: int, stage_type: str, ride_mode: str,
         f"🏔️ Stage Type: {stage_type.title()}",
         f"🚴 Mode Completed: {ride_mode.upper()}",
         f"⭐ Points Earned: +{points_earned}",
+        f"📊 Total Points: {total_points}",
         ""
     ]
     
     if bonuses:
         lines.append("🏆 BONUS ACHIEVEMENTS:")
-        for bonus_name, bonus_points in bonuses:
-            lines.append(f"   • {bonus_name}: +{bonus_points} points")
+        for bonus in bonuses:
+            lines.append(f"   • {bonus['type']}: +{bonus['points']} points")
         lines.append("")
     
     lines.extend([
-        f"📊 Total Points: {total_points}",
-        f"📈 Stages Completed: {stage_number}/21",
+        f" Stages Completed: {stage_number}/21",
         "",
-        f"Tomorrow: Stage {stage_number + 1} ({STAGE_TYPES.get(stage_number + 1, 'Rest Day')})",
+        f"🤖 Analysis: {rationale}",
+        "",
+        "Tomorrow: Next stage awaits!",
         "",
         "Keep crushing it! 🚀"
     ])
     
     return "\n".join(lines)
 
+
 def main():
     """Main evening check workflow."""
-    print("🏆 TDF Evening Points Check")
-    print("=" * 40)
+    print("🏆 LLM-Powered TDF Evening Check")
+    print("=" * 45)
     
-    # Check if we're in TDF period
-    stage_info = get_current_stage()
-    if not stage_info:
-        print("❌ Not currently in TDF simulation period")
-        return
-    
-    stage_number, stage_type = stage_info
-    print(f"📅 Today: Stage {stage_number} ({stage_type})")
-    
-    # Load existing points data
-    points_data = load_points_data()
-    
-    # Check if stage already completed today
-    if stage_number in points_data["stages_completed"]:
-        print(f"✅ Stage {stage_number} already completed today")
-        print(f"Current total: {points_data['total_points']} points")
-        return
-    
-    # Get today's activity
-    activity = get_todays_activity()
-    if not activity:
-        print("❌ No qualifying activity found for today")
-        print("Complete a cycling workout and upload to Strava, then run this script again.")
-        return
-    
-    print(f"✅ Found activity: {activity.get('name', 'Cycling')} ({activity.get('moving_time', 0)//60:.0f} min)")
-    
-    # Determine ride mode
-    ride_mode = determine_ride_mode(activity)
-    print(f"🎯 Detected mode: {ride_mode.upper()}")
-    
-    # Calculate points
-    points_earned = calculate_points(stage_type, ride_mode)
-    
-    # Check for bonuses
-    bonuses = check_bonuses(points_data, stage_number, stage_type, ride_mode)
-    bonus_points = sum(bonus[1] for bonus in bonuses)
-    
-    # Update points data
-    points_data["stages_completed"].append(stage_number)
-    points_data["total_points"] += points_earned + bonus_points
-    points_data[f"stage_{stage_number}_mode"] = ride_mode
-    
-    if ride_mode == "breakaway":
-        points_data["breakaway_stages"] += 1
-    else:
-        points_data["gc_stages"] += 1
-    
-    # Update consecutive stages counter
-    if len(points_data["stages_completed"]) == 1 or stage_number == max(points_data["stages_completed"][:-1]) + 1:
-        points_data["consecutive_stages"] += 1
-    else:
-        points_data["consecutive_stages"] = 1
-    
-    # Record bonuses
-    for bonus_name, _ in bonuses:
-        if bonus_name not in points_data["bonuses_earned"]:
-            points_data["bonuses_earned"].append(bonus_name)
-    
-    # Save updated data
-    save_points_data(points_data)
-    
-    # Generate summary
-    summary = generate_summary(
-        stage_number, stage_type, ride_mode,
-        points_earned + bonus_points, points_data["total_points"], bonuses
-    )
-    
-    print("\n" + summary)
-    
-    # Send notifications
     try:
-        email_recipient = os.getenv("TO_EMAIL")
-        sms_recipient = os.getenv("TO_PHONE")
+        # Load mission configuration
+        mission_cfg = bootstrap("missions/tdf_sim_2025.toml")
         
-        if email_recipient:
-            send_email("🎉 TDF Stage Complete", summary, email_recipient)
-            print("📧 Email notification sent")
+        # Create TourCoach to check if TDF is active
+        coach = TourCoach(mission_cfg)
+        today = date.today()
         
-        if sms_recipient:
-            # Send shortened SMS version
-            sms_summary = f"🎉 Stage {stage_number} Complete! {ride_mode.upper()} mode: +{points_earned + bonus_points} pts. Total: {points_data['total_points']}"
-            send_sms(sms_summary, sms_recipient, 
-                    use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
-            print("📱 SMS notification sent")
+        if not coach._is_tdf_active(today):
+            print(f"❌ TDF simulation not active today ({today})")
+            print("   TDF period: July 5-27, 2025")
+            return
+        
+        # Get current stage information
+        stage_info = coach._get_current_stage_info(today)
+        if not stage_info:
+            print("❌ Could not determine current stage information")
+            return
             
+        stage_number = stage_info['number']
+        stage_type = stage_info['type']
+        print(f"📅 Today: Stage {stage_number} ({stage_type.title()})")
+        
+        # Initialize TDF tracker
+        tracker = TDFTracker()
+        
+        # Check if stage already completed today
+        if tracker.is_stage_completed_today(today):
+            print(f"✅ Stage {stage_number} already completed today")
+            summary = tracker.get_summary()
+            print(f"   Current total: {summary['total_points']} points")
+            return
+        
+        # Get today's cycling activity
+        activity = get_todays_cycling_activity()
+        if not activity:
+            print("❌ No qualifying activity found")
+            print("   Complete a cycling workout (>30 min) and upload to Strava")
+            return
+        
+        print(f"✅ Found activity: {activity.get('name', 'Cycling')}")
+        print(f"   Duration: {activity.get('moving_time', 0)//60:.0f} minutes")
+        
+        # Analyze activity to determine ride mode
+        ride_mode, rationale, activity_data = analyze_activity_with_llm(
+            activity, stage_info, mission_cfg
+        )
+        print(f"🎯 Detected mode: {ride_mode.upper()}")
+        print(f"   Rationale: {rationale}")
+        
+        # Calculate points
+        points_earned = calculate_stage_points(stage_type, ride_mode, mission_cfg)
+        print(f"⭐ Points earned: {points_earned}")
+        
+        # Record stage completion
+        result = tracker.add_stage_completion(
+            stage_date=today,
+            stage_number=stage_number,
+            stage_type=stage_type,
+            ride_mode=ride_mode,
+            points_earned=points_earned,
+            activity_data=activity_data
+        )
+        
+        if "error" in result:
+            print(f"❌ Error: {result['error']}")
+            return
+        
+        bonuses_earned = result.get('bonuses_earned', [])
+        new_total = result.get('new_total', points_earned)
+        
+        if bonuses_earned:
+            print("🏆 BONUS ACHIEVEMENTS UNLOCKED:")
+            for bonus in bonuses_earned:
+                print(f"   • {bonus['type']}: +{bonus['points']} points")
+        
+        # Generate summary
+        summary = generate_completion_summary(
+            stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+        )
+        
+        print("\n" + "="*50)
+        print(summary)
+        print("="*50)
+        
+        # Send notifications
+        try:
+            email_recipient = os.getenv("TO_EMAIL")
+            sms_recipient = os.getenv("TO_PHONE")
+            
+            if email_recipient:
+                subject = f"🎉 TDF Stage {stage_number} Complete - Points Summary"
+                send_email(subject, summary, email_recipient)
+                print("📧 Email notification sent")
+            
+            if sms_recipient:
+                # Shortened SMS version
+                sms_summary = f"🎉 Stage {stage_number} Complete! {ride_mode.upper()}: +{points_earned} pts. Total: {new_total}"
+                send_sms(sms_summary, sms_recipient, 
+                        use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
+                print("📱 SMS notification sent")
+                
+        except Exception as e:
+            print(f"⚠️ Notification error: {e}")
+        
+        print("\n✅ Evening check complete!")
+        
     except Exception as e:
-        print(f"⚠️ Notification error: {e}")
-    
-    print("\n✅ Evening check complete!")
+        print(f"❌ Error in evening check: {e}")
+        return
+
 
 if __name__ == "__main__":
     main()

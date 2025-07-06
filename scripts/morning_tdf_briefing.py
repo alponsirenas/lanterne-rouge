@@ -46,8 +46,16 @@ def generate_briefing():
         # Load mission configuration
         mission_cfg = bootstrap("missions/tdf_sim_2025.toml")
         
-        # Check if TDF is enabled and active
+        # Create LLM-powered TourCoach
+        use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
+        llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
+        
+        coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm, llm_model=llm_model)
+        
+        # Check if TDF is active - if not, fall back to regular coaching
         today = date.today()
+        if not coach._is_tdf_active(today):
+            return f"TDF simulation not active today ({today}). TDF period: July 5-27, 2025"
         
         # Load points status
         points_status = load_points_status()
@@ -56,12 +64,6 @@ def generate_briefing():
         tdf_data = {
             "points_status": points_status
         }
-        
-        # Create LLM-powered TourCoach
-        use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
-        llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
-        
-        coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm, llm_model=llm_model)
         
         # Generate TDF recommendation
         briefing = coach.generate_tdf_recommendation(metrics, tdf_data)
