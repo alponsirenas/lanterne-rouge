@@ -329,6 +329,121 @@ class CommunicationAgent:
                 lines.append(f"  - {zone}: {minutes} min")
 
         return "\n".join(lines)
+    
+    def generate_tdf_summary(
+        self,
+        tdf_decision,  # TDFDecision
+        metrics: Dict[str, Any],
+        config,        # MissionConfig 
+        current_date: date,
+        tdf_data: Dict[str, Any] = None
+    ) -> str:
+        """Generate a TDF-specific training summary with ride mode recommendation."""
+        
+        # Get stage and points information
+        stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
+        points_status = tdf_data.get('points_status', {}) if tdf_data else {}
+        
+        # Build TDF-specific sections
+        sections = []
+        
+        # 1. TDF Stage Header
+        stage_section = self._generate_tdf_stage_header(stage_info, tdf_decision)
+        sections.append(stage_section)
+        
+        # 2. Current Metrics & Recommendation
+        metrics_section = self._generate_tdf_metrics_summary(metrics, tdf_decision)
+        sections.append(metrics_section)
+        
+        # 3. Points Strategy
+        points_section = self._generate_tdf_points_summary(tdf_decision, points_status, config)
+        sections.append(points_section)
+        
+        # 4. Reasoning & Strategy
+        reasoning_section = self._generate_tdf_reasoning_summary(tdf_decision)
+        sections.append(reasoning_section)
+        
+        # 5. Motivational close
+        motivation_section = self._generate_tdf_motivation(tdf_decision, stage_info)
+        sections.append(motivation_section)
+        
+        return "\n\n".join(sections)
+    
+    def _generate_tdf_stage_header(self, stage_info: Dict[str, Any], tdf_decision) -> str:
+        """Generate TDF stage header."""
+        stage_number = stage_info.get('number', 1)
+        stage_type = stage_info.get('type', 'flat')
+        
+        lines = [
+            f"🏆 TDF Simulation - Stage {stage_number}",
+            f"🏔️ Stage Type: {stage_type.title()} Stage",
+            "=" * 50
+        ]
+        
+        return "\n".join(lines)
+    
+    def _generate_tdf_metrics_summary(self, metrics: Dict[str, Any], tdf_decision) -> str:
+        """Generate TDF metrics and recommendation summary."""
+        lines = ["📊 READINESS CHECK:"]
+        lines.append(f"• Readiness Score: {metrics.get('readiness_score', 'N/A')}/100")
+        lines.append(f"• TSB (Form): {metrics.get('tsb', 'N/A')}")
+        lines.append(f"• CTL (Fitness): {metrics.get('ctl', 'N/A')}")
+        
+        lines.append("")
+        lines.append("🎯 TODAY'S RECOMMENDATION:")
+        lines.append(f"• Ride Mode: {tdf_decision.recommended_ride_mode.upper()}")
+        lines.append(f"• Expected Points: {tdf_decision.expected_points}")
+        lines.append(f"• Rationale: {tdf_decision.mode_rationale}")
+        
+        return "\n".join(lines)
+    
+    def _generate_tdf_points_summary(self, tdf_decision, points_status: Dict[str, Any], config) -> str:
+        """Generate points and bonus summary."""
+        lines = ["📈 POINTS STATUS:"]
+        lines.append(f"• Current Total: {points_status.get('total_points', 0)} points")
+        lines.append(f"• Stages Completed: {points_status.get('stages_completed', 0)}/21")
+        
+        if tdf_decision.bonus_opportunities:
+            lines.append("")
+            lines.append("🏆 BONUS OPPORTUNITIES:")
+            for opportunity in tdf_decision.bonus_opportunities:
+                lines.append(f"   • {opportunity}")
+        
+        # Show bonus progress
+        consecutive = points_status.get('consecutive_stages', 0)
+        breakaway_count = points_status.get('breakaway_count', 0)
+        
+        lines.append("")
+        lines.append("🎖️ BONUS PROGRESS:")
+        lines.append(f"   • 5 consecutive: {consecutive}/5")
+        lines.append(f"   • 10 breakaways: {breakaway_count}/10")
+        
+        return "\n".join(lines)
+    
+    def _generate_tdf_reasoning_summary(self, tdf_decision) -> str:
+        """Generate TDF reasoning summary."""
+        lines = ["🧠 TRAINING STRATEGY:"]
+        lines.append(f"• Training Focus: {tdf_decision.action.title()}")
+        lines.append(f"• Intensity: {tdf_decision.intensity_recommendation.title()}")
+        lines.append(f"• Reasoning: {tdf_decision.reason}")
+        
+        if tdf_decision.strategic_notes:
+            lines.append("")
+            lines.append("📝 STRATEGIC NOTES:")
+            lines.append(f"{tdf_decision.strategic_notes}")
+        
+        return "\n".join(lines)
+    
+    def _generate_tdf_motivation(self, tdf_decision, stage_info: Dict[str, Any]) -> str:
+        """Generate motivational closing."""
+        stage_number = stage_info.get('number', 1)
+        
+        if tdf_decision.recommended_ride_mode == 'rest':
+            return "🛌 Rest up! Your health comes first, and smart recovery makes you stronger."
+        elif tdf_decision.recommended_ride_mode == 'breakaway':
+            return f"🚀 Time to attack Stage {stage_number}! Your body is ready for an aggressive ride. Go get those bonus points!"
+        else:
+            return f"💪 Steady and smart for Stage {stage_number}. Every point counts, and consistency wins the long game!"
 
 
 # Keep existing functions for backward compatibility

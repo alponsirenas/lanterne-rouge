@@ -24,3 +24,81 @@ min_tsb       = -15
 
 [athlete]
 ftp           = 128         # Athlete's Functional Threshold Power in watts
+
+# ─────────────────────────────────────────────────────────────
+# TDF Points System Configuration
+# ─────────────────────────────────────────────────────────────
+[tdf_simulation]
+enabled = true
+start_date = 2025-07-05
+end_date = 2025-07-27
+total_stages = 21
+
+# Stage schedule with types
+[tdf_simulation.stages]
+1 = "flat"
+2 = "hilly" 
+3 = "hilly"
+4 = "flat"
+5 = "hilly"
+6 = "mountain"
+7 = "flat"
+8 = "hilly"
+9 = "mountain"
+10 = "hilly"
+11 = "mountain"
+12 = "hilly"
+13 = "itt"
+14 = "hilly"
+15 = "mountain"
+16 = "mountain"
+17 = "hilly"
+18 = "mountain"
+19 = "hilly"
+20 = "mtn_itt"
+21 = "flat"
+
+# Points structure for different stage types and ride modes
+[tdf_simulation.points]
+[tdf_simulation.points.flat]
+gc = 5
+breakaway = 8
+
+[tdf_simulation.points.hilly]
+gc = 7
+breakaway = 11
+
+[tdf_simulation.points.mountain]
+gc = 10
+breakaway = 15
+
+[tdf_simulation.points.itt]
+gc = 4
+breakaway = 6
+
+[tdf_simulation.points.mtn_itt]
+gc = 6
+breakaway = 9
+
+# Achievement bonus structure
+[tdf_simulation.bonuses]
+consecutive_5_stages = 5
+breakaway_10_stages = 15
+all_mountains_breakaway = 10
+final_week_complete = 10
+all_gc_mode = 25
+
+# Safety thresholds for ride mode recommendations
+[tdf_simulation.safety]
+force_rest_readiness = 60
+force_rest_tsb = -20
+prefer_gc_readiness = 75
+prefer_gc_tsb = -10
+prefer_breakaway_readiness = 80
+prefer_breakaway_tsb = -5
+
+# Activity detection settings
+[tdf_simulation.detection]
+min_stage_duration_minutes = 30
+breakaway_intensity_threshold = 100  # Suffer score threshold
+breakaway_duration_threshold = 60    # Minutes

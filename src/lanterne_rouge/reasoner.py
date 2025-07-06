@@ -18,8 +18,25 @@ from .ai_clients import call_llm
 
 
 @dataclass
+class TDFDecision:
+    """Extended decision structure for TDF simulation."""
+    # Base decision fields
+    action: str  # "recover", "maintain", "push", "ease"
+    reason: str  # Human-readable explanation
+    intensity_recommendation: str  # "low", "moderate", "high"
+    flags: List[str]  # ["low_readiness", "negative_tsb", etc.]
+    confidence: float  # 0.0 to 1.0
+    
+    # TDF-specific fields
+    recommended_ride_mode: str  # 'gc', 'breakaway', 'rest'
+    mode_rationale: str  # Explanation for ride mode choice
+    stage_type: str  # Current stage type
+    expected_points: int  # Points available for recommended mode
+    bonus_opportunities: List[str]  # Available bonus achievements
+    strategic_notes: str  # Additional strategic context
 
 
+@dataclass
 class TrainingDecision:
     """Structured output from reasoning agent."""
     action: str  # "recover", "maintain", "push", "ease"
@@ -226,6 +243,225 @@ Please provide a structured training decision based on my metrics and context. R
             print(f"Error in LLM decision making: {e}")
             # Fallback to rule-based decision
             return self._make_rule_based_decision(metrics, mission_config, current_date)
+
+    def make_tdf_decision(
+        self,
+        metrics: Dict[str, Any],
+        mission_config=None,
+        current_date: date = None,
+        tdf_data: Dict[str, Any] = None
+    ) -> TDFDecision:
+        """Make a TDF-specific decision including ride mode recommendation.
+        
+        Args:
+            metrics: Dictionary of athlete metrics
+            mission_config: Mission configuration with TDF settings
+            current_date: Current date
+            tdf_data: TDF-specific data (current points, stage info, etc.)
+            
+        Returns:
+            TDFDecision with both training and ride mode recommendations
+        """
+        if self.use_llm and os.getenv("OPENAI_API_KEY"):
+            return self._make_llm_tdf_decision(metrics, mission_config, current_date, tdf_data)
+        return self._make_rule_based_tdf_decision(metrics, mission_config, current_date, tdf_data)
+
+    def _make_rule_based_tdf_decision(
+        self,
+        metrics: Dict[str, Any],
+        mission_config=None,
+        current_date: date = None,
+        tdf_data: Dict[str, Any] = None
+    ) -> TDFDecision:
+        """Make a rule-based TDF decision."""
+        # First get base training decision
+        base_decision = self._make_rule_based_decision(metrics, mission_config, current_date)
+        
+        # Extract TDF configuration
+        tdf_config = getattr(mission_config, 'tdf_simulation', {}) if mission_config else {}
+        safety_config = tdf_config.get('safety', {})
+        
+        readiness = metrics.get('readiness_score', 75)
+        tsb = metrics.get('tsb', 0)
+        
+        # Determine stage info
+        stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
+        stage_type = stage_info.get('type', 'flat')
+        stage_number = stage_info.get('number', 1)
+        
+        # Get points for this stage type
+        points_config = tdf_config.get('points', {}).get(stage_type, {'gc': 5, 'breakaway': 8})
+        
+        # Rule-based ride mode decision
+        if (readiness < safety_config.get('force_rest_readiness', 60) or 
+            tsb < safety_config.get('force_rest_tsb', -20)):
+            ride_mode = 'rest'
+            expected_points = 0
+            mode_rationale = f"Safety first - readiness {readiness} or TSB {tsb:.1f} requires rest"
+        elif (readiness < safety_config.get('prefer_gc_readiness', 75) or 
+              tsb < safety_config.get('prefer_gc_tsb', -10)):
+            ride_mode = 'gc'
+            expected_points = points_config.get('gc', 5)
+            mode_rationale = f"Conservative GC mode - readiness {readiness}, TSB {tsb:.1f}"
+        elif (readiness > safety_config.get('prefer_breakaway_readiness', 80) and 
+              tsb > safety_config.get('prefer_breakaway_tsb', -5)):
+            ride_mode = 'breakaway'
+            expected_points = points_config.get('breakaway', 8)
+            mode_rationale = f"Aggressive breakaway mode - excellent readiness {readiness}, TSB {tsb:.1f}"
+        else:
+            ride_mode = 'gc'
+            expected_points = points_config.get('gc', 5)
+            mode_rationale = f"Balanced GC mode - readiness {readiness}, TSB {tsb:.1f}"
+        
+        # Analyze bonus opportunities (simplified for rule-based)
+        bonus_opportunities = []
+        points_status = tdf_data.get('points_status', {}) if tdf_data else {}
+        consecutive = points_status.get('consecutive_stages', 0)
+        if consecutive == 4:
+            bonus_opportunities.append("5 consecutive stages (1 more needed!)")
+        
+        return TDFDecision(
+            action=base_decision.action,
+            reason=base_decision.reason,
+            intensity_recommendation=base_decision.intensity_recommendation,
+            flags=base_decision.flags,
+            confidence=base_decision.confidence,
+            recommended_ride_mode=ride_mode,
+            mode_rationale=mode_rationale,
+            stage_type=stage_type,
+            expected_points=expected_points,
+            bonus_opportunities=bonus_opportunities,
+            strategic_notes=f"Stage {stage_number} ({stage_type}) - {mode_rationale}"
+        )
+
+    def _make_llm_tdf_decision(
+        self,
+        metrics: Dict[str, Any],
+        mission_config=None,
+        current_date: date = None,
+        tdf_data: Dict[str, Any] = None
+    ) -> TDFDecision:
+        """Make an LLM-based TDF decision with ride mode recommendation."""
+        try:
+            # Get recent memories for context
+            recent_memories = fetch_recent_memories(limit=7)
+            
+            # Extract TDF context
+            tdf_config = getattr(mission_config, 'tdf_simulation', {}) if mission_config else {}
+            stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
+            points_status = tdf_data.get('points_status', {}) if tdf_data else {}
+            
+            # Build training context
+            training_context = ""
+            if mission_config and current_date:
+                phase = mission_config.training_phase(current_date)
+                days_to_goal = (mission_config.goal_date - current_date).days
+                training_context = f"Training Phase: {phase}\nDays to goal: {days_to_goal}\n"
+            
+            # Build TDF context
+            tdf_context = ""
+            if stage_info:
+                stage_number = stage_info.get('number', 1)
+                stage_type = stage_info.get('type', 'flat')
+                points_for_stage = tdf_config.get('points', {}).get(stage_type, {'gc': 5, 'breakaway': 8})
+                
+                tdf_context = f"""
+TDF SIMULATION STAGE {stage_number}:
+- Stage Type: {stage_type.title()}
+- Points Available: GC Mode = {points_for_stage.get('gc', 5)}, Breakaway Mode = {points_for_stage.get('breakaway', 8)}
+- Current Total Points: {points_status.get('total_points', 0)}
+- Stages Completed: {points_status.get('stages_completed', 0)}/21
+- Consecutive Stages: {points_status.get('consecutive_stages', 0)}
+- Breakaway Stages: {points_status.get('breakaway_count', 0)}
+
+BONUS OPPORTUNITIES:
+- 5 Consecutive Stages: {points_status.get('consecutive_stages', 0)}/5 (+5 points)
+- 10 Breakaway Stages: {points_status.get('breakaway_count', 0)}/10 (+15 points)
+- All Mountains in Breakaway: Progress tracked
+- Complete Final Week: Available in stages 16-21
+- All GC Mode: Alternative strategy (+25 points)
+"""
+
+            # Build enhanced system prompt for TDF
+            system_prompt = f"""You are an expert cycling coach AI for the Tour de France Indoor Simulation. You're speaking directly to your athlete about today's stage.
+
+You must respond with a valid JSON object containing:
+{{
+  "action": "recover|ease|maintain|push",
+  "reason": "explanation for training decision (use 'you', 'your')",
+  "intensity_recommendation": "low|moderate|high", 
+  "flags": ["flag1", "flag2"],
+  "confidence": 0.8,
+  "recommended_ride_mode": "rest|gc|breakaway",
+  "mode_rationale": "explanation for ride mode choice (use 'you', 'your')",
+  "stage_type": "{stage_info.get('type', 'flat')}",
+  "expected_points": 0,
+  "bonus_opportunities": ["opportunity1", "opportunity2"],
+  "strategic_notes": "additional strategic context"
+}}
+
+RIDE MODES:
+- REST: Force recovery day (0 points) - use when readiness <60 or TSB <-20
+- GC MODE: Conservative completion focus (base points only) 
+- BREAKAWAY MODE: Aggressive performance focus (higher points + bonuses)
+
+DECISION FACTORS:
+- Athlete Safety: Priority #1 - never compromise health for points
+- Physiological State: Readiness score (0-100), TSB (training stress balance)
+- Strategic Context: Current points position, bonus opportunities, remaining stages
+- Stage Type: Different points available for flat/hilly/mountain/ITT stages
+
+COMMUNICATION STYLE:
+- Address athlete directly ("you", "your")
+- Be encouraging and supportive
+- Explain WHY this strategy helps their TDF campaign
+- Balance performance with safety"""
+
+            # Build user prompt
+            user_prompt = f"""My current metrics:
+{json.dumps(metrics, indent=2)}
+
+{training_context}
+
+{tdf_context}
+
+My recent training history:
+{json.dumps(recent_memories[-5:], indent=2) if recent_memories else "No recent history available"}
+
+Please provide both a training decision AND a ride mode recommendation for today's TDF stage. Remember to speak to me directly and explain your reasoning for both the training approach and the strategic ride mode choice."""
+
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
+
+            # Call LLM with JSON mode
+            response = call_llm(messages, model=self.model, force_json=True)
+
+            # Parse JSON response
+            try:
+                decision_data = json.loads(response)
+                return TDFDecision(
+                    action=decision_data.get("action", "maintain"),
+                    reason=decision_data.get("reason", "LLM-based training decision"),
+                    intensity_recommendation=decision_data.get("intensity_recommendation", "moderate"),
+                    flags=decision_data.get("flags", []),
+                    confidence=decision_data.get("confidence", 0.7),
+                    recommended_ride_mode=decision_data.get("recommended_ride_mode", "gc"),
+                    mode_rationale=decision_data.get("mode_rationale", "LLM-based ride mode decision"),
+                    stage_type=decision_data.get("stage_type", stage_info.get('type', 'flat')),
+                    expected_points=decision_data.get("expected_points", 5),
+                    bonus_opportunities=decision_data.get("bonus_opportunities", []),
+                    strategic_notes=decision_data.get("strategic_notes", "")
+                )
+            except json.JSONDecodeError:
+                # Fallback to rule-based if JSON parsing fails
+                return self._make_rule_based_tdf_decision(metrics, mission_config, current_date, tdf_data)
+
+        except Exception as e:
+            print(f"Error in LLM TDF decision making: {e}")
+            # Fallback to rule-based decision
+            return self._make_rule_based_tdf_decision(metrics, mission_config, current_date, tdf_data)
 
 
 # Legacy function for backward compatibility
