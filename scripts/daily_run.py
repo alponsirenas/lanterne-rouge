@@ -67,7 +67,7 @@ if __name__ == "__main__":
     os.environ["STRAVA_REFRESH_TOKEN"] = refresh_token
 
     # Update GitHub secret with new token
-    subprocess.run(["python", "scripts/update_github_secret.py"], check=True)
+    subprocess.run(["python", "scripts/update_github_secret.py"], check=True, shell=False)
 
     subject = "Lanterne Rouge: Daily Training Plan"
     email_recipient = os.getenv("TO_EMAIL")
@@ -86,10 +86,10 @@ if __name__ == "__main__":
         "sleep_balance", "explanation"
     ]
     if not os.path.exists(reasoning_log_path):
-        with open(reasoning_log_path, mode='w', newline='') as file:
+        with open(reasoning_log_path, mode='w', newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=headers)
             writer.writeheader()
-    with open(reasoning_log_path, mode='a', newline='') as file:
+    with open(reasoning_log_path, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=headers)
         row = {
             "day": log.get('date', ''),

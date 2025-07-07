@@ -92,7 +92,7 @@ def main():
     
     # Save to file
     os.makedirs("output", exist_ok=True)
-    with open("output/morning_tdf_briefing.txt", "w") as f:
+    with open("output/morning_tdf_briefing.txt", "w", encoding="utf-8") as f:
         f.write(briefing)
     
     print("✅ Briefing generated: output/morning_tdf_briefing.txt")

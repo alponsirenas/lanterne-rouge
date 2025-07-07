@@ -28,7 +28,7 @@ class TDFTracker:
         """Load TDF data from file."""
         if self.data_file.exists():
             try:
-                with open(self.data_file, 'r') as f:
+                with open(self.data_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except (json.JSONDecodeError, IOError):
                 pass
@@ -50,7 +50,7 @@ class TDFTracker:
         """Save TDF data to file."""
         self._data["last_updated"] = datetime.now().isoformat()
         
-        with open(self.data_file, 'w') as f:
+        with open(self.data_file, 'w', encoding='utf-8') as f:
             json.dump(self._data, f, indent=2)
     
     def get_points_status(self) -> Dict[str, Any]:
