@@ -231,18 +231,18 @@ def main():
             for bonus in bonuses_earned:
                 print(f"   • {bonus['type']}: +{bonus['points']} points")
         
-        # Generate summary
-        summary = generate_completion_summary(
-            stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
-        )
+        # Log stage completion without sensitive data
+        print(f"\n✅ Stage {stage_number} completion summary generated")
+        print(f"🎯 Mode: {ride_mode.upper()}, Points: +{points_earned}, Total: {new_total}")
         
-        # Only print summary in debug mode to avoid logging sensitive data
+        # Handle debug mode separately to avoid sensitive data in production logs
         if os.getenv("DEBUG_TDF", "false").lower() == "true":
+            debug_summary = generate_completion_summary(
+                stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+            )
             print("\n" + "="*50)
-            print(summary)
+            print(debug_summary)
             print("="*50)
-        else:
-            print(f"\n✅ Stage {stage_number} completion summary generated (use DEBUG_TDF=true to view details)")
         
         # Send notifications
         try:
@@ -250,8 +250,12 @@ def main():
             sms_recipient = os.getenv("TO_PHONE")
             
             if email_recipient:
+                # Generate summary only for notifications
+                notification_summary = generate_completion_summary(
+                    stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+                )
                 subject = f"🎉 TDF Stage {stage_number} Complete - Points Summary"
-                send_email(subject, summary, email_recipient)
+                send_email(subject, notification_summary, email_recipient)
                 print("📧 Email notification sent")
             
             if sms_recipient:
