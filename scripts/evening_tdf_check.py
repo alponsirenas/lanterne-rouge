@@ -145,6 +145,9 @@ def main():
     print("🏆 LLM-Powered TDF Evening Check")
     print("=" * 45)
     
+    # Check debug mode once at the start
+    debug_mode = os.getenv("DEBUG_TDF", "false").lower() == "true"
+    
     # Debug: Show LLM configuration
     use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
     llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
@@ -195,15 +198,23 @@ def main():
             print("   Complete a cycling workout (>30 min) and upload to Strava")
             return
         
-        print(f"✅ Found activity: {activity.get('name', 'Cycling')}")
-        print(f"   Duration: {activity.get('moving_time', 0)//60:.0f} minutes")
+        # Log activity detection without sensitive details
+        if debug_mode:
+            print(f"✅ Found activity: {activity.get('name', 'Cycling')}")
+            print(f"   Duration: {activity.get('moving_time', 0)//60:.0f} minutes")
+        else:
+            print("✅ Qualifying cycling activity found")
         
         # Analyze activity to determine ride mode
         ride_mode, rationale, activity_data = analyze_activity_with_llm(
             activity, stage_info, mission_cfg
         )
-        print(f"🎯 Detected mode: {ride_mode.upper()}")
-        print(f"   Rationale: {rationale}")
+        # Log mode detection without sensitive rationale data
+        if os.getenv("DEBUG_TDF", "false").lower() == "true":
+            print(f"🎯 Detected mode: {ride_mode.upper()}")
+            print(f"   Rationale: {rationale}")
+        else:
+            print("🎯 Activity analysis complete")
         
         # Calculate points
         points_earned = calculate_stage_points(stage_type, ride_mode, mission_cfg)
@@ -233,16 +244,28 @@ def main():
         
         # Log stage completion without sensitive data
         print(f"\n✅ Stage {stage_number} completion summary generated")
-        print(f"🎯 Mode: {ride_mode.upper()}, Points: +{points_earned}, Total: {new_total}")
+        if debug_mode:
+            print(f"🎯 Mode: {ride_mode.upper()}, Points: +{points_earned}, Total: {new_total}")
+        else:
+            print(f"📊 Points earned: +{points_earned}, Total: {new_total}")
         
         # Handle debug mode separately to avoid sensitive data in production logs
-        if os.getenv("DEBUG_TDF", "false").lower() == "true":
-            debug_summary = generate_completion_summary(
-                stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
-            )
-            print("\n" + "="*50)
-            print(debug_summary)
-            print("="*50)
+        if debug_mode:
+            # Only generate and display sensitive debug data when explicitly enabled
+            try:
+                debug_summary = generate_completion_summary(
+                    stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+                )
+                print("\n" + "="*50)
+                # Write to debug file instead of stdout to avoid logging sensitive data
+                debug_file = "output/debug_tdf_summary.txt"
+                os.makedirs("output", exist_ok=True)
+                with open(debug_file, "w", encoding="utf-8") as f:
+                    f.write(debug_summary)
+                print(f"Debug summary written to {debug_file}")
+                print("="*50)
+            except Exception as e:
+                print(f"Debug mode error: {e}")
         
         # Send notifications
         try:
