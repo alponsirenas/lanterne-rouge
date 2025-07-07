@@ -37,10 +37,13 @@ jobs:
           STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
           STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
           STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          STRAVA_ATHLETE_ID: ${{ secrets.STRAVA_ATHLETE_ID }}
           REPO_OWNER: alponsirenas
           REPO_NAME: lanterne-rouge
           GH_PAT: ${{ secrets.GH_PAT }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          USE_LLM_REASONING: "true"
+          OPENAI_MODEL: "gpt-4-turbo-preview"
           USE_TWILIO: ${{ secrets.USE_TWILIO }}
         run: python scripts/morning_tdf_briefing.py
 

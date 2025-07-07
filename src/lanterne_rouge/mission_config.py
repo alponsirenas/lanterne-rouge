@@ -7,10 +7,10 @@ configurations from TOML files.
 import json
 import sqlite3
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, Any
 from datetime import date, timedelta
 
-import tomli as tomllib  # tomllib in 3.11+
+import tomllib  # tomllib in 3.11+
 from pydantic import BaseModel, Field, ValidationError
 
 
@@ -34,6 +34,7 @@ class MissionConfig(BaseModel):
     goal_date: date
     athlete: AthleteConfig
     constraints: ConstraintsConfig = Field(default_factory=ConstraintsConfig)
+    tdf_simulation: Optional[Dict[str, Any]] = None
 
     def training_phase(self, today: date) -> str:
         """Determine current training phase based on date."""

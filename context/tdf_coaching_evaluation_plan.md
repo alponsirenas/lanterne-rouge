@@ -375,3 +375,44 @@ breakaway_stages_completed INTEGER -- Count for bonus tracking
 This coaching and evaluation plan provides a comprehensive framework for successfully completing the Tour de France Indoor Simulation 2025 while maintaining athlete health, optimizing AI system performance, and generating valuable insights for future development. The plan balances ambitious event completion goals with conservative health management, ensuring the "Lanterne Rouge" philosophy of finishing strong rather than burning out.
 
 The success of this simulation will validate the Lanterne Rouge system's ability to provide intelligent, adaptive coaching for complex endurance challenges while maintaining transparency, safety, and motivation throughout the journey.
+
+## ✅ IMPLEMENTED: Power-Based Analysis System
+
+### Scientific Training Load Assessment
+**Intensity Factor (IF)**: Normalized Power ÷ FTP for accurate relative effort assessment
+**Training Stress Score (TSS)**: Duration × IF² × 100 for quantified training load
+**Effort Level Classification**: Automatic power zone categorization (recovery/aerobic/tempo/threshold/vo2max/neuromuscular)
+
+### Power-Based Ride Mode Classification
+**Breakaway Mode Thresholds**:
+- IF ≥ 0.85 (Zone 4+ effort)
+- TSS ≥ 60 (High training load)
+- Strategy: Aggressive, high-intensity effort
+
+**GC Mode Thresholds**:
+- IF ≥ 0.70 (Zone 3+ effort)  
+- TSS ≥ 40 (Moderate training load)
+- Strategy: Conservative, sustainable effort
+
+**Rest Mode**:
+- IF < 0.70 (Zone 1-2 effort)
+- TSS < 40 (Low training load)
+- Strategy: Recovery or very easy effort
+
+### LLM-Powered Analysis
+- **Intelligent Context Analysis**: LLM evaluates power metrics with stage type and strategic considerations
+- **Confidence Scoring**: AI provides confidence levels and performance indicators
+- **Post-Stage Evaluation**: Comprehensive analysis with recovery recommendations and strategic guidance
+- **Fallback System**: Rule-based power analysis when LLM unavailable
+
+### Configuration Integration
+```toml
+[athlete]
+ftp = 128  # Functional Threshold Power for all calculations
+
+[tdf_simulation.detection]
+breakaway_intensity_threshold = 0.85  # IF for breakaway classification
+breakaway_tss_threshold = 60          # TSS for breakaway classification
+gc_intensity_threshold = 0.70         # IF for GC classification
+gc_tss_threshold = 40                 # TSS for GC classification
+```

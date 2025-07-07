@@ -1,3 +1,92 @@
+# TDF Points System Implementation Plan - v0.5.0 Update
+
+## ✅ COMPLETED: Power-Based Activity Analysis System
+
+### Power-Based Analysis Features ✅
+
+#### 1. Scientific Training Load Assessment
+- **Intensity Factor (IF)**: Normalized Power ÷ FTP for accurate effort assessment
+- **Training Stress Score (TSS)**: Duration × IF² × 100 for training load quantification
+- **Effort Level Classification**: Automatic categorization (recovery/aerobic/tempo/threshold/vo2max/neuromuscular)
+- **Normalized Power Integration**: Uses weighted average power for variability compensation
+
+#### 2. LLM-Powered Activity Analysis ✅
+- **Intelligent Stage Mode Detection**: LLM analyzes power metrics to determine GC/Breakaway/Rest modes
+- **Power-First Analysis**: Prioritizes IF, TSS, and NP over subjective metrics like suffer score
+- **Contextual Reasoning**: Considers stage type, athlete FTP, and training thresholds
+- **Confidence Scoring**: LLM provides confidence levels and performance indicators
+
+#### 3. Enhanced Detection Thresholds ✅
+```toml
+# Power-based thresholds (missions/tdf_sim_2025.toml)
+[tdf_simulation.detection]
+min_stage_duration_minutes = 30
+breakaway_intensity_threshold = 0.85  # IF threshold for breakaway effort
+breakaway_tss_threshold = 60          # TSS threshold for breakaway effort
+gc_intensity_threshold = 0.70         # IF threshold for solid GC effort
+gc_tss_threshold = 40                 # TSS threshold for GC effort
+fallback_suffer_threshold = 100       # Fallback when power unavailable
+```
+
+#### 4. Robust Fallback System ✅
+- **Rule-Based Power Analysis**: When LLM unavailable, uses power-based rules
+- **Suffer Score Fallback**: Only used when power data is insufficient
+- **Input Validation**: Comprehensive validation and sanitization of all inputs
+- **Error Handling**: Graceful degradation with detailed logging
+
+#### 5. Post-Stage LLM Evaluation ✅
+- **Strategic Performance Analysis**: LLM provides comprehensive post-stage evaluation
+- **Recovery Recommendations**: Personalized recovery advice based on training load
+- **Campaign Strategy**: Strategic guidance for upcoming stages
+- **Motivational Messaging**: Encouraging, personalized communication
+
+### Technical Architecture ✅
+
+#### Power Metrics Calculation
+```python
+def calculate_power_metrics(activity_data: Dict[str, Any], ftp: int) -> Dict[str, Any]:
+    """Calculate power-based training metrics using athlete's FTP."""
+    intensity_factor = normalized_power / ftp
+    tss = duration_hours * (intensity_factor ** 2) * 100
+    effort_level = classify_effort_level(intensity_factor)
+    return {
+        'intensity_factor': intensity_factor,
+        'tss': tss,
+        'normalized_power': normalized_power,
+        'effort_level': effort_level
+    }
+```
+
+#### LLM Integration Points
+- **Activity Analysis**: `analyze_activity_with_llm()` in `scripts/evening_tdf_check.py`
+- **Stage Evaluation**: `generate_llm_stage_evaluation()` for post-stage analysis
+- **Validation Layer**: `src/lanterne_rouge/validation.py` for input sanitization
+- **Power Metrics**: Integration with athlete FTP from mission configuration
+
+### Configuration Integration ✅
+
+#### Mission Configuration
+```toml
+[athlete]
+ftp = 128  # Functional Threshold Power in watts
+
+[tdf_simulation.detection]
+# Science-based thresholds using power zones
+breakaway_intensity_threshold = 0.85  # Zone 4+ effort
+gc_intensity_threshold = 0.70         # Zone 3+ effort
+```
+
+#### Environment Variables
+```bash
+USE_LLM_REASONING=true
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-4-turbo-preview
+```
+
+---
+
+## ORIGINAL IMPLEMENTATION PLAN
+
 # TDF Points System Implementation Plan
 
 ## Current Architecture Analysis
