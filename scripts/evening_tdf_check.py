@@ -208,15 +208,18 @@ def main():
         points_earned = calculate_stage_points(stage_type, ride_mode, mission_cfg)
         print("⭐ Points calculation complete")
         
-        # Record stage completion
-        result = tracker.add_stage_completion(
-            stage_date=today,
-            stage_number=stage_number,
-            stage_type=stage_type,
-            ride_mode=ride_mode,
-            points_earned=points_earned,
-            activity_data=activity_data
-        )
+        # Record stage completion (variables processed internally, not logged)
+        try:
+            result = tracker.add_stage_completion(
+                stage_date=today,
+                stage_number=stage_number,
+                stage_type=stage_type,
+                ride_mode=ride_mode,
+                points_earned=points_earned,
+                activity_data=activity_data
+            )
+        except Exception:
+            result = {"error": "Processing failed"}
         
         if "error" in result:
             print("❌ Error processing stage completion")
@@ -227,8 +230,7 @@ def main():
         
         if bonuses_earned:
             print("🏆 BONUS ACHIEVEMENTS UNLOCKED:")
-            for bonus in bonuses_earned:
-                print(f"   • {bonus['type']}: +{bonus['points']} points")
+            print("   • Bonus achievements earned")
         
         # Log stage completion without any sensitive data
         print("\n✅ Stage completion summary generated")
@@ -244,13 +246,16 @@ def main():
             sms_recipient = os.getenv("TO_PHONE")
             
             if email_recipient:
-                # Generate summary only for notifications
-                notification_summary = generate_completion_summary(
-                    stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
-                )
-                subject = "🎉 TDF Stage Complete - Points Summary"
-                send_email(subject, notification_summary, email_recipient)
-                print("📧 Email notification sent")
+                # Generate summary only for notifications (separate from logging)
+                try:
+                    notification_summary = generate_completion_summary(
+                        stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+                    )
+                    subject = "🎉 TDF Stage Complete - Points Summary"
+                    send_email(subject, notification_summary, email_recipient)
+                    print("📧 Email notification sent")
+                except Exception:
+                    print("📧 Email notification failed")
             
             if sms_recipient:
                 # Shortened SMS version without sensitive data
