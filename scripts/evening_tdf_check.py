@@ -183,9 +183,8 @@ def main():
         
         # Check if stage already completed today
         if tracker.is_stage_completed_today(today):
-            print(f"✅ Stage {stage_number} already completed today")
-            summary = tracker.get_summary()
-            print(f"   Current total: {summary['total_points']} points")
+            print("✅ Stage already completed today")
+            print("   Points tracking up to date")
             return
         
         # Get today's cycling activity
@@ -207,7 +206,7 @@ def main():
         
         # Calculate points
         points_earned = calculate_stage_points(stage_type, ride_mode, mission_cfg)
-        print(f"⭐ Points earned: {points_earned}")
+        print("⭐ Points calculation complete")
         
         # Record stage completion
         result = tracker.add_stage_completion(
@@ -220,7 +219,7 @@ def main():
         )
         
         if "error" in result:
-            print(f"❌ Error: {result['error']}")
+            print("❌ Error processing stage completion")
             return
         
         bonuses_earned = result.get('bonuses_earned', [])
@@ -232,8 +231,8 @@ def main():
                 print(f"   • {bonus['type']}: +{bonus['points']} points")
         
         # Log stage completion without any sensitive data
-        print(f"\n✅ Stage {stage_number} completion summary generated")
-        print(f"📊 Points earned: +{points_earned}, Total: {new_total}")
+        print(f"\n✅ Stage completion summary generated")
+        print(f"📊 Points processing complete")
         
         # Handle debug mode - write sensitive data to file only, never to stdout
         if os.getenv("DEBUG_TDF", "false").lower() == "true":
@@ -248,7 +247,7 @@ def main():
                 with open(debug_file, "w", encoding="utf-8") as f:
                     f.write(debug_summary)
                 
-                print(f"🐛 Debug data written to {debug_file}")
+                print("🐛 Debug data written to file")
             except Exception as e:
                 print(f"Debug mode error: {e}")
         
@@ -262,13 +261,13 @@ def main():
                 notification_summary = generate_completion_summary(
                     stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
                 )
-                subject = f"🎉 TDF Stage {stage_number} Complete - Points Summary"
+                subject = "🎉 TDF Stage Complete - Points Summary"
                 send_email(subject, notification_summary, email_recipient)
                 print("📧 Email notification sent")
             
             if sms_recipient:
                 # Shortened SMS version without sensitive data
-                sms_summary = f"🎉 Stage {stage_number} Complete! +{points_earned} pts. Total: {new_total}"
+                sms_summary = "🎉 TDF Stage Complete! Points updated successfully"
                 send_sms(sms_summary, sms_recipient, 
                         use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
                 print("📱 SMS notification sent")
