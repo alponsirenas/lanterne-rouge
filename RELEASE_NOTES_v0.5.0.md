@@ -60,6 +60,68 @@ Version 0.5.0 introduces the **TDF Points System** - a gamified 21-stage Tour de
 - **Oura integration**: Physiological data drives mode recommendations
 - **Notification system**: Leverages existing email/SMS infrastructure
 
+## 🔋 Power-Based Analysis System (v0.5.0 Update)
+
+### Scientific Training Load Assessment
+- **Intensity Factor (IF)**: Normalized Power ÷ FTP for accurate relative effort assessment
+- **Training Stress Score (TSS)**: Duration × IF² × 100 for quantified training load
+- **Effort Level Classification**: Automatic power zone categorization (recovery/aerobic/tempo/threshold/vo2max/neuromuscular)
+- **FTP Integration**: All calculations relative to athlete's Functional Threshold Power (128W)
+
+### LLM-Powered Activity Analysis
+- **Power-First Approach**: Prioritizes IF, TSS, and Normalized Power over subjective metrics
+- **Intelligent Context Analysis**: LLM evaluates power metrics with stage type and strategic considerations
+- **Confidence Scoring**: AI provides confidence levels and performance indicators
+- **Enhanced Validation**: Comprehensive input validation and sanitization for all LLM interactions
+
+### Smart Ride Mode Classification
+**Breakaway Mode (Aggressive)**:
+- IF ≥ 0.85 (Zone 4+ effort)
+- TSS ≥ 60 (High training load)
+- Strategy: High-intensity effort pushing physiological limits
+
+**GC Mode (Conservative)**:
+- IF ≥ 0.70 (Zone 3+ effort)
+- TSS ≥ 40 (Moderate training load)
+- Strategy: Sustainable effort focused on consistent completion
+
+**Rest Mode (Recovery)**:
+- IF < 0.70 (Zone 1-2 effort)
+- TSS < 40 (Low training load)
+- Strategy: Active recovery or very easy effort
+
+### Post-Stage LLM Evaluation
+- **Comprehensive Analysis**: Strategic performance evaluation with recovery recommendations
+- **Campaign Strategy**: Advice for upcoming stages considering current fitness state
+- **Personalized Motivation**: Encouraging, context-aware communication
+- **Training Load Management**: TSS-based recovery guidance and strategic planning
+
+### Enhanced Fallback System
+- **Rule-Based Power Analysis**: When LLM unavailable, uses power-based classification rules
+- **Graceful Degradation**: Maintains scientific accuracy even without LLM
+- **Suffer Score Fallback**: Only used when power data is insufficient
+- **Robust Error Handling**: Comprehensive error catching with detailed logging
+
+### Configuration Enhancements
+```toml
+# Power-based thresholds in missions/tdf_sim_2025.toml
+[athlete]
+ftp = 128  # Functional Threshold Power for all calculations
+
+[tdf_simulation.detection]
+breakaway_intensity_threshold = 0.85  # IF for breakaway classification
+breakaway_tss_threshold = 60          # TSS for breakaway classification
+gc_intensity_threshold = 0.70         # IF for GC classification
+gc_tss_threshold = 40                 # TSS for GC classification
+fallback_suffer_threshold = 100       # Fallback when power unavailable
+```
+
+### Technical Implementation
+- **Power Metrics Calculation**: New `calculate_power_metrics()` function in validation.py
+- **Enhanced Activity Analysis**: Updated `analyze_activity_with_llm()` with power-first approach
+- **Validation Layer**: Comprehensive input validation and sanitization
+- **LLM Integration**: Seamless integration with existing AI client infrastructure
+
 ## 📊 Points Structure
 
 | Stage Type | GC Mode | Breakaway Mode |

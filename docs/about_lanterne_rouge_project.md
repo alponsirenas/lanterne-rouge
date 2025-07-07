@@ -37,14 +37,20 @@ This is an exploration of:
 
 ## Current Status
 
-We're currently in **v0.3.1**, focused on:
+We're currently in **v0.5.0**, focused on:
+- **LLM-Powered TDF Simulation** — Intelligent Tour de France stage analysis using power-based metrics
+- **Power-Based Activity Analysis** — Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
+- **AI-Driven Stage Evaluation** — Comprehensive post-stage performance analysis and strategic guidance
+- **Enhanced Security & Validation** — Robust input validation and sanitization for all LLM interactions
+- **Fallback Reliability** — Intelligent rule-based analysis when LLM services are unavailable
+- **Daily Pipeline Integration** — Seamless TDF logic integration into existing daily coaching workflows
 - Utilizing updated OpenAI API integrations for reliable workout plan generation
-- Integrating OpenAI Codex to generate and maintain core training logic (Bannister CTL/ATL/TSB model).
-- Replacing the static workout library with a GPT-driven Workout of the Day generator.
-- Expanding readiness logging to include all Oura readiness contributors.
-- Prototyping an n8n workflow to orchestrate data pulls, processing, and notifications.
-- Building a demo harness (Streamlit stub) that runs one full daily cycle.
-- Generating natural-language coaching summaries via LLMs.
+- Integrating OpenAI Codex to generate and maintain core training logic (Bannister CTL/ATL/TSB model)
+- Replacing the static workout library with a GPT-driven Workout of the Day generator
+- Expanding readiness logging to include all Oura readiness contributors
+- Prototyping an n8n workflow to orchestrate data pulls, processing, and notifications
+- Building a demo harness (Streamlit stub) that runs one full daily cycle
+- Generating natural-language coaching summaries via LLMs
 
 
 ## Built With

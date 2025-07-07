@@ -65,37 +65,37 @@ class TourCoach:
         return summary
 
     def generate_tdf_recommendation(
-        self, 
-        metrics: Dict[str, Any], 
+        self,
+        metrics: Dict[str, Any],
         tdf_data: Dict[str, Any] = None
     ) -> str:
         """Generate a TDF-specific training recommendation with ride mode."""
         current_date = date.today()
-        
+
         # Check if TDF simulation is enabled and active
         if not self._is_tdf_active(current_date):
             return self.generate_daily_recommendation(metrics)
-        
+
         # Get current stage information
         stage_info = self._get_current_stage_info(current_date)
         if not stage_info:
             return self.generate_daily_recommendation(metrics)
-            
+
         # Enhance tdf_data with stage info
         if tdf_data is None:
             tdf_data = {}
         tdf_data['stage_info'] = stage_info
-        
+
         # Make TDF decision
         tdf_decision = self.reasoning_agent.make_tdf_decision(
             metrics, self.config, current_date, tdf_data
         )
-        
+
         # Generate TDF-specific summary
         summary = self.communication_agent.generate_tdf_summary(
             tdf_decision, metrics, self.config, current_date, tdf_data
         )
-        
+
         # Log TDF decision
         log_observation(metrics)
         log_decision({
@@ -107,52 +107,52 @@ class TourCoach:
             "expected_points": tdf_decision.expected_points
         })
         log_reflection({"tdf_summary": summary})
-        
+
         return summary
-    
+
     def _is_tdf_active(self, current_date: date) -> bool:
         """Check if TDF simulation is enabled and currently active."""
         try:
             tdf_config = getattr(self.config, 'tdf_simulation', {})
             if not tdf_config.get('enabled', False):
                 return False
-                
+
             start_date = tdf_config.get('start_date')
             end_date = tdf_config.get('end_date')
-            
+
             if isinstance(start_date, str):
                 from datetime import datetime
                 start_date = datetime.fromisoformat(start_date).date()
             if isinstance(end_date, str):
                 from datetime import datetime
                 end_date = datetime.fromisoformat(end_date).date()
-                
+
             return start_date <= current_date <= end_date
         except (AttributeError, TypeError, ValueError):
             return False
-    
+
     def _get_current_stage_info(self, current_date: date) -> Dict[str, Any]:
         """Get information about the current TDF stage."""
         try:
             tdf_config = getattr(self.config, 'tdf_simulation', {})
             start_date = tdf_config.get('start_date')
-            
+
             if isinstance(start_date, str):
                 from datetime import datetime
                 start_date = datetime.fromisoformat(start_date).date()
-            
+
             # Calculate stage number (1-based)
             days_since_start = (current_date - start_date).days
             stage_number = days_since_start + 1
-            
+
             # Validate stage number
             if stage_number < 1 or stage_number > tdf_config.get('total_stages', 21):
                 return None
-                
+
             # Get stage type from configuration
             stages_config = tdf_config.get('stages', {})
             stage_type = stages_config.get(str(stage_number), 'flat')
-            
+
             return {
                 'number': stage_number,
                 'type': stage_type,

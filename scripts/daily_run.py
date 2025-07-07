@@ -44,8 +44,22 @@ def run_daily_logic():
         "tsb": tsb
     }
 
-    # Run the daily logic to get the complete summary
-    summary = coach.generate_daily_recommendation(metrics)
+    # Check if TDF simulation is active and use appropriate coaching logic
+    current_date = date.today()
+    if coach._is_tdf_active(current_date):
+        # Load TDF context data
+        from lanterne_rouge.tdf_tracker import TDFTracker
+        tracker = TDFTracker()
+        tdf_data = {
+            "points_status": tracker.get_points_status(),
+            "stage_completed_today": tracker.is_stage_completed_today(current_date)
+        }
+        print("🏆 TDF simulation active - generating TDF-specific coaching")
+        summary = coach.generate_tdf_recommendation(metrics, tdf_data)
+    else:
+        # Use regular daily coaching when TDF is not active
+        print("📅 Regular training mode - generating standard coaching")
+        summary = coach.generate_daily_recommendation(metrics)
 
     # Return summary and extract metrics for logging
     log = {

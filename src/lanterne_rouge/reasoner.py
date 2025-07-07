@@ -26,7 +26,7 @@ class TDFDecision:
     intensity_recommendation: str  # "low", "moderate", "high"
     flags: List[str]  # ["low_readiness", "negative_tsb", etc.]
     confidence: float  # 0.0 to 1.0
-    
+
     # TDF-specific fields
     recommended_ride_mode: str  # 'gc', 'breakaway', 'rest'
     mode_rationale: str  # Explanation for ride mode choice
@@ -253,13 +253,13 @@ Please provide a structured training decision based on my metrics and context. R
         tdf_data: Dict[str, Any] = None
     ) -> TDFDecision:
         """Make a TDF-specific decision including ride mode recommendation.
-        
+
         Args:
             metrics: Dictionary of athlete metrics
             mission_config: Mission configuration with TDF settings
             current_date: Current date
             tdf_data: TDF-specific data (current points, stage info, etc.)
-            
+
         Returns:
             TDFDecision with both training and ride mode recommendations
         """
@@ -277,34 +277,34 @@ Please provide a structured training decision based on my metrics and context. R
         """Make a rule-based TDF decision."""
         # First get base training decision
         base_decision = self._make_rule_based_decision(metrics, mission_config, current_date)
-        
+
         # Extract TDF configuration
         tdf_config = getattr(mission_config, 'tdf_simulation', {}) if mission_config else {}
         safety_config = tdf_config.get('safety', {})
-        
+
         readiness = metrics.get('readiness_score', 75)
         tsb = metrics.get('tsb', 0)
-        
+
         # Determine stage info
         stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
         stage_type = stage_info.get('type', 'flat')
         stage_number = stage_info.get('number', 1)
-        
+
         # Get points for this stage type
         points_config = tdf_config.get('points', {}).get(stage_type, {'gc': 5, 'breakaway': 8})
-        
+
         # Rule-based ride mode decision
-        if (readiness < safety_config.get('force_rest_readiness', 60) or 
+        if (readiness < safety_config.get('force_rest_readiness', 60) or
             tsb < safety_config.get('force_rest_tsb', -20)):
             ride_mode = 'rest'
             expected_points = 0
             mode_rationale = f"Safety first - readiness {readiness} or TSB {tsb:.1f} requires rest"
-        elif (readiness < safety_config.get('prefer_gc_readiness', 75) or 
+        elif (readiness < safety_config.get('prefer_gc_readiness', 75) or
               tsb < safety_config.get('prefer_gc_tsb', -10)):
             ride_mode = 'gc'
             expected_points = points_config.get('gc', 5)
             mode_rationale = f"Conservative GC mode - readiness {readiness}, TSB {tsb:.1f}"
-        elif (readiness > safety_config.get('prefer_breakaway_readiness', 80) and 
+        elif (readiness > safety_config.get('prefer_breakaway_readiness', 80) and
               tsb > safety_config.get('prefer_breakaway_tsb', -5)):
             ride_mode = 'breakaway'
             expected_points = points_config.get('breakaway', 8)
@@ -313,14 +313,14 @@ Please provide a structured training decision based on my metrics and context. R
             ride_mode = 'gc'
             expected_points = points_config.get('gc', 5)
             mode_rationale = f"Balanced GC mode - readiness {readiness}, TSB {tsb:.1f}"
-        
+
         # Analyze bonus opportunities (simplified for rule-based)
         bonus_opportunities = []
         points_status = tdf_data.get('points_status', {}) if tdf_data else {}
         consecutive = points_status.get('consecutive_stages', 0)
         if consecutive == 4:
             bonus_opportunities.append("5 consecutive stages (1 more needed!)")
-        
+
         return TDFDecision(
             action=base_decision.action,
             reason=base_decision.reason,
@@ -346,26 +346,26 @@ Please provide a structured training decision based on my metrics and context. R
         try:
             # Get recent memories for context
             recent_memories = fetch_recent_memories(limit=7)
-            
+
             # Extract TDF context
             tdf_config = getattr(mission_config, 'tdf_simulation', {}) if mission_config else {}
             stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
             points_status = tdf_data.get('points_status', {}) if tdf_data else {}
-            
+
             # Build training context
             training_context = ""
             if mission_config and current_date:
                 phase = mission_config.training_phase(current_date)
                 days_to_goal = (mission_config.goal_date - current_date).days
                 training_context = f"Training Phase: {phase}\nDays to goal: {days_to_goal}\n"
-            
+
             # Build TDF context
             tdf_context = ""
             if stage_info:
                 stage_number = stage_info.get('number', 1)
                 stage_type = stage_info.get('type', 'flat')
                 points_for_stage = tdf_config.get('points', {}).get(stage_type, {'gc': 5, 'breakaway': 8})
-                
+
                 tdf_context = f"""
 TDF SIMULATION STAGE {stage_number}:
 - Stage Type: {stage_type.title()}
@@ -390,7 +390,7 @@ You must respond with a valid JSON object containing:
 {{
   "action": "recover|ease|maintain|push",
   "reason": "explanation for training decision (use 'you', 'your')",
-  "intensity_recommendation": "low|moderate|high", 
+  "intensity_recommendation": "low|moderate|high",
   "flags": ["flag1", "flag2"],
   "confidence": 0.8,
   "recommended_ride_mode": "rest|gc|breakaway",
@@ -403,7 +403,7 @@ You must respond with a valid JSON object containing:
 
 RIDE MODES:
 - REST: Force recovery day (0 points) - use when readiness <60 or TSB <-20
-- GC MODE: Conservative completion focus (base points only) 
+- GC MODE: Conservative completion focus (base points only)
 - BREAKAWAY MODE: Aggressive performance focus (higher points + bonuses)
 
 DECISION FACTORS:
@@ -418,7 +418,7 @@ COMMUNICATION STYLE:
 - Explain WHY this strategy helps their TDF campaign
 - Balance performance with safety"""
 
-            # Build user prompt  
+            # Build user prompt
             user_prompt = f"""My current metrics:
 {json.dumps(metrics, indent=2)}
 

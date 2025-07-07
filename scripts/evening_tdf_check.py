@@ -27,72 +27,187 @@ from scripts.notify import send_email, send_sms
 def get_todays_cycling_activity():
     """Get today's cycling activity from Strava."""
     print("🔍 Checking for today's cycling activity...")
-    
+
     activities = strava_get("athlete/activities?per_page=10")
     if not activities:
         print("❌ No activities found")
         return None
-    
+
     today = date.today()
-    
+
     for activity in activities:
         try:
             # Parse activity date
             activity_date = datetime.fromisoformat(
                 activity["start_date_local"].replace("Z", "")
             ).date()
-            
+
             # Check if it's today and is cycling
-            if (activity_date == today and 
+            if (activity_date == today and
                 activity.get("sport_type") in ["Ride", "VirtualRide"]):
-                
+
                 # Check minimum duration (from mission config)
                 duration_minutes = activity.get("moving_time", 0) / 60
                 if duration_minutes >= 30:  # Minimum stage duration
                     return activity
-                    
+
         except (ValueError, KeyError):
             continue
-    
+
     print("❌ No qualifying cycling activity found for today")
     print("   (Need cycling activity >30 minutes uploaded to Strava)")
     return None
 
 
 def analyze_activity_with_llm(activity, stage_info, mission_cfg):
-    """Use LLM to analyze activity and determine ride mode."""
-    # Prepare activity data for LLM analysis
-    activity_data = {
-        "duration_minutes": activity.get("moving_time", 0) / 60,
-        "distance_km": activity.get("distance", 0) / 1000,
-        "average_power": activity.get("average_watts"),
-        "suffer_score": activity.get("suffer_score"),
-        "intensity_factor": activity.get("intensity_factor"),
-        "average_heartrate": activity.get("average_heartrate"),
-        "max_heartrate": activity.get("max_heartrate"),
-        "total_elevation_gain": activity.get("total_elevation_gain"),
-        "name": activity.get("name", "Cycling"),
-        "description": activity.get("description", "")
-    }
+    """Use LLM to analyze activity and determine ride mode with intelligent reasoning."""
+    from lanterne_rouge.ai_clients import call_llm
+    from lanterne_rouge.validation import validate_llm_json_response, validate_ride_mode, validate_confidence_score, validate_activity_data, calculate_power_metrics
     
-    # Get detection thresholds from mission config
+    # Validate and prepare activity data
+    activity_data = validate_activity_data(activity)
+    
+    # Calculate power-based metrics using athlete's FTP
+    ftp = getattr(mission_cfg.athlete, 'ftp', 200)  # Default to 200W if not set
+    power_metrics = calculate_power_metrics(activity_data, ftp)
+    
+    # Merge power metrics into activity data
+    activity_data.update(power_metrics)
+    
+    # Get detection thresholds and points info from mission config
     tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
     detection_config = tdf_config.get('detection', {})
+    points_config = tdf_config.get('points', {})
     
+    stage_type = stage_info.get('type', 'flat')
+    stage_number = stage_info.get('number', 1)
+    stage_points = points_config.get(stage_type, {'gc': 5, 'breakaway': 8})
+    
+    # Check if LLM is available and enabled
+    use_llm = (os.getenv("USE_LLM_REASONING", "true").lower() == "true" and 
+               os.getenv("OPENAI_API_KEY"))
+    
+    if use_llm:
+        try:
+            # Build comprehensive system prompt for intelligent analysis
+            system_prompt = f"""Classify this TDF stage effort with intelligent analysis. Be encouraging and informative.
+
+JSON format:
+{{
+  "ride_mode": "gc|breakaway|rest",
+  "confidence": 0.8,
+  "rationale": "Informative coaching feedback addressing the rider directly with power insights",
+  "performance_indicators": ["IF", "TSS", "duration"],
+  "effort_assessment": "conservative|moderate|aggressive"
+}}
+
+Rules: BREAKAWAY if IF≥{detection_config.get('breakaway_intensity_threshold', 0.85)} AND TSS≥{detection_config.get('breakaway_tss_threshold', 60)}, GC if IF≥{detection_config.get('gc_intensity_threshold', 0.70)}, REST otherwise.
+
+Rationale guidelines:
+- Be encouraging and personal (use "you/your")
+- Explain WHY it's classified as breakaway/GC/rest
+- Include key power metrics (IF, TSS, duration) in context
+- Mention performance highlights or areas for improvement
+- Target 300-400 characters for informative feedback
+- Examples: "Excellent breakaway effort! Your IF of 0.87 and 85 TSS show you sustained high intensity perfectly for this stage type.", "Solid GC pacing! Your steady 0.74 IF over 90 minutes shows great endurance control."
+"""
+
+            # Build user prompt with activity data
+            user_prompt = f"""Analyze this Stage {stage_number} ride:
+
+YOUR POWER DATA:
+• Duration: {activity_data['duration_minutes']:.1f} minutes
+• Power: {activity_data['normalized_power']}W (vs {ftp}W FTP)
+• Intensity Factor: {activity_data['intensity_factor']:.3f}
+• Training Load: {activity_data['tss']:.1f} TSS
+• Effort Zone: {activity_data['effort_level']}
+
+RIDE DETAILS:
+• Distance: {activity_data['distance_km']:.1f}km
+• Elevation: {activity_data.get('total_elevation_gain', 'N/A')}m
+• Activity: "{activity_data['name']}"
+
+What's your verdict - was this a GC effort, breakaway attempt, or recovery ride?"""
+
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
+
+            # Call LLM with JSON mode
+            response = call_llm(messages, model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview"), force_json=True)
+            print("✅ LLM activity analysis completed")
+
+            # Safely parse and validate LLM response
+            try:
+                required_fields = ["ride_mode", "rationale"]
+                analysis = validate_llm_json_response(response, required_fields)
+                
+                # Validate specific fields
+                ride_mode = validate_ride_mode(analysis.get("ride_mode", "gc"))
+                confidence = validate_confidence_score(analysis.get("confidence", 0.7))
+                rationale = analysis.get("rationale", "LLM-based analysis")
+                
+                # Enhance rationale with confidence and indicators
+                enhanced_rationale = f"{rationale} (Confidence: {confidence:.1f})"
+                
+                # Allow for more informative feedback - limit to ~450 characters max
+                if len(enhanced_rationale) > 450:
+                    # Truncate but keep the confidence info
+                    base_rationale = rationale[:400] + "..."
+                    enhanced_rationale = f"{base_rationale} (Confidence: {confidence:.1f})"
+                
+                if analysis.get("performance_indicators"):
+                    indicators = analysis["performance_indicators"][:3]  # Allow up to 3 indicators
+                    if len(enhanced_rationale) < 400:  # Only add if we have space
+                        enhanced_rationale += f" Key: {', '.join(indicators)}"
+                
+                return ride_mode, enhanced_rationale, activity_data
+                
+            except (json.JSONDecodeError, ValueError) as e:
+                print(f"⚠️ LLM response validation failed: {e}, falling back to rule-based analysis")
+                # Fall through to rule-based analysis
+                
+        except Exception as e:
+            print(f"⚠️ LLM analysis failed: {e}, falling back to rule-based analysis")
+            # Fall through to rule-based analysis
+    
+    # Fallback: Rule-based analysis with power-based logic
+    print("🤖 Using rule-based activity analysis with power metrics")
+    
+    # Get power-based metrics
+    intensity_factor = activity_data.get("intensity_factor", 0)
+    tss = activity_data.get("tss", 0)
+    effort_level = activity_data.get("effort_level", "recovery")
     duration_minutes = activity_data["duration_minutes"]
-    suffer_score = activity_data.get("suffer_score", 0) or 0
     
-    # Simple classification based on mission config thresholds
-    breakaway_intensity_threshold = detection_config.get('breakaway_intensity_threshold', 100)
-    breakaway_duration_threshold = detection_config.get('breakaway_duration_threshold', 60)
+    # Get power-based thresholds from config
+    breakaway_if_threshold = detection_config.get('breakaway_intensity_threshold', 0.85)
+    breakaway_tss_threshold = detection_config.get('breakaway_tss_threshold', 60)
+    gc_if_threshold = detection_config.get('gc_intensity_threshold', 0.70)
+    gc_tss_threshold = detection_config.get('gc_tss_threshold', 40)
     
-    if (suffer_score > breakaway_intensity_threshold or 
-        duration_minutes > breakaway_duration_threshold):
+    # Power-based classification
+    if intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
         ride_mode = "breakaway"
-        rationale = f"Aggressive ride detected: {suffer_score} suffer score, {duration_minutes:.0f} min duration"
-    else:
+        rationale = f"You nailed a breakaway effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show you pushed hard in the {effort_level} zone."
+    elif intensity_factor >= gc_if_threshold and tss >= gc_tss_threshold:
         ride_mode = "gc"
-        rationale = f"Conservative ride detected: {suffer_score} suffer score, {duration_minutes:.0f} min duration"
+        rationale = f"Solid GC effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show consistent {effort_level} zone riding."
+    elif intensity_factor >= gc_if_threshold or tss >= gc_tss_threshold:
+        ride_mode = "gc"
+        rationale = f"Good steady effort! IF {intensity_factor:.2f}, TSS {tss:.0f} in {effort_level} zone - smart pacing."
+    else:
+        # Fallback to suffer score if power data is insufficient
+        suffer_score = activity_data.get("suffer_score", 0) or 0
+        fallback_threshold = detection_config.get('fallback_suffer_threshold', 100)
+        
+        if suffer_score > fallback_threshold and duration_minutes > 60:
+            ride_mode = "gc"
+            rationale = f"Decent GC effort based on your {suffer_score} effort score over {duration_minutes:.0f} minutes."
+        else:
+            ride_mode = "gc"  # Default to GC for completion
+            rationale = f"Easy completion ride - IF {intensity_factor:.2f}, TSS {tss:.0f}. Good recovery work!"
     
     return ride_mode, rationale, activity_data
 
@@ -104,6 +219,101 @@ def calculate_stage_points(stage_type, ride_mode, mission_cfg):
     
     stage_points_config = points_config.get(stage_type, {'gc': 5, 'breakaway': 8})
     return stage_points_config.get(ride_mode, 5)
+
+
+def generate_llm_stage_evaluation(stage_info, ride_mode, points_earned, total_points, bonuses, rationale, activity_data, mission_cfg):
+    """Generate LLM-powered post-stage performance evaluation and strategic advice."""
+    from lanterne_rouge.ai_clients import call_llm
+    
+    # Check if LLM is available
+    use_llm = (os.getenv("USE_LLM_REASONING", "true").lower() == "true" and 
+               os.getenv("OPENAI_API_KEY"))
+    
+    if not use_llm:
+        # Fallback to simple summary
+        return generate_completion_summary(stage_info, ride_mode, points_earned, total_points, bonuses, rationale)
+    
+    try:
+        # Get TDF context for strategic analysis
+        tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
+        total_stages = tdf_config.get('total_stages', 21)
+        stage_number = stage_info.get('number', 1)
+        stage_type = stage_info.get('type', 'flat')
+        
+        # Calculate remaining stages and strategic context
+        stages_remaining = total_stages - stage_number
+        completion_percentage = (stage_number / total_stages) * 100
+        
+        # Build comprehensive system prompt
+        system_prompt = """You're a cycling coach giving a post-stage TDF debrief. Keep it personal, informative, and actionable.
+
+Write a brief evaluation (under 300 words) covering:
+1. How you performed today (mention specific power metrics)
+2. Your points position and strategy
+3. Recovery needs for tomorrow
+4. Quick motivation and what to focus on next
+
+Use "you/your" throughout. Be encouraging but realistic. Include relevant power data insights. Be specific about what the numbers tell us."""
+
+        # Build detailed user prompt
+        user_prompt = f"""STAGE {stage_number} COMPLETE! 
+
+Your Performance:
+• Mode: {ride_mode.upper()} (+{points_earned} points)
+• Total Points: {total_points}
+• Power: {activity_data.get('normalized_power', 'N/A')}W, IF {activity_data.get('intensity_factor', 0):.2f}
+• Training Load: {activity_data.get('tss', 0):.0f} TSS
+• Duration: {activity_data.get('duration_minutes', 0):.0f} minutes
+
+Campaign Status:
+• Progress: {stage_number}/{total_stages} stages ({completion_percentage:.0f}% done)
+• Stages remaining: {stages_remaining}"""
+
+        if bonuses:
+            user_prompt += f"\n• BONUSES: {len(bonuses)} unlocked this stage! 🏆"
+        else:
+            user_prompt += "\n• No bonuses this stage"
+
+        user_prompt += f"""
+
+Analysis: {rationale}
+
+Give me your quick coach debrief - how did I do and what's next?"""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        # Call LLM for evaluation
+        response = call_llm(messages, model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview"))
+        print("✅ LLM stage evaluation completed")
+        
+        # Format the response with header
+        evaluation = f"""🎉 TDF Stage {stage_number} Complete!
+{'=' * 50}
+
+{response}
+
+{'=' * 50}
+📊 STAGE SUMMARY:
+• Points Earned: +{points_earned}
+• Total Points: {total_points}
+• Mode: {ride_mode.upper()}
+• Progress: {stage_number}/{total_stages} stages
+"""
+        
+        if bonuses:
+            evaluation += "\n🏆 BONUSES UNLOCKED:\n"
+            for bonus in bonuses:
+                evaluation += f"   • {bonus['type']}: +{bonus['points']} points\n"
+                
+        return evaluation
+        
+    except Exception as e:
+        print(f"⚠️ LLM evaluation failed: {e}, using standard summary")
+        # Fallback to standard summary
+        return generate_completion_summary(stage_info, ride_mode, points_earned, total_points, bonuses, rationale)
 
 
 def generate_completion_summary(stage_info, ride_mode, points_earned, total_points, bonuses, rationale):
@@ -246,20 +456,22 @@ def main():
             sms_recipient = os.getenv("TO_PHONE")
             
             if email_recipient:
-                # Generate summary only for notifications (separate from logging)
+                # Generate comprehensive LLM-powered evaluation for notifications
                 try:
-                    notification_summary = generate_completion_summary(
-                        stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
+                    notification_summary = generate_llm_stage_evaluation(
+                        stage_info, ride_mode, points_earned, new_total, bonuses_earned, 
+                        rationale, activity_data, mission_cfg
                     )
-                    subject = "🎉 TDF Stage Complete - Points Summary"
+                    subject = f"🎉 TDF Stage {stage_number} Complete - LLM Analysis"
                     send_email(subject, notification_summary, email_recipient)
-                    print("📧 Email notification sent")
+                    print("📧 Email notification sent with LLM analysis")
                 except Exception:
                     print("📧 Email notification failed")
             
             if sms_recipient:
-                # Shortened SMS version without sensitive data
-                sms_summary = "🎉 TDF Stage Complete! Points updated successfully"
+                # Shortened SMS version
+                bonus_text = f" +{len(bonuses_earned)} bonus!" if bonuses_earned else ""
+                sms_summary = f"🎉 TDF Stage {stage_number} done! +{points_earned} pts (Total: {new_total}){bonus_text}"
                 send_sms(sms_summary, sms_recipient, 
                         use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
                 print("📱 SMS notification sent")

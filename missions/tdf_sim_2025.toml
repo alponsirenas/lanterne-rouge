@@ -100,5 +100,10 @@ prefer_breakaway_tsb = -5
 # Activity detection settings
 [tdf_simulation.detection]
 min_stage_duration_minutes = 30
-breakaway_intensity_threshold = 100  # Suffer score threshold
-breakaway_duration_threshold = 60    # Minutes
+# Power-based thresholds (using Intensity Factor and TSS)
+breakaway_intensity_threshold = 0.85  # IF threshold for breakaway effort
+breakaway_tss_threshold = 60          # TSS threshold for breakaway effort
+gc_intensity_threshold = 0.70         # IF threshold for solid GC effort
+gc_tss_threshold = 40                 # TSS threshold for GC effort
+# Fallback suffer score for when power data is unavailable
+fallback_suffer_threshold = 100       # Suffer score threshold

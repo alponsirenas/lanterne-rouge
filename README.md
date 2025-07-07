@@ -101,12 +101,23 @@ This system is designed to fit into your routine, helping you build consistency 
 ## Current Version: v0.5.0
 
 Release highlights:
+- **Power-Based Activity Analysis** - Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
+- **LLM-Powered TDF Simulation** - Intelligent stage analysis with AI-driven performance evaluation
+- **Enhanced Security & Validation** - Robust input validation and sanitization for all LLM interactions
+- **Smart Ride Mode Detection** - GC vs Breakaway classification based on power zones and athlete FTP
+- **Comprehensive Post-Stage Analysis** - Strategic guidance and recovery recommendations
+- **Fallback Reliability** - Rule-based analysis when LLM services are unavailable
 - **TDF Points System** - 21-stage gamified Tour de France simulation
-- **Automated workflows** - Morning briefings and evening points tracking
-- **Smart ride mode recommendations** - GC vs Breakaway based on physiology
-- **Achievement bonuses** - 5 bonus categories with strategic gameplay
-- **GitHub Actions integration** - Complete automation with 4 new workflows
-- **Backwards compatibility** - Existing coaching system unchanged
+- **Automated Workflows** - Morning briefings and evening points tracking
+- **Achievement Bonuses** - 5 bonus categories with strategic gameplay
+- **GitHub Actions Integration** - Complete automation with 4 new workflows
+- **Backwards Compatibility** - Existing coaching system unchanged
+
+### New Power Analysis Features
+- **FTP-Based Calculations**: All power metrics relative to individual athlete's Functional Threshold Power
+- **Scientific Accuracy**: Uses established sports science metrics instead of subjective suffer scores
+- **Intelligent Classification**: LLM analyzes power data contextually for strategic recommendations
+- **Training Load Management**: TSS-based recovery recommendations and strategic planning
 
 See the full [Release Notes for v0.5.0](RELEASE_NOTES_v0.5.0.md) for detailed information.
 
