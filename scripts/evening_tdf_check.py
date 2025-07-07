@@ -236,9 +236,13 @@ def main():
             stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
         )
         
-        print("\n" + "="*50)
-        print(summary)
-        print("="*50)
+        # Only print summary in debug mode to avoid logging sensitive data
+        if os.getenv("DEBUG_TDF", "false").lower() == "true":
+            print("\n" + "="*50)
+            print(summary)
+            print("="*50)
+        else:
+            print(f"\n✅ Stage {stage_number} completion summary generated (use DEBUG_TDF=true to view details)")
         
         # Send notifications
         try:

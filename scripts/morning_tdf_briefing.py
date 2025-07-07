@@ -96,7 +96,12 @@ def main():
         f.write(briefing)
     
     print("✅ Briefing generated: output/morning_tdf_briefing.txt")
-    print("\n" + briefing)
+    
+    # Only print briefing in debug mode to avoid logging sensitive data
+    if os.getenv("DEBUG_TDF", "false").lower() == "true":
+        print("\n" + briefing)
+    else:
+        print("📝 Morning briefing ready (use DEBUG_TDF=true to view content)")
     
     # Send notifications if configured
     email_recipient = os.getenv("TO_EMAIL")
@@ -105,7 +110,7 @@ def main():
     if email_recipient:
         subject = f"� TDF Morning Briefing - Stage Ready!"
         send_email(subject, briefing, email_recipient)
-        print(f"📧 Email sent to {email_recipient}")
+        print("📧 Email notification sent")
     
     if sms_recipient:
         # Create short SMS version
@@ -119,7 +124,7 @@ def main():
         sms_brief = '\n'.join(key_lines[:6])  # Max 6 key lines for SMS
         send_sms(sms_brief, sms_recipient, 
                 use_twilio=os.getenv("USE_TWILIO", "false").lower() == "true")
-        print(f"📱 SMS sent to {sms_recipient}")
+        print("📱 SMS notification sent")
 
 
 if __name__ == "__main__":
