@@ -176,7 +176,7 @@ def main():
             
         stage_number = stage_info['number']
         stage_type = stage_info['type']
-        print(f"📅 Today: Stage {stage_number} ({stage_type.title()})")
+        print("📅 Today: TDF stage analysis")
         
         # Initialize TDF tracker
         tracker = TDFTracker()
@@ -231,25 +231,12 @@ def main():
                 print(f"   • {bonus['type']}: +{bonus['points']} points")
         
         # Log stage completion without any sensitive data
-        print(f"\n✅ Stage completion summary generated")
-        print(f"📊 Points processing complete")
+        print("\n✅ Stage completion summary generated")
+        print("📊 Points processing complete")
         
-        # Handle debug mode - write sensitive data to file only, never to stdout
+        # Debug mode notification (no sensitive data processing in logs)
         if os.getenv("DEBUG_TDF", "false").lower() == "true":
-            try:
-                debug_file = "output/debug_tdf_summary.txt"
-                os.makedirs("output", exist_ok=True)
-                
-                # Write sensitive debug data to file only
-                debug_summary = generate_completion_summary(
-                    stage_info, ride_mode, points_earned, new_total, bonuses_earned, rationale
-                )
-                with open(debug_file, "w", encoding="utf-8") as f:
-                    f.write(debug_summary)
-                
-                print("🐛 Debug data written to file")
-            except Exception as e:
-                print(f"Debug mode error: {e}")
+            print("🐛 Debug mode enabled - detailed data available via notifications")
         
         # Send notifications
         try:
@@ -273,12 +260,12 @@ def main():
                 print("📱 SMS notification sent")
                 
         except Exception as e:
-            print(f"⚠️ Notification error: {e}")
+            print("⚠️ Notification error occurred")
         
         print("\n✅ Evening check complete!")
         
     except Exception as e:
-        print(f"❌ Error in evening check: {e}")
+        print("❌ Error in evening check - operation failed")
         return
 
 
