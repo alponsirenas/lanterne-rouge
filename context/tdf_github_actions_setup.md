@@ -4,25 +4,25 @@
 
 I've created **4 GitHub Actions workflows** that automate your entire TDF experience:
 
-1. **🌅 Daily Coach + TDF Morning** - Combined morning briefing (7AM PT)
+1. **🌅 Daily Coach** - Regular daily coaching with TDF-aware recommendations (7AM PT)
 2. **🎉 TDF Evening Check** - Automatic evening points tracking (multiple times daily)  
-3. **🌅 TDF Morning Briefing** - Standalone morning briefing
+3. **🌅 TDF Morning Briefing** - Standalone morning TDF briefing (6AM PT)
 4. **⚡ TDF Manual Check** - On-demand manual triggers
 
 ## 🚀 Quick Setup (2 minutes)
 
 ### 1. Commit the New Workflows
 ```bash
-# Add the new workflow files
+# Add the workflow files (already committed)
 git add .github/workflows/tdf-*.yml
-git add .github/workflows/daily-tdf-enhanced.yml
+git add .github/workflows/daily.yml
 git commit -m "feat: add TDF GitHub Actions workflows"
 git push
 ```
 
 ### 2. Enable Workflows
 1. Go to your GitHub repo → **Actions** tab
-2. You'll see the new workflows listed
+2. You'll see the workflows listed
 3. Click **"Enable workflow"** for each one
 
 ### 3. Test Immediately
@@ -34,15 +34,11 @@ git push
 
 ## 📅 Automatic Schedule
 
-### Morning (7AM PT / 14:00 UTC)
-- **Daily Coach + TDF Morning** runs automatically
-- Sends you:
-  - Regular Lanterne Rouge coaching
-  - TDF stage briefing
-  - Ride mode recommendation
-  - Points opportunities
+### Morning Briefings
+- **Daily Coach** (7AM PT / 14:00 UTC) - Regular coaching + TDF context when active
+- **TDF Morning Briefing** (6AM PT / 13:00 UTC) - TDF-specific stage recommendations (July only)
 
-### Evening (Multiple times - PT timezone)
+### Evening Points Tracking (PT timezone)
 - **3PM PT (22:00 UTC)** - Early afternoon check
 - **6PM PT (01:00 UTC)** - Evening workout check  
 - **9PM PT (04:00 UTC)** - Late workout check
@@ -52,18 +48,30 @@ Each run checks for new Strava activities and calculates points if found.
 
 ## 🎯 What Each Workflow Does
 
-### 🌅 Daily Coach + TDF Morning
-**Runs:** Every day at 7AM PT during July  
+### 🌅 Daily Coach
+**Runs:** Every day at 7AM PT  
 **Sends you:**
 ```
-Subject: Daily Training Plan + TDF Stage 1 Briefing
+Subject: Daily Training Plan
 
-[Regular Lanterne Rouge coaching]
+[Regular Lanterne Rouge coaching with TDF context when active]
+
+🏆 TDF Stage 1 - Flat Stage (when TDF active)
+📊 READINESS: 85/100, TSB: +2.3  
+🎯 STAGE STRATEGY: Recommendations based on current points
+```
+
+### 🌅 TDF Morning Briefing
+**Runs:** Every day at 6AM PT during July  
+**Sends you:**
+```
+Subject: TDF Stage Briefing and Recommendations
 
 🏆 TDF Stage 1 - Flat Stage
 📊 READINESS: 85/100, TSB: +2.3
 🎯 RECOMMEND: BREAKAWAY (8 points)
 🏆 BONUS PROGRESS: 0/5 consecutive
+💪 STRATEGY: Power-based analysis and stage insights
 ```
 
 ### 🎉 TDF Evening Check  
@@ -75,6 +83,7 @@ Subject: 🎉 TDF Stage Complete - Points Summary
 🎉 TDF Stage 1 Complete!
 🚴 Mode: BREAKAWAY (+8 points)
 📊 Total: 8 points (1/21 stages)
+🔥 Power Analysis: IF 0.87, TSS 85
 Tomorrow: Stage 2 (hilly)
 ```
 
@@ -91,17 +100,18 @@ Tomorrow: Stage 2 (hilly)
 Edit the `cron` schedules in the workflow files:
 ```yaml
 schedule:
-  - cron: '0 14 * 7 *'  # 7AM PT = 14:00 UTC
+  - cron: '0 14 * 7 *'  # 7AM PT = 14:00 UTC (daily.yml)
+  - cron: '0 13 * 7 *'  # 6AM PT = 13:00 UTC (tdf-morning.yml)
 ```
 
 ### Change Notifications
 All workflows use your existing notification setup:
 - `TO_EMAIL` for email notifications
 - `TO_PHONE` for SMS notifications
-- Same setup as your current `daily.yml`
+- Uses `GH_PAT` for protected branch access
 
 ### July-Only Execution
-Workflows are set to run only in July (`* 7 *`). After TDF, they'll automatically stop.
+TDF-specific workflows run only in July (`* 7 *`). The daily coach runs year-round but includes TDF context when active.
 
 ## 🎮 Usage During TDF
 

@@ -1,30 +1,43 @@
-GitHub Project Template: Lanterne Rouge v0.3.0 — Mission-Locked Reasoning
+GitHub Project Template: Lanterne Rouge v0.5.0 — TDF Power-Based Analysis
 
 Project Title
 
-Lanterne Rouge v0.3.0 — Mission-Locked Reasoning
+Lanterne Rouge v0.5.0 — TDF Power-Based Analysis & Project Organization
 
 Description
 
-Launch daily agentic reasoning based on structured mission goals.
-Deliver a human-readable daily coaching experience through a simple GUI.
+Enhanced TDF simulation with power-based activity analysis, LLM-powered stage evaluation,
+improved GitHub Actions workflows, and comprehensive project structure organization.
+
+Current Focus Areas
+	•	Power-based TDF stage classification (IF, TSS, normalized power)
+	•	GitHub Actions workflow reliability and protected branch support
+	•	Project structure cleanup and documentation organization
+	•	Enhanced labeler action for automatic PR categorization
+
+Recent Achievements
+	•	Fixed TDF points accumulation in GitHub Actions
+	•	Organized project structure (docs/, scripts/utils/)
+	•	Updated workflows for protected main branch
+	•	Enhanced labeler configuration and documentation
 
 Columns
 	•	To Do
-	•	In Progress
+	•	In Progress  
 	•	Done
 
-Initial Cards
+Recent Completed Cards
 
-Title	Type	Notes
-Create and Integrate MissionConfig v1.0	Issue	Define simulation goals, fitness targets, stage demands.
-Build Reasoning Module v1.0	Issue	Enable daily decision-making aligned to MissionConfig.
-Build Initial GUI Using Streamlit	Issue	Display daily readiness, decision, and explanations.
-Integrate First LLM for Explanations	Issue	Generate human-readable coaching summaries after reasoning decisions.
-Expand Oura Contributor Logging	Issue	Capture full readiness contributor data for future reasoning improvements.
+Title	Type	Status
+Fix TDF Points Accumulation in GitHub Actions	Issue	✅ Done
+Organize Project Structure and Documentation	Issue	✅ Done
+Update GitHub Actions for Protected Branch	Issue	✅ Done
+Enhance Labeler Action Configuration	Issue	✅ Done
+Power-Based Stage Classification Implementation	Issue	✅ Done
+LLM-Powered Post-Stage Analysis	Issue	✅ Done
 
 ✅
-These match exactly what you want to ship by v0.3.0.
+Project now has clean structure, reliable workflows, and accurate TDF tracking.
 
 ⸻
 

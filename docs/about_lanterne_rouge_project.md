@@ -37,13 +37,13 @@ This is an exploration of:
 
 ## Current Status
 
-We're currently in **v0.5.0**, focused on:
-- **LLM-Powered TDF Simulation** — Intelligent Tour de France stage analysis using power-based metrics
+We're currently in **v0.5.1**, focused on:
+- **Project Organization & Reliability** — Clean structure, reliable GitHub Actions workflows, enhanced documentation
+- **TDF Points Accumulation** — Fixed GitHub Actions workflows to properly accumulate points across stages
 - **Power-Based Activity Analysis** — Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
-- **AI-Driven Stage Evaluation** — Comprehensive post-stage performance analysis and strategic guidance
-- **Enhanced Security & Validation** — Robust input validation and sanitization for all LLM interactions
-- **Fallback Reliability** — Intelligent rule-based analysis when LLM services are unavailable
-- **Daily Pipeline Integration** — Seamless TDF logic integration into existing daily coaching workflows
+- **LLM-Powered TDF Simulation** — Intelligent Tour de France stage analysis and post-stage evaluation
+- **Enhanced Automation** — Reliable workflow automation with protected branch support and comprehensive labeling
+- **Documentation Excellence** — Organized docs/, comprehensive utility documentation, and up-to-date technical guides
 - Utilizing updated OpenAI API integrations for reliable workout plan generation
 - Integrating OpenAI Codex to generate and maintain core training logic (Bannister CTL/ATL/TSB model)
 - Replacing the static workout library with a GPT-driven Workout of the Day generator
