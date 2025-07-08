@@ -1,0 +1,37 @@
+{
+  "total_points": 12,
+  "stages_completed": 2,
+  "consecutive_stages": 2,
+  "breakaway_count": 0,
+  "gc_count": 2,
+  "mountain_breakaway_count": 0,
+  "bonuses_earned": [],
+  "stages": {
+    "2025-07-05": {
+      "stage_number": 1,
+      "stage_type": "flat",
+      "ride_mode": "gc",
+      "points_earned": 5,
+      "completed_at": "2025-07-07T13:11:12.409285",
+      "activity_data": {
+        "test": "data"
+      }
+    },
+    "2025-07-06": {
+      "stage_number": 2,
+      "stage_type": "hilly",
+      "ride_mode": "gc",
+      "points_earned": 7,
+      "completed_at": "2025-07-06T20:00:00.000000",
+      "activity_data": {
+        "duration_minutes": 60.0,
+        "distance_km": 24.5,
+        "normalized_power": 87.0,
+        "intensity_factor": 0.68,
+        "tss": 46.2,
+        "effort_level": "aerobic"
+      }
+    }
+  },
+  "last_updated": "2025-07-07T13:18:55.716075"
+}
