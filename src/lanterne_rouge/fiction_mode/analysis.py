@@ -8,6 +8,9 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
 from .data_ingestion import RideData, StageRaceData, RaceEvent
+from ..ai_clients import call_llm
+from ..validation import calculate_power_metrics
+from ..monitor import get_current_ftp
 
 
 @dataclass
@@ -56,44 +59,147 @@ class AnalysisMappingAgent:
         }
 
     def analyze_ride_intensity(self, ride_data: RideData) -> Dict[str, Any]:
-        """Analyze overall ride intensity and effort distribution"""
+        """Analyze overall ride intensity and effort distribution using existing power metrics"""
 
-        duration_minutes = ride_data.duration_seconds / 60
-        avg_power = ride_data.avg_power or 0
-        max_power = ride_data.max_power or 0
-
-        # Estimate FTP for power zone calculations (would be from user profile)
-        estimated_ftp = avg_power * 1.2 if avg_power > 0 else 250
-
-        # Calculate intensity factor
-        if_value = avg_power / estimated_ftp if estimated_ftp > 0 else 0
-
-        # Categorize overall effort
-        effort_level = 'easy'
-        if if_value > 0.85:
-            effort_level = 'maximal'
-        elif if_value > 0.75:
-            effort_level = 'hard'
-        elif if_value > 0.65:
-            effort_level = 'moderate'
-
+        # Get current athlete FTP
+        ftp = get_current_ftp()
+        
+        # Convert RideData to activity_data format for calculate_power_metrics
+        activity_data = {
+            'weighted_average_watts': ride_data.avg_power or 0,
+            'duration_minutes': ride_data.duration_seconds / 60,
+            'max_watts': ride_data.max_power or 0
+        }
+        
+        # Use existing power metrics calculation
+        power_metrics = calculate_power_metrics(activity_data, ftp)
+        
         # Analyze high-effort intervals
         high_efforts = len([i for i in ride_data.high_effort_intervals
-                           if i.get('avg_power', 0) > estimated_ftp * 0.9])
+                           if i.get('avg_power', 0) > ftp * 0.9])
 
         return {
-            'duration_minutes': duration_minutes,
-            'estimated_ftp': estimated_ftp,
-            'intensity_factor': if_value,
-            'effort_level': effort_level,
+            'duration_minutes': activity_data['duration_minutes'],
+            'ftp': ftp,
+            'intensity_factor': power_metrics['intensity_factor'],
+            'tss': power_metrics['tss'],
+            'effort_level': power_metrics['effort_level'],
+            'normalized_power': power_metrics['normalized_power'],
             'high_effort_count': high_efforts,
-            'avg_power_pct_ftp': (avg_power / estimated_ftp * 100) if estimated_ftp > 0 else 0,
-            'max_power_pct_ftp': (max_power / estimated_ftp * 100) if estimated_ftp > 0 else 0
+            'avg_power_pct_ftp': (ride_data.avg_power / ftp * 100) if ftp > 0 and ride_data.avg_power else 0,
+            'max_power_pct_ftp': (ride_data.max_power / ftp * 100) if ftp > 0 and ride_data.max_power else 0
         }
 
     def assign_rider_role(self, ride_analysis: Dict[str, Any], stage_data: StageRaceData) -> RiderRole:
         """Assign user a plausible role in the stage based on their effort"""
+        
+        # Prepare data for LLM analysis
+        analysis_prompt = self._build_analysis_prompt(ride_analysis, stage_data)
+        
+        try:
+            messages = [
+                {"role": "system", "content": "You are an expert cycling analyst who assigns tactical roles based on rider effort patterns."},
+                {"role": "user", "content": analysis_prompt}
+            ]
+            response = call_llm(messages, model="gpt-4", force_json=True)
+            
+            # Parse LLM response to extract role assignment
+            role_data = self._parse_role_response(response)
+            
+            return RiderRole(
+                role_type=role_data.get('role_type', 'peloton'),
+                position_in_race=role_data.get('position', 'main_bunch'),
+                tactical_description=role_data.get('tactical', 'rode conservatively in the bunch'),
+                effort_level=ride_analysis['effort_level']
+            )
+            
+        except Exception as e:
+            # Fallback to rule-based logic if LLM fails
+            return self._fallback_role_assignment(ride_analysis, stage_data)
+    
+    def _build_analysis_prompt(self, ride_analysis: Dict[str, Any], stage_data: StageRaceData) -> str:
+        """Build prompt for LLM role assignment"""
+        
+        prompt = f"""You are the Analysis & Mapping Agent for the Fiction Mode cycling narrative generator.
 
+RIDE DATA SUMMARY:
+- Duration: {ride_analysis['duration_minutes']:.0f} minutes
+- Effort Level: {ride_analysis['effort_level']}
+- Intensity Factor: {ride_analysis['intensity_factor']:.2f}
+- High Effort Count: {ride_analysis['high_effort_count']}
+- Average Power (% FTP): {ride_analysis['avg_power_pct_ftp']:.0f}%
+- Max Power (% FTP): {ride_analysis['max_power_pct_ftp']:.0f}%
+
+STAGE CONTEXT:
+- Stage: {stage_data.stage_name}
+- Type: {stage_data.stage_type}
+- Distance: {stage_data.distance_km}km
+- Weather: {stage_data.weather or 'Clear'}
+- Winner: {stage_data.winner}
+
+STAGE EVENTS:
+{self._format_stage_events(stage_data.events)}
+
+Instructions:
+1. Analyze the user's effort pattern and intensity profile
+2. Consider the stage type, distance, and key events
+3. Assign a plausible "virtual role" for this rider in the stage context
+4. Choose from: breakaway, peloton, domestique, chase_group, dropped, sprint_train
+
+Respond with JSON format:
+{{
+    "role_type": "peloton",
+    "position": "main_bunch", 
+    "tactical": "rode defensively, responded to key moves, finished safely",
+    "reasoning": "Moderate effort with controlled surges suggests tactical riding in bunch"
+}}"""
+        
+        return prompt
+    
+    def _format_stage_events(self, events: List[RaceEvent]) -> str:
+        """Format stage events for prompt"""
+        if not events:
+            return "No specific events recorded"
+        
+        event_list = []
+        for event in events[:5]:  # Limit to key events
+            time_info = f"{event.time_km}km" if event.time_km else f"{event.time_minutes}min"
+            event_list.append(f"- {time_info}: {event.description}")
+        
+        return "\n".join(event_list)
+    
+    def _parse_role_response(self, response: str) -> Dict[str, str]:
+        """Parse LLM response to extract role data"""
+        import json
+        import re
+        
+        try:
+            # Try to extract JSON from response
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group())
+        except Exception:
+            pass
+        
+        # Fallback parsing
+        role_type = 'peloton'
+        if 'breakaway' in response.lower():
+            role_type = 'breakaway'
+        elif 'dropped' in response.lower() or 'gruppetto' in response.lower():
+            role_type = 'dropped'
+        elif 'domestique' in response.lower():
+            role_type = 'domestique'
+        elif 'chase' in response.lower():
+            role_type = 'chase_group'
+        
+        return {
+            'role_type': role_type,
+            'position': 'main_bunch',
+            'tactical': 'responded to race dynamics'
+        }
+    
+    def _fallback_role_assignment(self, ride_analysis: Dict[str, Any], stage_data: StageRaceData) -> RiderRole:
+        """Fallback rule-based role assignment"""
         effort_level = ride_analysis['effort_level']
         high_efforts = ride_analysis['high_effort_count']
         duration_minutes = ride_analysis['duration_minutes']
@@ -148,7 +254,7 @@ class AnalysisMappingAgent:
         )
 
     def map_efforts_to_events(self, ride_data: RideData, stage_data: StageRaceData) -> List[MappedEvent]:
-        """Map user's effort intervals to race events"""
+        """Map user's effort intervals to race events using LLM intelligence"""
 
         mapped_events = []
         race_events = stage_data.events
@@ -157,6 +263,119 @@ class AnalysisMappingAgent:
         if not race_events or not user_intervals:
             return mapped_events
 
+        # Use LLM to intelligently map efforts to events
+        mapping_prompt = self._build_mapping_prompt(ride_data, stage_data)
+        
+        try:
+            messages = [
+                {"role": "system", "content": "You are an expert cycling analyst who maps rider efforts to race events for narrative purposes."},
+                {"role": "user", "content": mapping_prompt}
+            ]
+            response = call_llm(messages, model="gpt-4", force_json=True)
+            mapped_events = self._parse_mapping_response(response, user_intervals, race_events)
+        except Exception as e:
+            print(f"LLM mapping failed, using fallback: {e}")
+            # Fallback to simple time-based mapping
+            mapped_events = self._fallback_effort_mapping(user_intervals, race_events)
+
+        return mapped_events
+
+    def _build_mapping_prompt(self, ride_data: RideData, stage_data: StageRaceData) -> str:
+        """Build prompt for LLM effort-to-event mapping"""
+        
+        # Format user efforts
+        effort_summary = []
+        for i, interval in enumerate(ride_data.high_effort_intervals):
+            effort_summary.append(
+                f"Effort {i+1}: {interval.get('start_minute', 0)}-{interval.get('end_minute', 0)}min, "
+                f"{interval.get('avg_power', 0):.0f}W avg, {interval.get('max_power', 0):.0f}W max"
+            )
+        
+        # Format race events
+        event_summary = []
+        for i, event in enumerate(stage_data.events[:10]):  # Limit to key events
+            time_info = f"{event.time_km}km" if event.time_km else f"{event.time_minutes}min"
+            event_summary.append(f"Event {i+1}: {time_info} - {event.description}")
+        
+        prompt = f"""You are the Analysis & Mapping Agent for Fiction Mode cycling narratives.
+
+TASK: Map the user's effort intervals to plausible race events for narrative purposes.
+
+STAGE CONTEXT:
+- Stage: {stage_data.stage_name}
+- Type: {stage_data.stage_type}
+- Distance: {stage_data.distance_km}km
+- Winner: {stage_data.winner}
+
+USER EFFORT INTERVALS:
+{chr(10).join(effort_summary)}
+
+RACE EVENTS:
+{chr(10).join(event_summary)}
+
+INSTRUCTIONS:
+1. Analyze the timing and intensity of user efforts vs race events
+2. Create plausible narrative connections (doesn't need to be exact timing)
+3. Consider that users might respond to race action, not initiate it
+4. Match high-intensity efforts to exciting race moments
+5. Provide confidence scores (0.0-1.0) for each mapping
+
+Respond with JSON array format:
+[
+  {{
+    "user_effort_index": 0,
+    "race_event_index": 1,
+    "confidence": 0.8,
+    "narrative_description": "responded to the early breakaway formation with a surge to 320W"
+  }},
+  ...
+]
+
+Focus on creating compelling narrative connections rather than precise timing matches."""
+        
+        return prompt
+
+    def _parse_mapping_response(self, response: str, user_intervals: List[Dict], race_events: List[RaceEvent]) -> List[MappedEvent]:
+        """Parse LLM mapping response into MappedEvent objects"""
+        import json
+        import re
+        
+        mapped_events = []
+        
+        try:
+            # Extract JSON from response
+            json_match = re.search(r'\[.*\]', response, re.DOTALL)
+            if json_match:
+                mappings = json.loads(json_match.group())
+                
+                for mapping in mappings:
+                    user_idx = mapping.get('user_effort_index', 0)
+                    event_idx = mapping.get('race_event_index', 0)
+                    
+                    if (user_idx < len(user_intervals) and event_idx < len(race_events)):
+                        interval = user_intervals[user_idx]
+                        event = race_events[event_idx]
+                        
+                        mapped_events.append(MappedEvent(
+                            user_minute=interval.get('start_minute', 0),
+                            race_event=event,
+                            user_power=interval.get('avg_power'),
+                            user_hr=interval.get('avg_hr'),
+                            mapping_confidence=mapping.get('confidence', 0.5),
+                            narrative_description=mapping.get('narrative_description', 
+                                                            f"responded with {interval.get('avg_power', 0):.0f}W effort")
+                        ))
+        
+        except Exception as e:
+            print(f"Failed to parse LLM mapping response: {e}")
+            # Return empty list, fallback will be used
+        
+        return mapped_events
+
+    def _fallback_effort_mapping(self, user_intervals: List[Dict], race_events: List[RaceEvent]) -> List[MappedEvent]:
+        """Fallback simple time-based effort mapping"""
+        mapped_events = []
+        
         # Sort events by time
         race_events_sorted = sorted([e for e in race_events if e.time_km or e.time_minutes],
                                   key=lambda x: x.time_km if x.time_km else x.time_minutes or 0)
@@ -170,7 +389,7 @@ class AnalysisMappingAgent:
                 race_event = race_events_sorted[i]
 
                 # Calculate mapping confidence based on timing alignment
-                confidence = 0.7  # Default medium confidence
+                confidence = 0.6  # Default medium confidence for fallback
 
                 # Create narrative description
                 event_desc = race_event.description.lower()

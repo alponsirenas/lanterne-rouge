@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 from ..strava_api import strava_get, get_athlete_id
 from ..validation import validate_activity_data
+from ..ai_clients import call_llm
 
 
 @dataclass
@@ -92,42 +93,237 @@ class RideDataIngestionAgent:
 
     def extract_effort_intervals(self, activity: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
-        Extract high-effort intervals from activity data.
-        This is a simplified version - full implementation would analyze
-        power/HR streams to detect surges.
+        Extract high-effort intervals from detailed activity streams using LLM analysis.
+        Uses actual power/HR data streams for intelligent pattern detection.
         """
+        activity_id = activity.get('id')
+        if not activity_id:
+            return []
+
+        # Get detailed streams data
+        stream_types = ['time', 'watts', 'heartrate', 'cadence', 'velocity_smooth']
+        streams_param = ','.join(stream_types)
+        
+        try:
+            streams = strava_get(f'activities/{activity_id}/streams?keys={streams_param}&key_by_type=true')
+            if not streams or 'time' not in streams:
+                return self._fallback_effort_extraction(activity)
+            
+            # Extract stream data
+            time_data = streams['time']['data']
+            watts_data = streams.get('watts', {}).get('data', [])
+            hr_data = streams.get('heartrate', {}).get('data', [])
+            
+            if not watts_data and not hr_data:
+                return self._fallback_effort_extraction(activity)
+            
+            # Use LLM to analyze the effort patterns
+            intervals = self._analyze_efforts_with_llm(time_data, watts_data, hr_data, activity)
+            
+            if intervals:
+                return intervals
+                
+        except Exception as e:
+            print(f"Failed to get streams data for activity {activity_id}: {e}")
+        
+        # Fallback to basic analysis
+        return self._fallback_effort_extraction(activity)
+
+    def _analyze_efforts_with_llm(self, time_data: List[int], watts_data: List[float], 
+                                  hr_data: List[float], activity: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Use LLM to analyze effort patterns from streams data"""
+        
+        if not time_data:
+            return []
+        
+        # Prepare summary statistics for LLM
+        total_minutes = max(time_data) / 60 if time_data else 0
+        
+        # Calculate power statistics
+        power_stats = {}
+        if watts_data:
+            power_stats = {
+                'avg_power': sum(watts_data) / len(watts_data),
+                'max_power': max(watts_data),
+                'min_power': min(watts_data)
+            }
+        
+        # Calculate HR statistics  
+        hr_stats = {}
+        if hr_data and any(hr > 0 for hr in hr_data):
+            valid_hr = [hr for hr in hr_data if hr > 0]
+            if valid_hr:
+                hr_stats = {
+                    'avg_hr': sum(valid_hr) / len(valid_hr),
+                    'max_hr': max(valid_hr),
+                    'min_hr': min(valid_hr)
+                }
+        
+        # Create 10-minute segment summaries for LLM analysis
+        segment_minutes = 10
+        segments = []
+        
+        for segment_start in range(0, int(total_minutes), segment_minutes):
+            segment_end = min(segment_start + segment_minutes, total_minutes)
+            segment_indices = [i for i, t in enumerate(time_data) 
+                              if segment_start*60 <= t < segment_end*60]
+            
+            if segment_indices:
+                segment_data = {
+                    'start_min': segment_start,
+                    'end_min': segment_end,
+                }
+                
+                if watts_data:
+                    segment_powers = [watts_data[i] for i in segment_indices]
+                    segment_data.update({
+                        'avg_power': sum(segment_powers) / len(segment_powers),
+                        'max_power': max(segment_powers)
+                    })
+                
+                if hr_data:
+                    segment_hrs = [hr_data[i] for i in segment_indices if hr_data[i] > 0]
+                    if segment_hrs:
+                        segment_data.update({
+                            'avg_hr': sum(segment_hrs) / len(segment_hrs),
+                            'max_hr': max(segment_hrs)
+                        })
+                
+                segments.append(segment_data)
+        
+        # Build LLM prompt for effort analysis
+        effort_prompt = self._build_effort_analysis_prompt(
+            activity, power_stats, hr_stats, segments, total_minutes
+        )
+        
+        try:
+            messages = [
+                {"role": "system", "content": "You are an expert cycling data analyst specializing in effort pattern recognition."},
+                {"role": "user", "content": effort_prompt}
+            ]
+            response = call_llm(messages, model="gpt-4", force_json=True)
+            intervals = self._parse_effort_response(response)
+            return intervals
+            
+        except Exception as e:
+            print(f"LLM effort analysis failed: {e}")
+            return []
+
+    def _build_effort_analysis_prompt(self, activity: Dict[str, Any], power_stats: Dict, 
+                                     hr_stats: Dict, segments: List[Dict], total_minutes: float) -> str:
+        """Build prompt for LLM effort interval analysis"""
+        
+        activity_name = activity.get('name', 'Unknown')
+        
+        prompt = f"""You are the Ride Data Ingestion Agent for Fiction Mode cycling narratives.
+
+TASK: Analyze this ride's effort patterns to identify key intervals for narrative purposes.
+
+ACTIVITY: {activity_name}
+DURATION: {total_minutes:.1f} minutes
+
+OVERALL STATS:"""
+        
+        if power_stats:
+            prompt += f"""
+POWER: Avg {power_stats['avg_power']:.0f}W, Max {power_stats['max_power']:.0f}W"""
+        
+        if hr_stats:
+            prompt += f"""
+HEART RATE: Avg {hr_stats['avg_hr']:.0f}bpm, Max {hr_stats['max_hr']:.0f}bpm"""
+        
+        prompt += f"""
+
+10-MINUTE SEGMENTS:"""
+        
+        for segment in segments:
+            prompt += f"""
+{segment['start_min']}-{segment['end_min']}min:"""
+            if 'avg_power' in segment:
+                prompt += f" Power {segment['avg_power']:.0f}W (max {segment['max_power']:.0f}W)"
+            if 'avg_hr' in segment:
+                prompt += f" HR {segment['avg_hr']:.0f}bpm (max {segment['max_hr']:.0f}bpm)"
+        
+        prompt += f"""
+
+INSTRUCTIONS:
+1. Identify 2-5 significant effort intervals that could represent race events
+2. Look for power/HR surges, sustained efforts, or tactical moments
+3. Consider the activity name for context (TDF stage simulation, training, etc.)
+4. Each interval should be meaningful for cycling narrative purposes
+
+Respond with JSON array:
+[
+  {{
+    "start_minute": 25.5,
+    "duration_minutes": 2.3,
+    "avg_power": 105,
+    "max_power": 114,
+    "avg_hr": 145,
+    "effort_type": "surge",
+    "description": "Mid-ride power surge - possible attack response"
+  }}
+]
+
+Effort types: surge, sustained, recovery, sprint, climb, tempo
+Focus on intervals that tell a story about the rider's tactical choices."""
+        
+        return prompt
+
+    def _parse_effort_response(self, response: str) -> List[Dict[str, Any]]:
+        """Parse LLM response into effort interval objects"""
+        import json
+        import re
+        
+        intervals = []
+        
+        try:
+            # Extract JSON from response
+            json_match = re.search(r'\[.*\]', response, re.DOTALL)
+            if json_match:
+                intervals_data = json.loads(json_match.group())
+                
+                for interval_data in intervals_data:
+                    intervals.append({
+                        'start_minute': interval_data.get('start_minute', 0),
+                        'duration_minutes': interval_data.get('duration_minutes', 1),
+                        'avg_power': interval_data.get('avg_power'),
+                        'max_power': interval_data.get('max_power'),
+                        'avg_hr': interval_data.get('avg_hr'),
+                        'effort_type': interval_data.get('effort_type', 'effort'),
+                        'description': interval_data.get('description', 'Effort interval')
+                    })
+        
+        except Exception as e:
+            print(f"Failed to parse LLM effort response: {e}")
+        
+        return intervals
+
+    def _fallback_effort_extraction(self, activity: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Fallback effort extraction using basic activity summary data"""
         intervals = []
 
-        # Use available summary data to estimate effort periods
         moving_time = activity.get('moving_time', 0)
         avg_power = activity.get('average_watts')
         max_power = activity.get('max_watts')
 
-        if avg_power and max_power and moving_time > 1800:  # 30+ min rides
-            # Estimate high-effort periods based on power data
-            # This is simplified - real implementation would use streams API
+        if moving_time > 1800:  # 30+ min rides
             total_minutes = moving_time / 60
 
-            # Assume 3-5 high effort intervals for typical stage simulation
-            if total_minutes > 90:  # Long stage
+            # Create basic intervals for longer rides
+            if total_minutes > 45:
                 intervals = [
                     {
-                        'start_minute': 15,
+                        'start_minute': total_minutes * 0.25,
+                        'duration_minutes': 3,
+                        'avg_power': max_power * 0.8 if max_power else None,
+                        'description': 'Early effort period'
+                    },
+                    {
+                        'start_minute': total_minutes * 0.65,
                         'duration_minutes': 5,
-                        'avg_power': max_power * 0.85,
-                        'description': 'Early breakaway response'
-                    },
-                    {
-                        'start_minute': int(total_minutes * 0.4),
-                        'duration_minutes': 8,
-                        'avg_power': max_power * 0.90,
-                        'description': 'Mid-stage effort'
-                    },
-                    {
-                        'start_minute': int(total_minutes * 0.8),
-                        'duration_minutes': 10,
-                        'avg_power': max_power * 0.95,
-                        'description': 'Final surge'
+                        'avg_power': max_power * 0.9 if max_power else None,
+                        'description': 'Late-ride push'
                     }
                 ]
 
@@ -282,48 +478,154 @@ class RaceDataIngestionAgent:
         return stage_reports.get(stage_number)
 
     def parse_stage_events(self, stage_report: str, stage_number: int) -> List[RaceEvent]:
-        """Parse stage report text to extract key events"""
+        """Parse stage report text to extract key events using LLM intelligence"""
 
+        if not stage_report or not stage_report.strip():
+            return self._fallback_stage_events(stage_number)
+
+        # Use LLM to intelligently extract race events
+        events_prompt = self._build_events_extraction_prompt(stage_report, stage_number)
+        
+        try:
+            messages = [
+                {"role": "system", "content": "You are an expert cycling race analyst who extracts key events from race reports."},
+                {"role": "user", "content": events_prompt}
+            ]
+            response = call_llm(messages, model="gpt-4", force_json=True)
+            events = self._parse_events_response(response)
+            
+            if events:
+                return events
+        
+        except Exception as e:
+            print(f"LLM event extraction failed, using fallback: {e}")
+        
+        # Fallback to rule-based parsing
+        return self._fallback_stage_events(stage_number)
+
+    def _build_events_extraction_prompt(self, stage_report: str, stage_number: int) -> str:
+        """Build prompt for LLM race event extraction"""
+        
+        prompt = f"""You are the Race Data Ingestion Agent for Fiction Mode cycling narratives.
+
+TASK: Extract key race events from this stage report for narrative purposes.
+
+STAGE REPORT:
+{stage_report[:2000]}  # Limit text length
+
+INSTRUCTIONS:
+1. Identify key race events: breakaways, attacks, crashes, sprints, climbs, etc.
+2. Extract timing information (km markers or time) when available
+3. Note important riders involved
+4. Focus on dramatic moments suitable for narrative
+
+Respond with JSON array format:
+[
+  {{
+    "time_km": 45.5,
+    "time_minutes": null,
+    "event_type": "breakaway",
+    "description": "Five riders escape: Pacher, Bouchard, Declercq break clear",
+    "riders": ["Pacher", "Bouchard", "Declercq"]
+  }},
+  {{
+    "time_km": null,
+    "time_minutes": 180,
+    "event_type": "attack",
+    "description": "Pogačar attacks on the final climb",
+    "riders": ["Pogačar"]
+  }}
+]
+
+Event types: breakaway, attack, crash, sprint, climb, catch, finish
+Extract maximum 8 key events for narrative focus."""
+        
+        return prompt
+
+    def _parse_events_response(self, response: str) -> List[RaceEvent]:
+        """Parse LLM response into RaceEvent objects"""
+        import json
+        import re
+        
+        events = []
+        
+        try:
+            # Extract JSON from response
+            json_match = re.search(r'\[.*\]', response, re.DOTALL)
+            if json_match:
+                events_data = json.loads(json_match.group())
+                
+                for event_data in events_data:
+                    events.append(RaceEvent(
+                        time_km=event_data.get('time_km'),
+                        time_minutes=event_data.get('time_minutes'), 
+                        event_type=event_data.get('event_type', 'race_action'),
+                        description=event_data.get('description', 'Race event occurred'),
+                        riders=event_data.get('riders', [])
+                    ))
+        
+        except Exception as e:
+            print(f"Failed to parse LLM events response: {e}")
+        
+        return events
+
+    def _fallback_stage_events(self, stage_number: int) -> List[RaceEvent]:
+        """Fallback rule-based event generation when LLM fails"""
+        
         events = []
 
-        # Simple parsing based on common patterns
-        # Full implementation would use more sophisticated NLP
-
-        if "break" in stage_report.lower() and "km" in stage_report.lower():
-            events.append(RaceEvent(
-                time_km=15.0,
-                time_minutes=None,
-                event_type='breakaway',
-                description='Early breakaway formation',
-                riders=['Pacher', 'Bouchard', 'Declercq']
-            ))
-
-        if "caught" in stage_report.lower():
-            events.append(RaceEvent(
-                time_km=None,
-                time_minutes=None,
-                event_type='catch',
-                description='Breakaway caught by peloton',
-                riders=[]
-            ))
-
-        if "sprint" in stage_report.lower():
-            events.append(RaceEvent(
-                time_km=None,
-                time_minutes=None,
-                event_type='sprint',
-                description='Final sprint finish',
-                riders=[]
-            ))
-
-        if "crash" in stage_report.lower():
-            events.append(RaceEvent(
-                time_km=95.3,
-                time_minutes=None,
-                event_type='crash',
-                description='High-speed crash at intermediate sprint',
-                riders=['Philipsen', 'Coquard']
-            ))
+        # Generate some basic events based on stage number patterns
+        if stage_number <= 3:  # Early stages - sprints
+            events.extend([
+                RaceEvent(
+                    time_km=15.0,
+                    time_minutes=None,
+                    event_type='breakaway',
+                    description='Early breakaway formation with 3-4 riders',
+                    riders=['Breakaway riders']
+                ),
+                RaceEvent(
+                    time_km=None,
+                    time_minutes=None,
+                    event_type='sprint',
+                    description='Bunch sprint finish',
+                    riders=[]
+                )
+            ])
+        elif stage_number >= 15:  # Mountain stages
+            events.extend([
+                RaceEvent(
+                    time_km=50.0,
+                    time_minutes=None,
+                    event_type='attack',
+                    description='GC contenders attack on the climb',
+                    riders=['GC riders']
+                ),
+                RaceEvent(
+                    time_km=None,
+                    time_minutes=None,
+                    event_type='finish',
+                    description='Mountain stage finish',
+                    riders=[]
+                )
+            ])
+        else:  # Mid-stage variety
+            events.extend([
+                RaceEvent(
+                    time_km=25.0,
+                    time_minutes=None,
+                    event_type='breakaway',
+                    description='Day-long breakaway establishes',
+                    riders=['Break riders']
+                ),
+                RaceEvent(
+                    time_km=None,
+                    time_minutes=None,
+                    event_type='catch',
+                    description='Peloton controls and catches the break',
+                    riders=[]
+                )
+            ])
 
         return events
 
