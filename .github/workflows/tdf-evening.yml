@@ -23,6 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -55,14 +58,24 @@ jobs:
           USE_TWILIO: ${{ secrets.USE_TWILIO }}
         run: |
           echo "Running TDF evening check..."
+          echo "Current working directory: $(pwd)"
+          echo "Points file exists: $(test -f output/tdf_points.json && echo 'YES' || echo 'NO')"
+          if [ -f output/tdf_points.json ]; then
+            echo "Current points total: $(cat output/tdf_points.json | grep -o '"total_points": [0-9]*' | cut -d: -f2 | tr -d ' ')"
+          fi
+          
+          # Run the TDF check
           python scripts/evening_tdf_check.py
           
           # Check if points file was updated (indicates new stage completed)
+          echo "Checking for points file changes..."
           if git diff --quiet HEAD -- output/tdf_points.json; then
             echo "No new stage completed"
             echo "stage_completed=false" >> $GITHUB_OUTPUT
           else
             echo "New stage completed!"
+            echo "Points file changes detected:"
+            git diff HEAD -- output/tdf_points.json
             echo "stage_completed=true" >> $GITHUB_OUTPUT
           fi
 
@@ -74,6 +87,7 @@ jobs:
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
           message: 'feat(tdf): stage completed - points updated [skip ci]'
+          github_token: ${{ secrets.GH_PAT }}
 
       - name: Create Stage Completion Summary
         if: steps.tdf-check.outputs.stage_completed == 'true'
