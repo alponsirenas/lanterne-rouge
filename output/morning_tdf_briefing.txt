@@ -1,0 +1,35 @@
+🏆 TDF Simulation - Stage 4
+🏔️ Stage Type: Flat Stage
+==================================================
+
+📊 READINESS CHECK:
+• Readiness Score: 77/100
+• TSB (Form): -6.7
+• CTL (Fitness): 36.8
+
+🎯 TODAY'S RECOMMENDATION:
+• Ride Mode: GC
+• Expected Points: 5
+• Rationale: Choosing GC mode for today's flat stage is strategic given your current physiological state and the early phase of the Tour de France Simulation. With no points currently on the board, securing base points in GC mode will add to your total while conserving energy for stages where your strengths can be more effectively leveraged. This approach also aligns with the goal of achieving the bonus for completing all stages in GC mode, providing a steady accumulation of points without the risk of overexertion.
+
+📈 POINTS STATUS:
+• Current Total: 0 points
+• Stages Completed: 0/21
+
+🏆 BONUS OPPORTUNITIES:
+   • 5 consecutive stages
+   • All GC Mode
+
+🎖️ BONUS PROGRESS:
+   • 5 consecutive: 0/5
+   • 10 breakaways: 0/10
+
+🧠 TRAINING STRATEGY:
+• Training Focus: Maintain
+• Intensity: Moderate
+• Reasoning: Given your current readiness score of 77, which indicates you're in a good state of physical readiness, and a TSB of -6.7, showing a slight increase in fatigue compared to the previous stage, it's important to maintain a strategic approach to your effort today. Your CTL and ATL values are indicating that you're balancing between building fitness and managing fatigue. Maintaining your effort level will ensure that you can compete effectively today without exacerbating fatigue, setting a solid foundation for the upcoming stages.
+
+📝 STRATEGIC NOTES:
+Today's strategy is about building a foundation for the rest of the Tour. With 19 days to your goal and being in the peak training phase, it's vital to balance between securing points and conserving energy. Your readiness and TSB suggest you're in a position to perform well today without pushing into the red zone. We'll aim for a moderate intensity to ensure recovery and readiness for more challenging stages ahead, where opportunities for breakaways and higher point gains may present themselves more favorably.
+
+💪 Steady and smart for Stage 4. Every point counts, and consistency wins the long game!
