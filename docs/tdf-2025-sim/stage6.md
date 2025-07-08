@@ -46,7 +46,7 @@ Profile Summary & Tactical Story
 - 10m @ 83W   (65%)   [Stay sheltered early, teammates work]
 - 10m @ 90W   (70%)   [Steady climb, tempo]
 - 5m @ 77W    (60%)   [Short descent/recovery]
-- 5m @ 96W    (75%)   [Defensive tempo, keep position]   ← Added
+- 5m @ 96W    (75%)   [Defensive tempo, keep position]
 - 10m @ 96W   (75%)   [Long climb, controlled pace]
 - 5m @ 90W    (70%)   [Rolling, regroup]
 - 10m @ 109W  (85%)   [Key selection—follow only if rivals move]
