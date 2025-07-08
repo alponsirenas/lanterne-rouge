@@ -29,7 +29,7 @@ Profile Summary & Tactical Story
 - 8m @ 122W   (95%)   [Final crosswind push—last chance]
 - 3m @ 90W    (70%)   [Trying to hold on, peloton closes in]
 - 4m @ 109W   (85%)   [Last ditch to stay away]
-- 10m @ 64W   (50%)   [Sit up, “caught by peloton,” ride in]
+- 10m @ 64W   (50%)   [Sit up, 'caught by peloton,' ride in]
 - 10m @ 64W   (50%)   [Cool-down, debrief]
 
 
