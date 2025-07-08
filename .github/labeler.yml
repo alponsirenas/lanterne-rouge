@@ -1,19 +1,55 @@
----
+# Configuration for the labeler action
+# https://github.com/actions/labeler
+
+# Label for root level changes
 root:
-  - '*'
+  - changed-files:
+    - any-glob-to-any-file: '*'
+    - all-globs-to-all-files: '!**/*'
 
+# Label for CI/CD related changes  
 CI:
-  - '.github/**'
+  - changed-files:
+    - any-glob-to-any-file: '.github/**/*'
 
+# Label for documentation changes
 documentation:
-  - 'docs/*'
-  - 'context/*'
+  - changed-files:
+    - any-glob-to-any-file: 
+      - 'docs/**/*'
+      - 'context/**/*'
+      - '*.md'
 
+# Label for source code changes
 source:
-  - 'src/**/*'
+  - changed-files:
+    - any-glob-to-any-file: 'src/**/*'
 
+# Label for test changes
 tests:
-  - 'tests/**/*'
+  - changed-files:
+    - any-glob-to-any-file: 'tests/**/*'
 
-llm-context:
-  - 'context/*'
+# Label for script changes
+scripts:
+  - changed-files:
+    - any-glob-to-any-file: 'scripts/**/*'
+
+# Label for configuration changes
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'config/**/*'
+      - 'missions/**/*'
+      - '*.toml'
+      - '*.json'
+      - '*.yml'
+      - '*.yaml'
+
+# Label for TDF simulation changes
+tdf:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/tdf_*'
+      - '**/*tdf*'
+      - 'output/tdf_points.json'
