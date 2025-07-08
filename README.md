@@ -98,7 +98,7 @@ Follow these steps to set up Lanterne Rouge:
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-## Current Version: v0.5.0
+## Current Version: v0.5.1
 
 Release highlights:
 - **Power-Based Activity Analysis** - Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
@@ -119,11 +119,11 @@ Release highlights:
 - **Intelligent Classification**: LLM analyzes power data contextually for strategic recommendations
 - **Training Load Management**: TSS-based recovery recommendations and strategic planning
 
-See the full [Release Notes for v0.5.0](RELEASE_NOTES_v0.5.0.md) for detailed information.
+See the full [Release Notes for v0.5.1](docs/RELEASE_NOTES_v0.5.1.md) for detailed information.
 
 ## Looking Ahead
 
-With version **v0.5.0**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, now enhanced with the gamified TDF Points System for engaging, goal-oriented training experiences.
+With version **v0.5.1**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, enhanced TDF Points System, reliable GitHub Actions workflows, and a clean, organized project structure for optimal maintainability.
 
 In our TO DO:
 - Refining recommendations and data visualization.
