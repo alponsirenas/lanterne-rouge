@@ -4,11 +4,10 @@ Delivery Agent for Fiction Mode
 Formats and delivers completed narratives in various formats.
 """
 
-import os
 import json
 from datetime import datetime
 from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 try:
     import markdown
@@ -192,7 +191,7 @@ class DeliveryAgent:
             html_content = markdown_content.replace('\n', '<br>\n')
 
         # Wrap in complete HTML document
-        html_document = f"""<!DOCTYPE html>
+        html_document = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -236,7 +235,7 @@ class DeliveryAgent:
         subject = f"Tour de France Fiction Mode: {title}"
 
         # Email body with plain text formatting
-        body = f"""Subject: {subject}
+        body = """Subject: {subject}
 
 {title}
 {datetime.fromisoformat(metadata['stage_date']).strftime('%B %d, %Y')}

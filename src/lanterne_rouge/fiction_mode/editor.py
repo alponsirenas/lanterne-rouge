@@ -4,7 +4,7 @@ Editor Agent for Fiction Mode
 Reviews and polishes generated narratives for style, accuracy, and quality.
 """
 
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import re
 
@@ -48,7 +48,7 @@ class EditorAgent:
             'peloton': 'peloton (not pack or field)',
             'gruppetto': 'gruppetto (not group)',
             'domestique': 'domestique (not helper)',
-            'directeur sportif': 'directeur sportif (not team director)',
+            'directeur sporti': 'directeur sportif (not team director)',
             'maillot jaune': 'maillot jaune (not yellow jersey when being literary)',
             'echelon': 'echelon (for crosswind formation)',
             'breakaway': 'breakaway (not break)',
@@ -297,7 +297,7 @@ class EditorAgent:
         """Incorporate user feedback using LLM"""
 
         try:
-            prompt = f"""Please revise this cycling narrative based on the user's feedback:
+            prompt = """Please revise this cycling narrative based on the user's feedback:
 
 ORIGINAL NARRATIVE:
 {narrative}

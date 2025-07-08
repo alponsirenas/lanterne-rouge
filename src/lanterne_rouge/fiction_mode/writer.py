@@ -4,9 +4,8 @@ Writer Agent for Fiction Mode
 Generates literary cycling narratives in various styles from analyzed ride data.
 """
 
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional
 from dataclasses import dataclass
-import json
 
 from ..ai_clients import call_llm
 from .analysis import AnalysisResult, MappedEvent
@@ -172,11 +171,12 @@ Write in past tense with rich, descriptive language."""
         # Build character description
         character_name = "Ana Luisa"  # Default name, could be from user bio
         if user_bio:
-            character_desc = f"Character: {user_bio}"
+            # Character description logic here
+            character_desc = "Character: Ana Luisa, an experienced cyclist with unique qualities"
         else:
-            character_desc = f"Character: Ana Luisa, an experienced cyclist"
+            character_desc = "Character: Ana Luisa, an experienced cyclist"
 
-        prompt = f"""Generate a cycling narrative for this Tour de France stage:
+        prompt = """Generate a cycling narrative for this Tour de France stage:
 
 STAGE INFORMATION:
 - Stage: {stage_data.stage_name}
@@ -201,7 +201,7 @@ NARRATIVE TIMELINE:
         for event in timeline:
             prompt += f"- Minute {event['minute']}: {event['description']} -> {event['user_action']}\n"
 
-        prompt += f"""
+        prompt += """
 
 MAPPED EVENTS:
 """
@@ -210,7 +210,7 @@ MAPPED EVENTS:
         for mapped_event in analysis.mapped_events:
             prompt += f"- {mapped_event.narrative_description}\n"
 
-        prompt += f"""
+        prompt += """
 
 STAGE REPORT EXCERPT:
 {stage_data.stage_report[:500]}...
@@ -235,7 +235,7 @@ is experiencing this stage as part of the actual Tour de France peloton."""
         stage_data = analysis.stage_data
         rider_role = analysis.rider_role
 
-        fallback = f"""Stage {stage_data.stage_number} — {stage_data.stage_name}
+        fallback = """Stage {stage_data.stage_number} — {stage_data.stage_name}
 
 {stage_data.date.strftime('%B %d, %Y')}
 
@@ -249,7 +249,7 @@ Today's challenge: {analysis.performance_summary['key_challenge']}. Over {analys
         for event in analysis.narrative_timeline[:3]:  # First few events
             fallback += f"At {event['minute']} minutes, as {event['description']}, she {event['user_action']}.\n\n"
 
-        fallback += f"""In the end, {stage_data.winner} takes the stage victory. Ana Luisa crosses the line having completed another day in the world's greatest bike race. The tour continues."""
+        fallback += """In the end, {stage_data.winner} takes the stage victory. Ana Luisa crosses the line having completed another day in the world's greatest bike race. The tour continues."""
 
         return fallback
 

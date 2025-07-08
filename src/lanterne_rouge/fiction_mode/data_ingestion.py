@@ -5,13 +5,10 @@ RideDataIngestionAgent: Fetches and processes user's Strava ride data
 RaceDataIngestionAgent: Scrapes and processes official race reports
 """
 
-import os
 import re
-import requests
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-import json
 
 from ..strava_api import strava_get, get_athlete_id
 from ..validation import validate_activity_data
@@ -151,7 +148,7 @@ class RideDataIngestionAgent:
         start_time_str = activity.get('start_date_local', '')
         try:
             start_time = datetime.fromisoformat(start_time_str.replace('Z', ''))
-        except:
+        except Exception:
             start_time = datetime.now()
 
         # Extract effort intervals
@@ -197,7 +194,7 @@ class RideDataIngestionAgent:
                 activity_date = datetime.fromisoformat(start_time_str.replace('Z', '')).date()
                 if activity_date != today:
                     continue
-            except:
+            except Exception:
                 continue
 
             # Check if it's a cycling activity

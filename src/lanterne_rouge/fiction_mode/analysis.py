@@ -4,10 +4,8 @@ Analysis & Mapping Agent for Fiction Mode
 Maps user's ride data to official stage events and assigns a narrative role.
 """
 
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-import json
 
 from .data_ingestion import RideData, StageRaceData, RaceEvent
 
