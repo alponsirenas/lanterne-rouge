@@ -31,22 +31,16 @@ def fix_trailing_whitespace(file_path):
 
 def main():
     """Find and fix trailing whitespace in Python files in the lanterne_rouge package."""
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     src_dir = os.path.join(base_dir, 'src', 'lanterne_rouge')
 
-    # Find all Python files recursively
-    py_files = []
-    for root, dirs, files in os.walk(src_dir):
-        for file in files:
-            if file.endswith('.py'):
-                py_files.append(os.path.join(root, file))
-
+    py_files = glob.glob(os.path.join(src_dir, '*.py'))
     fixed_count = 0
 
     for py_file in py_files:
         if fix_trailing_whitespace(py_file):
             fixed_count += 1
-            print(f"Fixed trailing whitespace in {os.path.relpath(py_file, src_dir)}")
+            print(f"Fixed trailing whitespace in {os.path.basename(py_file)}")
 
     print(f"\nFixed {fixed_count} out of {len(py_files)} files.")
 

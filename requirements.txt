@@ -9,6 +9,9 @@ pydantic==2.7.*
 tomli>=2.0.1        # safe no‑op on 3.11+
 openai>=1.14.0
 typing-extensions>=4.10
+markdown>=3.6.0      # For Fiction Mode HTML formatting
+beautifulsoup4>=4.12.0  # For web scraping race data
+lxml>=4.9.0          # XML/HTML parser for BeautifulSoup
 
 # Uncomment once token counting is integrated
 # tiktoken>=0.6.0

@@ -92,7 +92,15 @@ Follow these steps to set up Lanterne Rouge:
    - Check the daily coaching report to understand your readiness and training focus.
    - Ride, recover, and let the AI adapt your plan as you progress.
 
-8. **Review and update documentation:**
+8. **Experience Fiction Mode (Optional):**
+   - Generate literary cycling narratives from your TDF simulation rides:
+     ```bash
+     python scripts/run_fiction_mode.py --preview
+     python scripts/run_fiction_mode.py --style krabbe
+     ```
+   - See [Fiction Mode Documentation](docs/fiction_mode.md) for full details.
+
+9. **Review and update documentation:**
    - Regularly review the project documentation to ensure it remains accurate and up-to-date.
    - Follow the Documentation Review Process outlined below to make necessary updates.
 
@@ -103,6 +111,7 @@ This system is designed to fit into your routine, helping you build consistency 
 Release highlights:
 - **Power-Based Activity Analysis** - Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
 - **LLM-Powered TDF Simulation** - Intelligent stage analysis with AI-driven performance evaluation
+- **Fiction Mode** - Automated literary cycling narratives from your Strava rides and real race data
 - **Enhanced Security & Validation** - Robust input validation and sanitization for all LLM interactions
 - **Smart Ride Mode Detection** - GC vs Breakaway classification based on power zones and athlete FTP
 - **Comprehensive Post-Stage Analysis** - Strategic guidance and recovery recommendations
