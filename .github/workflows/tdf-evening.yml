@@ -9,13 +9,13 @@ on:
   schedule:
     # Run multiple times during typical workout hours (PT timezone)
     # 3PM PT - early afternoon workouts
-    - cron: '0 22 * 7 *'
+    - cron: '0 22 * * *'
     # 6PM PT - evening workouts  
-    - cron: '0 1 * 7 *'
+    - cron: '0 1 * * *'
     # 9PM PT - late workouts
-    - cron: '0 4 * 7 *'
+    - cron: '0 4 * * *'
     # 11PM PT - final check
-    - cron: '0 6 * 7 *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:

@@ -7,8 +7,8 @@ permissions:
 
 on:
   schedule:
-    # 6AM PT = 13:00 UTC, only in July
-    - cron: '0 13 * 7 *'
+    # 6AM PT = 13:00 UTC, every day during TDF season
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 jobs:

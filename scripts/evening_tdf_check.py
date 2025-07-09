@@ -33,28 +33,34 @@ def get_todays_cycling_activity():
         print("❌ No activities found")
         return None
 
+    from datetime import timedelta
     today = date.today()
+    yesterday = today - timedelta(days=1)
+    
+    print(f"📅 Checking for activities on {today} (or {yesterday} due to timezone)")
 
     for activity in activities:
         try:
-            # Parse activity date
+            # Parse activity date (this is in athlete's local time)
             activity_date = datetime.fromisoformat(
                 activity["start_date_local"].replace("Z", "")
             ).date()
 
-            # Check if it's today and is cycling
-            if (activity_date == today and
+            # Check if it's today OR yesterday (to handle timezone differences)
+            # When GitHub Actions runs in UTC, "today" might be tomorrow for the athlete
+            if (activity_date in [today, yesterday] and
                 activity.get("sport_type") in ["Ride", "VirtualRide"]):
 
                 # Check minimum duration (from mission config)
                 duration_minutes = activity.get("moving_time", 0) / 60
                 if duration_minutes >= 30:  # Minimum stage duration
+                    print(f"✅ Found qualifying activity: {activity.get('name')} ({activity_date})")
                     return activity
 
         except (ValueError, KeyError):
             continue
 
-    print("❌ No qualifying cycling activity found for today")
+    print("❌ No qualifying cycling activity found for today or yesterday")
     print("   (Need cycling activity >30 minutes uploaded to Strava)")
     return None
 
@@ -66,6 +72,9 @@ def analyze_activity_with_llm(activity, stage_info, mission_cfg):
     
     # Validate and prepare activity data
     activity_data = validate_activity_data(activity)
+    
+    # Ensure we preserve the original activity ID
+    activity_data['id'] = activity.get('id')
     
     # Calculate power-based metrics using athlete's FTP
     ftp = getattr(mission_cfg.athlete, 'ftp', 200)  # Default to 200W if not set
