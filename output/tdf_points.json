@@ -1,9 +1,9 @@
 {
-  "total_points": 19,
-  "stages_completed": 3,
-  "consecutive_stages": 3,
+  "total_points": 24,
+  "stages_completed": 4,
+  "consecutive_stages": 4,
   "breakaway_count": 0,
-  "gc_count": 3,
+  "gc_count": 4,
   "mountain_breakaway_count": 0,
   "bonuses_earned": [],
   "stages": {
@@ -46,7 +46,36 @@
         "tss": 67.5,
         "effort_level": "tempo"
       }
+    },
+    "2025-07-08": {
+      "stage_number": 4,
+      "stage_type": "flat",
+      "ride_mode": "gc",
+      "points_earned": 5,
+      "completed_at": "2025-07-08T20:52:55.071328",
+      "activity_data": {
+        "moving_time": 4502.0,
+        "distance": 30619.9,
+        "average_watts": 85.9,
+        "weighted_average_watts": 89.0,
+        "suffer_score": 80.0,
+        "intensity_factor": 0.695,
+        "average_heartrate": 134.4,
+        "max_heartrate": 149.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 6.801,
+        "max_speed": 7.72,
+        "name": "Peloton - 75 min Just Ride",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 75.03333333333333,
+        "distance_km": 30.6199,
+        "tss": 60.5,
+        "normalized_power": 89.0,
+        "effort_level": "aerobic"
+      }
     }
   },
-  "last_updated": "2025-07-08T09:49:13.477144"
+  "last_updated": "2025-07-08T20:52:55.071387"
 }
