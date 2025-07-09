@@ -118,40 +118,55 @@ class AnalysisMappingAgent:
             return self._fallback_role_assignment(ride_analysis, stage_data)
     
     def _build_analysis_prompt(self, ride_analysis: Dict[str, Any], stage_data: StageRaceData) -> str:
-        """Build prompt for LLM role assignment"""
+        """Build prompt for LLM role assignment using documented prompt"""
         
-        prompt = f"""You are the Analysis & Mapping Agent for the Fiction Mode cycling narrative generator.
+        # Get rider context including TDF simulation progress
+        from .rider_profile import get_rider_prompt_context
+        rider_context = get_rider_prompt_context(stage_data.stage_number)
+        
+        # Format ride data summary exactly as specified in the documentation
+        ride_summary = f"""Duration: {ride_analysis['duration_minutes']:.0f} minutes
+Distance: {stage_data.distance_km}km
+Average Power: {ride_analysis.get('avg_power', 'N/A')}W
+Max Power: {ride_analysis.get('max_power', 'N/A')}W
+Heart Rate: {ride_analysis.get('avg_hr', 'N/A')} bpm (avg)
+Intensity Factor: {ride_analysis['intensity_factor']:.2f}
+High Effort Intervals: {ride_analysis['high_effort_count']}
+Power Profile: Avg {ride_analysis['avg_power_pct_ftp']:.0f}% FTP, Max {ride_analysis['max_power_pct_ftp']:.0f}% FTP"""
 
-RIDE DATA SUMMARY:
-- Duration: {ride_analysis['duration_minutes']:.0f} minutes
-- Effort Level: {ride_analysis['effort_level']}
-- Intensity Factor: {ride_analysis['intensity_factor']:.2f}
-- High Effort Count: {ride_analysis['high_effort_count']}
-- Average Power (% FTP): {ride_analysis['avg_power_pct_ftp']:.0f}%
-- Max Power (% FTP): {ride_analysis['max_power_pct_ftp']:.0f}%
+        # Format stage report summary
+        stage_summary = f"""Stage: {stage_data.stage_name}
+Timeline: Start to finish over {stage_data.distance_km}km
+Key Events: {self._format_stage_events(stage_data.events)}
+Winner: {stage_data.winner}
+Weather: {stage_data.weather or 'Clear conditions'}"""
 
-STAGE CONTEXT:
-- Stage: {stage_data.stage_name}
-- Type: {stage_data.stage_type}
-- Distance: {stage_data.distance_km}km
-- Weather: {stage_data.weather or 'Clear'}
-- Winner: {stage_data.winner}
+        # Use the exact prompt from context/tdf_fiction_mode.md
+        prompt = f"""You are the Analysis & Mapping Agent for the Fiction Mode cycling narrative generator. You will receive two inputs:
+- The user's ride data summary for a Tour de France stage (duration, distance, average power, max power, cadence, heart rate, and time-stamped intervals of high effort or surges).
+- A summary of the actual stage's official race report, including timeline, key events (breaks, crashes, attacks, winner), and weather.
 
-STAGE EVENTS:
-{self._format_stage_events(stage_data.events)}
+{rider_context}
+
+USER'S RIDE DATA SUMMARY:
+{ride_summary}
+
+ACTUAL STAGE'S OFFICIAL RACE REPORT SUMMARY:
+{stage_summary}
 
 Instructions:
-1. Analyze the user's effort pattern and intensity profile
-2. Consider the stage type, distance, and key events
-3. Assign a plausible "virtual role" for this rider in the stage context
-4. Choose from: breakaway, peloton, domestique, chase_group, dropped, sprint_train
+1. Identify high-effort intervals in the user's ride (e.g., surges, sustained efforts, or rest periods).
+2. Map these intervals to real events in the stage (e.g., a surge at 35 min corresponds to the crosswind split at 60 km; a steady block matches a period when the peloton chased the break).
+3. Assign the user a plausible "virtual role" for the stage (in the break, in the peloton, working for a sprinter, etc.) based on their performance and effort profile, while considering the stage context and their TDF simulation progress.
+4. Annotate key moments where the user's data aligns with actual race events (e.g., "you held a high effort as the peloton reacted to a late attack").
+5. Output a timeline of the user's ride mapped to stage events and a brief characterization of their day's role in the race.
 
 Respond with JSON format:
 {{
-    "role_type": "peloton",
-    "position": "main_bunch", 
-    "tactical": "rode defensively, responded to key moves, finished safely",
-    "reasoning": "Moderate effort with controlled surges suggests tactical riding in bunch"
+  "role_type": "protected rider in the peloton",
+  "position": "main_bunch", 
+  "tactical": "rode defensively, responding to the day's crosswinds and chaos, finishing safely in the bunch",
+  "reasoning": "Based on moderate effort with controlled responses, suitable for tactical riding in peloton"
 }}"""
         
         return prompt

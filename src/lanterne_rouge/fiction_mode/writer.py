@@ -4,11 +4,13 @@ Writer Agent for Fiction Mode
 Generates literary cycling narratives in various styles from analyzed ride data.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
+import re
 
 from ..ai_clients import call_llm
 from .analysis import AnalysisResult, MappedEvent
+from .rider_profile import get_rider_prompt_context, get_rider_context
 
 
 @dataclass
@@ -86,20 +88,24 @@ class WriterAgent:
 
     def generate_narrative(self, analysis: AnalysisResult,
                          style_name: str = 'krabbe',
-                         user_bio: Optional[str] = None) -> str:
-        """Generate complete narrative from analysis"""
+                         stage_number: Optional[int] = None) -> str:
+        """Generate complete narrative from analysis with rider profile context"""
 
         style = self.styles.get(style_name, self.styles['krabbe'])
 
-        # Build the prompt
-        prompt = self._build_writer_prompt(analysis, style, user_bio)
+        # Get rider profile context
+        rider_context = get_rider_context(stage_number)
+        rider_prompt_context = get_rider_prompt_context(stage_number)
+
+        # Build the prompt with rider context
+        prompt = self._build_writer_prompt(analysis, style, rider_context, rider_prompt_context)
 
         # Generate narrative using LLM
         try:
             messages = [
                 {
                     "role": "system",
-                    "content": self._get_system_prompt(style)
+                    "content": self._get_system_prompt(style, rider_context['rider_profile'])
                 },
                 {
                     "role": "user",
@@ -114,21 +120,29 @@ class WriterAgent:
                 max_tokens=2000
             )
 
+            # Post-process to replace any remaining template variables
+            narrative = self._replace_template_variables(narrative, analysis, rider_context)
+
             return narrative.strip()
 
         except Exception as e:
             print(f"Error generating narrative: {e}")
-            return self._generate_fallback_narrative(analysis, style)
+            return self._generate_fallback_narrative(analysis, style, rider_context)
 
-    def _get_system_prompt(self, style: NarrativeStyle) -> str:
+    def _get_system_prompt(self, style: NarrativeStyle, rider_profile: Dict[str, Any]) -> str:
         """Get system prompt for the narrative style"""
 
         if style.name == 'Tim Krabbé':
-            return """You are the Writer Agent for the Fiction Mode cycling narrative generator.
+            return f"""You are the Writer Agent for the Fiction Mode cycling narrative generator.
 
 You write in the style of Tim Krabbé's "The Rider" - spare, intelligent, present-tense prose
 with sharp attention to detail, calculation, and atmosphere. Your voice is slightly detached
 but deeply observant, focused on the internal experience of cycling and the tactical flow of racing.
+
+RIDER CONTEXT:
+- Name: {rider_profile.get('name', 'Ana Luisa')}
+- Bio: {rider_profile.get('bio', 'An experienced cyclist')}
+- Style: {rider_profile.get('literary_voice', 'Tim Krabbé style')}
 
 Key characteristics:
 - Third person, present tense
@@ -139,9 +153,8 @@ Key characteristics:
 - Attention to the tactical and psychological aspects of racing
 - Show the rider's sensations and decision-making process
 
-Write immersive narratives that blend the user's real effort data with the stage's actual events,
-referencing real riders, results, and weather. The story should feel authentic to the world of
-professional cycling while capturing the user's experience within that context."""
+CRITICAL: Write actual narrative prose, never template code or {{}} placeholders.
+Use real names, dates, and specific details from the provided data."""
 
         elif style.name == 'Race Report':
             return """You are a professional cycling journalist writing a detailed race report.
@@ -159,77 +172,88 @@ Write in past tense with rich, descriptive language."""
 
     def _build_writer_prompt(self, analysis: AnalysisResult,
                            style: NarrativeStyle,
-                           user_bio: Optional[str]) -> str:
-        """Build the detailed prompt for narrative generation"""
+                           rider_context: Dict[str, Any],
+                           rider_prompt_context: str) -> str:
+        """Build the detailed prompt for narrative generation using documented prompt"""
 
         # Extract key information
         stage_data = analysis.stage_data
         rider_role = analysis.rider_role
         timeline = analysis.narrative_timeline
         performance = analysis.performance_summary
+        rider_profile = rider_context.get('rider_profile', {})
 
-        # Build character description
-        character_name = "Ana Luisa"  # Default name, could be from user bio
-        if user_bio:
-            # Character description logic here
-            character_desc = "Character: Ana Luisa, an experienced cyclist with unique qualities"
-        else:
-            character_desc = "Character: Ana Luisa, an experienced cyclist"
-
-        prompt = """Generate a cycling narrative for this Tour de France stage:
-
-STAGE INFORMATION:
-- Stage: {stage_data.stage_name}
-- Date: {stage_data.date.strftime('%B %d, %Y')}
-- Distance: {stage_data.distance_km}km
-- Type: {stage_data.stage_type}
-- Winner: {stage_data.winner} ({stage_data.winning_team})
-- Weather: {stage_data.weather or 'Not specified'}
-
-RIDER'S ROLE & PERFORMANCE:
-- Role: {rider_role.role_type} - {rider_role.tactical_description}
-- Position: {rider_role.position_in_race}
-- Effort Level: {rider_role.effort_level}
-- Duration: {performance['duration_minutes']:.0f} minutes
-- Average Power: {analysis.ride_data.avg_power or 'N/A'}W
-- Key Challenge: {performance['key_challenge']}
-
-NARRATIVE TIMELINE:
-"""
-
-        # Add timeline events
+        # Format mapped timeline and virtual role (from Analysis & Mapping Agent)
+        mapped_timeline = []
         for event in timeline:
-            prompt += f"- Minute {event['minute']}: {event['description']} -> {event['user_action']}\n"
+            mapped_timeline.append(f"Minute {event['minute']}: {event['description']} -> {event['user_action']}")
+        
+        # Format user's ride summary
+        ride_summary = f"""Effort Level: {rider_role.effort_level}
+Duration: {performance.get('duration_minutes', 0):.0f} minutes
+Average Power: {analysis.ride_data.avg_power or 'N/A'}W
+Max Power: {analysis.ride_data.max_power or 'N/A'}W
+Heart Rate: {analysis.ride_data.avg_hr or 'N/A'} bpm (avg)
+Key Efforts: {len(analysis.mapped_events)} significant intervals"""
 
-        prompt += """
+        # Format official stage report
+        stage_report_summary = f"""Timeline: {stage_data.stage_name} - {stage_data.distance_km}km
+Main Events: {self._format_stage_events_for_writer(stage_data.events)}
+Winner: {stage_data.winner}
+Weather: {stage_data.weather or 'Clear conditions'}
+Stage Report: {stage_data.stage_report[:300]}..."""
 
-MAPPED EVENTS:
-"""
+        # Use the exact prompt from context/tdf_fiction_mode.md
+        prompt = f"""You are the Writer Agent for the Fiction Mode cycling narrative generator.
+You will receive:
+- The mapped timeline and virtual role from the Analysis & Mapping Agent
+- The user's ride summary (effort level, surges, HR, etc.)
+- The official stage report (timeline of the race, main events, winner, weather, etc.)
+- The user's chosen literary style: "Tim Krabbé, The Rider" (third person, spare, wry, introspective, vivid)
 
-        # Add mapped events with specific details
-        for mapped_event in analysis.mapped_events:
-            prompt += f"- {mapped_event.narrative_description}\n"
+{rider_prompt_context}
 
-        prompt += """
+MAPPED TIMELINE AND VIRTUAL ROLE:
+Role: {rider_role.role_type} - {rider_role.tactical_description}
+Position: {rider_role.position_in_race}
+Timeline:
+{chr(10).join(mapped_timeline)}
 
-STAGE REPORT EXCERPT:
-{stage_data.stage_report[:500]}...
+USER'S RIDE SUMMARY:
+{ride_summary}
 
-WRITING INSTRUCTIONS:
-Write a complete narrative (800-1200 words) that:
-1. Opens with the stage start and atmosphere
-2. Incorporates the rider's specific efforts and mapped events
-3. References real riders, results, and stage events accurately
-4. Shows the tactical flow and decision-making
-5. Captures the physical and mental experience of the ride
-6. Ends with the finish and reflection on the day
+OFFICIAL STAGE REPORT:
+{stage_report_summary}
 
-Use the character name {character_name} throughout. The narrative should feel like the reader
-is experiencing this stage as part of the actual Tour de France peloton."""
+USER'S CHOSEN LITERARY STYLE: "Tim Krabbé, The Rider" (third person, spare, wry, introspective, vivid)
+
+Instructions:
+1. Write a third-person narrative of the stage from the user's perspective, weaving together their ride data, their virtual role, and the day's real race events.
+2. Reference real happenings (breakaway names, crashes, winner, weather) in the correct timeline.
+3. Evoke Krabbé's literary style—sharp, spare, intelligent, focused on detail and calculation, sometimes ironic or detached.
+4. Show the user's sensations (effort, calculation, fear, relief) and how their ride fits into the Tour's drama.
+5. The narrative should not be about "winning" but about living the day as part of the peloton's world, finishing in character.
+6. When narratively appropriate, subtly reference the user's Tour simulation progress (stages completed, consecutive days, overall goals) as part of their mental state and motivation.
+
+Character Name: {rider_profile.get('name', 'Ana Luisa')}
+
+Write a complete narrative that reads like a literary stage recap with the added rider character experiencing the events firsthand. Include specific stage facts, rider names, and race details."""
 
         return prompt
 
-    def _generate_fallback_narrative(self, analysis: AnalysisResult, style: NarrativeStyle) -> str:
+    def _format_stage_events_for_writer(self, events) -> str:
+        """Format stage events for writer prompt"""
+        if not events:
+            return "No specific events recorded"
+        
+        event_list = []
+        for event in events[:5]:  # Limit to key events
+            time_info = f"{event.time_km}km" if event.time_km else f"{event.time_minutes}min"
+            event_list.append(f"- {time_info}: {event.description}")
+        
+        return "\n".join(event_list)
+
+    def _generate_fallback_narrative(self, analysis: AnalysisResult, style: NarrativeStyle, rider_context: Dict[str, Any]) -> str:
         """Generate a simple fallback narrative if LLM fails"""
 
         stage_data = analysis.stage_data
@@ -252,6 +276,36 @@ Today's challenge: {analysis.performance_summary['key_challenge']}. Over {analys
         fallback += """In the end, {stage_data.winner} takes the stage victory. Ana Luisa crosses the line having completed another day in the world's greatest bike race. The tour continues."""
 
         return fallback
+
+    def _replace_template_variables(self, narrative: str, analysis: AnalysisResult, rider_context: Dict[str, Any]) -> str:
+        """Replace template variables in the narrative with actual values"""
+        
+        stage_data = analysis.stage_data
+        rider_role = analysis.rider_role
+        performance = analysis.performance_summary
+        rider_profile = rider_context.get('rider_profile', {})
+        
+        # Create replacement mapping
+        replacements = {
+            '{stage_data.stage_number}': str(stage_data.stage_number),
+            '{stage_data.stage_name}': stage_data.stage_name,
+            '{stage_data.date.strftime(\'%B %d, %Y\')}': stage_data.date.strftime('%B %d, %Y'),
+            '{stage_data.weather or \'typical racing conditions\'}': stage_data.weather or 'typical racing conditions',
+            '{stage_data.distance_km}': str(stage_data.distance_km),
+            '{stage_data.winner}': stage_data.winner,
+            '{rider_role.tactical_description}': rider_role.tactical_description,
+            '{analysis.performance_summary[\'key_challenge\']}': performance.get('key_challenge', 'tactical positioning'),
+            '{analysis.performance_summary[\'duration_minutes\']:.0f}': str(int(performance.get('duration_minutes', 0))),
+            '{character_name}': rider_profile.get('name', 'Ana Luisa'),
+            '{analysis.ride_data.avg_power or \'N/A\'}': f"{analysis.ride_data.avg_power}W" if analysis.ride_data.avg_power else 'N/A'
+        }
+        
+        # Apply replacements
+        result = narrative
+        for template, value in replacements.items():
+            result = result.replace(template, value)
+        
+        return result
 
     def get_available_styles(self) -> List[str]:
         """Get list of available narrative styles"""

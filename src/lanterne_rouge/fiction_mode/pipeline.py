@@ -15,6 +15,8 @@ from .analysis import AnalysisMappingAgent, AnalysisResult
 from .writer import WriterAgent
 from .editor import EditorAgent, EditingReport
 from .delivery import DeliveryAgent, DeliveryOptions, DeliveredNarrative
+from .rider_profile import RiderProfileManager
+from ..tdf_tracker import TDFTracker
 
 
 @dataclass
@@ -47,6 +49,12 @@ class FictionModeOrchestrator:
     def __init__(self, config: Optional[FictionModeConfig] = None):
         self.config = config or FictionModeConfig()
 
+        # Initialize rider profile manager
+        self.profile_manager = RiderProfileManager()
+        
+        # Initialize TDF tracker
+        self.tdf_tracker = TDFTracker()
+
         # Initialize agents
         self.ride_agent = RideDataIngestionAgent()
         self.race_agent = RaceDataIngestionAgent()
@@ -62,6 +70,20 @@ class FictionModeOrchestrator:
 
         try:
             print("🎬 Starting Fiction Mode pipeline...")
+
+            # Step 0: Validate rider profile
+            print("👤 Checking rider profile...")
+            is_ready, message = self.profile_manager.validate_profile_ready()
+            if not is_ready:
+                return PipelineResult(
+                    success=False,
+                    narrative=None,
+                    delivered_narrative=None,
+                    analysis=None,
+                    editing_report=None,
+                    error_message=f"Rider profile not ready: {message}. Run 'python scripts/configure_rider_profile.py example' to create one.",
+                    processing_time_seconds=(datetime.now() - start_time).total_seconds()
+                )
 
             # Step 1: Find today's TDF ride
             print("📥 Looking for today's TDF simulation ride...")
@@ -180,6 +202,9 @@ class FictionModeOrchestrator:
             print(f"🎉 Fiction Mode complete! ({processing_time:.1f}s)")
             if delivered_narrative.file_path:
                 print(f"📄 Saved to: {delivered_narrative.file_path}")
+
+            # Step 8: Update TDF tracker with completed stage
+            self._update_tdf_tracker(race_data, analysis, ride_data)
 
             return PipelineResult(
                 success=True,
