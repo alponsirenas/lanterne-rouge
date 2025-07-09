@@ -235,7 +235,7 @@ class DeliveryAgent:
         subject = f"Tour de France Fiction Mode: {title}"
 
         # Email body with plain text formatting
-        body = """Subject: {subject}
+        body = f"""Subject: {subject}
 
 {title}
 {datetime.fromisoformat(metadata['stage_date']).strftime('%B %d, %Y')}
