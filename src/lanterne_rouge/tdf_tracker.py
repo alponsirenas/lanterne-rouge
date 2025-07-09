@@ -43,6 +43,7 @@ class TDFTracker:
             "mountain_breakaway_count": 0,
             "bonuses_earned": [],
             "stages": {},  # date -> stage data
+            "used_activity_ids": [],  # Track used Strava activity IDs to prevent duplicates
             "last_updated": None
         }
 
@@ -82,6 +83,21 @@ class TDFTracker:
         if stage_key in self._data["stages"]:
             return {"error": "Stage already completed today"}
 
+        # Check for activity ID to prevent duplicates
+        activity_id = None
+        if activity_data and 'id' in activity_data:
+            activity_id = activity_data['id']
+        elif activity_data and 'activity_id' in activity_data:
+            activity_id = activity_data['activity_id']
+        
+        # Ensure used_activity_ids exists (for backward compatibility)
+        if "used_activity_ids" not in self._data:
+            self._data["used_activity_ids"] = []
+            
+        # Check if this activity has already been used
+        if activity_id and activity_id in self._data["used_activity_ids"]:
+            return {"error": f"Activity {activity_id} already used for a previous stage"}
+
         # Add stage data
         stage_data = {
             "stage_number": stage_number,
@@ -91,6 +107,11 @@ class TDFTracker:
             "completed_at": datetime.now().isoformat(),
             "activity_data": activity_data or {}
         }
+
+        # Add activity ID to stage data if available
+        if activity_id:
+            stage_data["activity_id"] = activity_id
+            self._data["used_activity_ids"].append(activity_id)
 
         self._data["stages"][stage_key] = stage_data
 
