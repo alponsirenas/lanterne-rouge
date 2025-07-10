@@ -235,6 +235,12 @@ class TDFTracker:
             "last_updated": self._data["last_updated"]
         }
 
+    def is_activity_already_used(self, activity_id: int) -> bool:
+        """Check if an activity ID has already been used for a previous stage."""
+        if "used_activity_ids" not in self._data:
+            self._data["used_activity_ids"] = []
+        return activity_id in self._data["used_activity_ids"]
+
 
 # Convenience functions for backward compatibility
 def load_points_status() -> Dict[str, Any]:

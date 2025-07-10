@@ -39,6 +39,10 @@ def get_todays_cycling_activity():
     
     print(f"📅 Checking for activities on {today} (or {yesterday} due to timezone)")
 
+    # First, try to find an activity from today
+    todays_activity = None
+    yesterdays_activity = None
+    
     for activity in activities:
         try:
             # Parse activity date (this is in athlete's local time)
@@ -46,19 +50,25 @@ def get_todays_cycling_activity():
                 activity["start_date_local"].replace("Z", "")
             ).date()
 
-            # Check if it's today OR yesterday (to handle timezone differences)
-            # When GitHub Actions runs in UTC, "today" might be tomorrow for the athlete
-            if (activity_date in [today, yesterday] and
-                activity.get("sport_type") in ["Ride", "VirtualRide"]):
-
+            if (activity.get("sport_type") in ["Ride", "VirtualRide"]):
                 # Check minimum duration (from mission config)
                 duration_minutes = activity.get("moving_time", 0) / 60
                 if duration_minutes >= 30:  # Minimum stage duration
-                    print(f"✅ Found qualifying activity: {activity.get('name')} ({activity_date})")
-                    return activity
+                    if activity_date == today:
+                        todays_activity = activity
+                    elif activity_date == yesterday:
+                        yesterdays_activity = activity
 
         except (ValueError, KeyError):
             continue
+
+    # Prefer today's activity, fall back to yesterday's only if no today activity
+    if todays_activity:
+        print(f"✅ Found qualifying activity from today: {todays_activity.get('name')}")
+        return todays_activity
+    elif yesterdays_activity:
+        print(f"✅ Found qualifying activity from yesterday: {yesterdays_activity.get('name')} (timezone difference)")
+        return yesterdays_activity
 
     print("❌ No qualifying cycling activity found for today or yesterday")
     print("   (Need cycling activity >30 minutes uploaded to Strava)")
@@ -411,6 +421,13 @@ def main():
         if not activity:
             print("❌ No qualifying activity found")
             print("   Complete a cycling workout (>30 min) and upload to Strava")
+            return
+        
+        # Check if this activity has already been used for a previous stage
+        activity_id = activity.get('id')
+        if activity_id and tracker.is_activity_already_used(activity_id):
+            print(f"❌ Activity {activity_id} already used for a previous stage")
+            print("   Upload a new cycling workout to Strava")
             return
         
         # Log activity detection without any sensitive details
