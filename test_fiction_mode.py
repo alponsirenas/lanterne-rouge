@@ -42,17 +42,17 @@ def test_fiction_mode():
         print("\n✅ Fiction mode test completed successfully!")
         
         # Check if output files were created
-        fiction_dir = Path("output/fiction_mode")
+        fiction_dir = Path("docs/tdf-2025-hallucinations")
         if fiction_dir.exists():
-            files = list(fiction_dir.glob("*.md"))
+            files = list(fiction_dir.glob("stage*.md"))
             if files:
-                print(f"📄 Generated files: {len(files)}")
-                for file in files[:3]:  # Show first 3
+                print(f"📄 Generated narrative files: {len(files)}")
+                for file in sorted(files)[-3:]:  # Show last 3
                     print(f"   - {file.name}")
             else:
-                print("⚠️  No markdown files found in output/fiction_mode/")
+                print("⚠️  No stage*.md files found in docs/tdf-2025-hallucinations/")
         else:
-            print("⚠️  output/fiction_mode/ directory not created")
+            print("⚠️  docs/tdf-2025-hallucinations/ directory not found")
     else:
         print("\n❌ Fiction mode test failed")
     

@@ -57,8 +57,9 @@ jobs:
         run: |
           # Check if there's a recent stage completion in the last 2 hours
           if [ -f output/tdf_points.json ]; then
-            # Get the last updated timestamp
+            # Get the last updated timestamp and stages completed
             last_updated=$(cat output/tdf_points.json | jq -r '.last_updated // empty')
+            stages_completed=$(cat output/tdf_points.json | jq -r '.stages_completed // 0')
             
             if [ -n "$last_updated" ]; then
               # Check if it's within the last 2 hours
@@ -67,9 +68,19 @@ jobs:
               time_diff=$((current_time - last_update_time))
               
               if [ $time_diff -le 7200 ]; then  # 2 hours = 7200 seconds
-                echo "Recent stage completion found!"
-                stages_completed=$(cat output/tdf_points.json | jq -r '.stages_completed // 0')
-                echo "generate_narrative=true" >> $GITHUB_OUTPUT
+                # Check if narrative already exists for this stage
+                narrative_file="docs/tdf-2025-hallucinations/stage${stages_completed}.md"
+                
+                if [ -f "$narrative_file" ]; then
+                  echo "✅ Narrative already exists for stage $stages_completed: $narrative_file"
+                  echo "generate_narrative=false" >> $GITHUB_OUTPUT
+                  echo "narrative_exists=true" >> $GITHUB_OUTPUT
+                else
+                  echo "📝 Recent stage completion found! Stage $stages_completed needs narrative"
+                  echo "generate_narrative=true" >> $GITHUB_OUTPUT
+                  echo "narrative_exists=false" >> $GITHUB_OUTPUT
+                fi
+                
                 echo "stages_completed=$stages_completed" >> $GITHUB_OUTPUT
               else
                 echo "No recent stage completion (last update: $last_updated)"
@@ -129,7 +140,7 @@ jobs:
         if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'output/fiction_mode/ output/*.txt output/*.md'
+          add: 'docs/tdf-2025-hallucinations/*.md output/*.txt output/*.md'
           author_name: lanterne-rouge-fiction-bot
           author_email: fiction-bot@users.noreply.github.com
           message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
@@ -138,22 +149,28 @@ jobs:
       - name: Create Fiction Mode Summary
         if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
         run: |
-          echo "🎭 Fiction Mode Narrative Generated!" >> $GITHUB_STEP_SUMMARY
-          echo "A cycling narrative has been automatically created." >> $GITHUB_STEP_SUMMARY
-          echo "Check the output/fiction_mode/ directory for the generated story." >> $GITHUB_STEP_SUMMARY
-          
-          # Add narrative preview to summary if file exists
-          if [ -f output/fiction_mode/latest_narrative.md ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Latest Narrative Preview:" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            head -n 10 output/fiction_mode/latest_narrative.md >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "*(truncated - full narrative available in repository)*" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check-stage.outputs.narrative_exists }}" = "true" ]; then
+            echo "✅ Fiction Mode Narrative Already Exists!" >> $GITHUB_STEP_SUMMARY
+            echo "No new narrative generated - stage ${{ steps.check-stage.outputs.stages_completed }} already has a story." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🎭 Fiction Mode Narrative Generated!" >> $GITHUB_STEP_SUMMARY
+            echo "A cycling narrative has been automatically created." >> $GITHUB_STEP_SUMMARY
+            echo "Check the docs/tdf-2025-hallucinations/ directory for the generated story." >> $GITHUB_STEP_SUMMARY
+            
+            # Add narrative preview to summary if file exists
+            stage_file="docs/tdf-2025-hallucinations/stage${{ steps.check-stage.outputs.stages_completed }}.md"
+            if [ -f "$stage_file" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Latest Narrative Preview:" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              head -n 10 "$stage_file" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "*(truncated - full narrative available in repository)*" >> $GITHUB_STEP_SUMMARY
+            fi
           fi
 
       - name: Send Fiction Mode Notification
-        if: steps.check-stage.outputs.generate_narrative == 'true'
+        if: steps.check-stage.outputs.generate_narrative == 'true' && steps.check-stage.outputs.narrative_exists == 'false'
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
@@ -164,20 +181,23 @@ jobs:
           import os
           from scripts.notify import send_email
           
-          if os.path.exists('output/fiction_mode/latest_narrative.md'):
-              with open('output/fiction_mode/latest_narrative.md', 'r') as f:
+          stage_num = '${{ steps.check-stage.outputs.stages_completed }}'
+          stage_file = f'docs/tdf-2025-hallucinations/stage{stage_num}.md'
+          
+          if os.path.exists(stage_file):
+              with open(stage_file, 'r') as f:
                   narrative = f.read()
               
-              subject = '🎭 Your TDF Fiction Mode Narrative is Ready!'
+              subject = f'🎭 Your TDF Stage {stage_num} Fiction Mode Narrative is Ready!'
               
               send_email(
                   subject=subject,
-                  message=f'Your cycling narrative has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/output/fiction_mode/latest_narrative.md',
+                  message=f'Your cycling narrative for Stage {stage_num} has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/docs/tdf-2025-hallucinations/stage{stage_num}.md',
                   sender_email=os.getenv('EMAIL_ADDRESS'),
                   sender_pass=os.getenv('EMAIL_PASS'),
                   recipient_email=os.getenv('TO_EMAIL')
               )
-              print('📧 Fiction mode notification sent!')
+              print(f'📧 Fiction mode notification sent for Stage {stage_num}!')
           else:
-              print('⚠️  No narrative file found to send')
+              print(f'⚠️  No narrative file found for Stage {stage_num}')
           "

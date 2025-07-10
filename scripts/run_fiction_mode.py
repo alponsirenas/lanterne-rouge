@@ -28,6 +28,41 @@ def run_fiction_mode(activity_id: Optional[int] = None,
                     preview_only: bool = False):
     """Run Fiction Mode pipeline"""
     
+    # Handle auto-latest mode
+    if activity_id is None and stage_number is None:
+        print("🔍 Auto-detecting latest stage completion...")
+        
+        # Import utilities
+        sys.path.insert(0, str(project_root))
+        from fiction_mode_utils import get_narrative_status
+        
+        status = get_narrative_status()
+        
+        if not status['narrative_needed']:
+            if status['latest_completed_stage']:
+                stage_num = status['latest_completed_stage']['stage_number']
+                print(f"✅ Narrative already exists for stage {stage_num}")
+                print("   No new narrative generation needed")
+            else:
+                print("❌ No completed stages found")
+            return 0
+        
+        # Get details for missing narrative
+        latest_stage = status['latest_completed_stage']
+        stage_number = latest_stage['stage_number']
+        activity_id = latest_stage.get('activity_id')
+        
+        print(f"📝 Generating narrative for stage {stage_number} (activity {activity_id})")
+    
+    # Check if narrative already exists (for manual runs)
+    if stage_number:
+        sys.path.insert(0, str(project_root))
+        from fiction_mode_utils import narrative_already_exists
+        if narrative_already_exists(stage_number):
+            print(f"⚠️  Narrative already exists for stage {stage_number}")
+            print("   Use --force to overwrite (not implemented yet)")
+            return 0
+    
     # Configure Fiction Mode
     config = FictionModeConfig(
         narrative_style=style,

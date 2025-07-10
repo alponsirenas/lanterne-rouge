@@ -744,12 +744,23 @@ Return ONLY valid JSON array, no other text."""
             import json
             import re
             
+            # Handle empty or whitespace-only responses
+            if not response or not response.strip():
+                print(f"Empty response from LLM for stage {stage_number} results extraction")
+                return []
+            
             # Try to extract JSON from response
             json_match = re.search(r'\[.*\]', response, re.DOTALL)
             if json_match:
                 results = json.loads(json_match.group())
             else:
-                results = json.loads(response)
+                # Try to parse the entire response as JSON
+                try:
+                    results = json.loads(response)
+                except json.JSONDecodeError:
+                    # If response contains text but no valid JSON, it likely means no results found
+                    print(f"LLM returned non-JSON response for stage {stage_number}: {response[:100]}...")
+                    return []
             
             # Validate that it's a list
             if isinstance(results, list):
@@ -766,6 +777,7 @@ Return ONLY valid JSON array, no other text."""
                 
         except json.JSONDecodeError as e:
             print(f"JSON decode error in results extraction for stage {stage_number}: {e}")
+            print(f"Response was: {response[:200] if response else 'None'}...")
             return []
         except Exception as e:
             print(f"Failed to extract results with LLM for stage {stage_number}: {e}")
