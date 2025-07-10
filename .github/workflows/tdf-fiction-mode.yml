@@ -1,0 +1,183 @@
+name: TDF Fiction Mode Generator
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+on:
+  workflow_run:
+    workflows: ["TDF Evening Check"]
+    types:
+      - completed
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      stage_number:
+        description: 'Stage number to generate narrative for'
+        required: false
+        type: number
+      activity_id:
+        description: 'Specific Strava activity ID (optional)'
+        required: false
+        type: number
+      style:
+        description: 'Narrative style'
+        required: false
+        default: 'krabbe'
+        type: choice
+        options:
+          - krabbe
+          - journalistic
+          - dramatic
+
+jobs:
+  fiction-mode:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check for Recent Stage Completion
+        id: check-stage
+        run: |
+          # Check if there's a recent stage completion in the last 2 hours
+          if [ -f output/tdf_points.json ]; then
+            # Get the last updated timestamp
+            last_updated=$(cat output/tdf_points.json | jq -r '.last_updated // empty')
+            
+            if [ -n "$last_updated" ]; then
+              # Check if it's within the last 2 hours
+              current_time=$(date -u +%s)
+              last_update_time=$(date -d "$last_updated" +%s 2>/dev/null || echo "0")
+              time_diff=$((current_time - last_update_time))
+              
+              if [ $time_diff -le 7200 ]; then  # 2 hours = 7200 seconds
+                echo "Recent stage completion found!"
+                stages_completed=$(cat output/tdf_points.json | jq -r '.stages_completed // 0')
+                echo "generate_narrative=true" >> $GITHUB_OUTPUT
+                echo "stages_completed=$stages_completed" >> $GITHUB_OUTPUT
+              else
+                echo "No recent stage completion (last update: $last_updated)"
+                echo "generate_narrative=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "No last_updated timestamp found"
+              echo "generate_narrative=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No TDF points file found"
+            echo "generate_narrative=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate Fiction Mode Narrative
+        if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
+        env:
+          STRAVA_CLIENT_ID: ${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN: ${{ secrets.STRAVA_REFRESH_TOKEN }}
+          STRAVA_ATHLETE_ID: ${{ secrets.STRAVA_ATHLETE_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: "gpt-4-turbo-preview"
+          USE_LLM_REASONING: "true"
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+        run: |
+          echo "🎭 Generating Fiction Mode narrative..."
+          
+          # Determine parameters
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            stage_arg=""
+            activity_arg=""
+            style_arg=""
+            
+            if [ -n "${{ github.event.inputs.stage_number }}" ]; then
+              stage_arg="--stage ${{ github.event.inputs.stage_number }}"
+            fi
+            
+            if [ -n "${{ github.event.inputs.activity_id }}" ]; then
+              activity_arg="--activity-id ${{ github.event.inputs.activity_id }}"
+            fi
+            
+            if [ -n "${{ github.event.inputs.style }}" ]; then
+              style_arg="--style ${{ github.event.inputs.style }}"
+            fi
+            
+            python scripts/run_fiction_mode.py $stage_arg $activity_arg $style_arg
+          else
+            # Auto-run for the most recent stage
+            echo "Auto-generating narrative for most recent stage completion..."
+            python scripts/run_fiction_mode.py --auto-latest
+          fi
+
+      - name: Commit Fiction Mode Output
+        if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'output/fiction_mode/ output/*.txt output/*.md'
+          author_name: lanterne-rouge-fiction-bot
+          author_email: fiction-bot@users.noreply.github.com
+          message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
+          github_token: ${{ secrets.GH_PAT }}
+
+      - name: Create Fiction Mode Summary
+        if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          echo "🎭 Fiction Mode Narrative Generated!" >> $GITHUB_STEP_SUMMARY
+          echo "A cycling narrative has been automatically created." >> $GITHUB_STEP_SUMMARY
+          echo "Check the output/fiction_mode/ directory for the generated story." >> $GITHUB_STEP_SUMMARY
+          
+          # Add narrative preview to summary if file exists
+          if [ -f output/fiction_mode/latest_narrative.md ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Latest Narrative Preview:" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            head -n 10 output/fiction_mode/latest_narrative.md >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "*(truncated - full narrative available in repository)*" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Send Fiction Mode Notification
+        if: steps.check-stage.outputs.generate_narrative == 'true'
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+        run: |
+          # Send notification that fiction mode narrative is ready
+          python -c "
+          import os
+          from scripts.notify import send_email
+          
+          if os.path.exists('output/fiction_mode/latest_narrative.md'):
+              with open('output/fiction_mode/latest_narrative.md', 'r') as f:
+                  narrative = f.read()
+              
+              subject = '🎭 Your TDF Fiction Mode Narrative is Ready!'
+              
+              send_email(
+                  subject=subject,
+                  message=f'Your cycling narrative has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/output/fiction_mode/latest_narrative.md',
+                  sender_email=os.getenv('EMAIL_ADDRESS'),
+                  sender_pass=os.getenv('EMAIL_PASS'),
+                  recipient_email=os.getenv('TO_EMAIL')
+              )
+              print('📧 Fiction mode notification sent!')
+          else:
+              print('⚠️  No narrative file found to send')
+          "

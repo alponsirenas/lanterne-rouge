@@ -104,6 +104,8 @@ def main():
                        help='Specific Strava activity ID to process')
     parser.add_argument('--stage', type=int,
                        help='TDF stage number (required with --activity-id)')
+    parser.add_argument('--auto-latest', action='store_true',
+                       help='Automatically generate narrative for the latest stage completion')
     parser.add_argument('--style', default='krabbe', 
                        choices=['krabbe', 'journalistic', 'dramatic'],
                        help='Narrative style (default: krabbe)')
@@ -132,6 +134,19 @@ def main():
     if args.activity_id and not args.stage:
         print("❌ --stage is required when using --activity-id")
         return 1
+    
+    # Handle auto-latest mode
+    if args.auto_latest:
+        print("🔍 Auto-detecting latest stage completion...")
+        # Use None for activity_id and stage_number to trigger auto-detection
+        return run_fiction_mode(
+            activity_id=None,
+            stage_number=None,
+            style=args.style,
+            format=args.format,
+            user_feedback=args.feedback,
+            preview_only=args.preview
+        )
     
     return run_fiction_mode(
         activity_id=args.activity_id,

@@ -95,3 +95,4 @@ jobs:
           echo "🎉 TDF Stage Completed!" >> $GITHUB_STEP_SUMMARY
           echo "Points have been updated automatically." >> $GITHUB_STEP_SUMMARY
           echo "Check your email/SMS for the detailed summary." >> $GITHUB_STEP_SUMMARY
+          echo "Fiction Mode narrative generation will begin shortly..." >> $GITHUB_STEP_SUMMARY
