@@ -1,0 +1,138 @@
+site_name: Lanterne Rouge Documentation
+site_description: AI-powered cycling coach and Tour de France simulation
+site_author: Ana Luisa Ponsirenas
+site_url: https://alponsirenas.github.io/lanterne-rouge/
+
+repo_name: alponsirenas/lanterne-rouge
+repo_url: https://github.com/alponsirenas/lanterne-rouge
+edit_uri: edit/main/docs_src/
+
+docs_dir: docs_src
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: white
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  logo: assets/logo.png
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.action.edit
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.blocks.caption
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+nav:
+  - Home: index.md
+  - AI Coach: 
+      - ai-coach/index.md
+      - AI Coaching: ai-coach/ai-coaching.md
+      - TDF Simulation: ai-coach/tdf-simulation.md
+      - Fiction Mode: ai-coach/fiction-mode.md
+      - Recovery Monitoring: ai-coach/recovery-monitoring.md
+  - TDF 2025 Simulation:
+      - Overview:
+        - tdf-simulation/index.md
+      - Points System:
+        - tdf-simulation/points-system.md
+      - Stage-by-Stage Breakdown:
+        - Stage 1: tdf-simulation/stages/stage1.md
+        - Stage 2: tdf-simulation/stages/stage2.md
+        - Stage 3: tdf-simulation/stages/stage3.md
+        - Stage 4: tdf-simulation/stages/stage4.md
+        - Stage 5: tdf-simulation/stages/stage5.md
+        - Stage 6: tdf-simulation/stages/stage6.md
+        - Stage 7: tdf-simulation/stages/stage7.md
+        - Stage 8: tdf-simulation/stages/stage8.md
+        - Stage 9: tdf-simulation/stages/stage9.md
+      - The Indoor Rider:
+        - tdf-simulation/tdf-2025-hallucinations/index.md
+        - Stage 1: tdf-simulation/tdf-2025-hallucinations/stage1.md
+        - Stage 2: tdf-simulation/tdf-2025-hallucinations/stage2.md
+        - Stage 3: tdf-simulation/tdf-2025-hallucinations/stage3.md
+        - Stage 4: tdf-simulation/tdf-2025-hallucinations/stage4.md
+        - Stage 5: tdf-simulation/tdf-2025-hallucinations/stage5.md
+        - Stage 6: tdf-simulation/tdf-2025-hallucinations/stage6.md
+  - Documentation:
+      - documentation/index.md
+      - Getting Started:
+          - documentation/getting-started/index.md
+          - Quick Start: documentation/getting-started/quick-start.md
+          - Installation: documentation/getting-started/installation.md
+          - Configuration: documentation/getting-started/configuration.md
+      - Reference:
+          - documentation/reference/index.md
+          - Architecture: documentation/reference/architecture.md
+          - API Reference: documentation/reference/api.md
+          - Configuration Options: documentation/reference/configuration.md
+          - Power Analysis: documentation/reference/power-analysis.md
+      - User Guides:
+          - documentation/guides/index.md
+          - Daily Workflow: documentation/guides/daily-workflow.md
+          - Fiction Mode Setup: documentation/guides/fiction-mode-setup.md
+          - GitHub Actions: documentation/guides/github-actions.md
+          - Troubleshooting: documentation/guides/troubleshooting.md
+      - Development:
+          - documentation/development/index.md
+          - Contributing: documentation/contributing.md
+          - Project Structure: documentation/project-structure.md
+          - Testing: documentation/testing.md
+          - Release Notes: documentation/release-notes.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/alponsirenas/lanterne-rouge
+  version:
+    provider: mike
+
+extra_css:
+  - stylesheets/extra.css

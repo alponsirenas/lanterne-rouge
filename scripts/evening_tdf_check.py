@@ -364,6 +364,16 @@ Give me your quick coach debrief - how did I do and what's next?"""
         response = call_llm(messages, model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview"))
         print("✅ LLM stage evaluation completed")
         
+        # Save LLM analysis for documentation integration
+        try:
+            output_dir = os.path.join(project_root, 'output')
+            os.makedirs(output_dir, exist_ok=True)
+            analysis_file = os.path.join(output_dir, f'stage{stage_number}_analysis.txt')
+            with open(analysis_file, 'w') as f:
+                f.write(response)
+        except Exception as e:
+            print(f"⚠️  Could not save analysis: {e}")
+        
         # Format the response with header
         evaluation = f"""🎉 TDF Stage {stage_number} Complete!
 {'=' * 50}
@@ -565,6 +575,17 @@ def main():
         # Log stage completion without any sensitive data
         print("\n✅ Stage completion summary generated")
         print("📊 Points processing complete")
+        
+        # Update TDF documentation after stage completion
+        try:
+            import subprocess
+            subprocess.run(["python", "scripts/integrate_tdf_docs.py"], 
+                         check=True, shell=False, cwd=project_root)
+            print("📄 Documentation updated with stage completion")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Documentation update failed: {e}")
+        except Exception as e:
+            print(f"⚠️  Documentation update error: {e}")
         
         # Debug mode notification (no sensitive data processing in logs)
         if os.getenv("DEBUG_TDF", "false").lower() == "true":

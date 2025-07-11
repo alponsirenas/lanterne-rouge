@@ -1,4 +1,39 @@
-# Lanterne Rouge — Agentic AI for Every Athlete
+# Lanter## How It Works
+
+Lanterne Rouge integrates data from your Oura Ring and Strava to understand your fitness, fatigue, and recovery. Each day, it analyzes this information to generate a personalized coaching report and update your training schedule. This ensures your plan adapts to your progress and needs.
+
+The system provides two complementary experiences:
+
+**🏋️ Classic Coaching Mode**: AI-powered daily analysis with personalized training recommendations, recovery monitoring, and adaptive planning based on your physiological data and performance metrics.
+
+**📖 Fiction Mode**: Transform your training data into immersive cycling narratives, creating compelling stories from your TDF simulation rides with AI-powered event generation and personalized literary styles.
+
+By integrating with your existing tools, Lanterne Rouge helps you stay consistent without adding complexity. Whether you follow structured workouts, use cycling platforms, or ride by feel, the application adapts to keep you moving forward.
+
+All observations and decisions are stored in a lightweight SQLite database (`memory/lanterne.db`).
+This memory lets the LLM‑powered planner reference recent history when crafting each day's workout.
+
+## Quick Start
+
+## Quick Start
+
+**For daily AI coaching and TDF simulation:**
+
+```bash
+git clone https://github.com/alponsirenas/lanterne-rouge.git
+cd lanterne-rouge
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# Configure your .env file with API keys (Oura, Strava, OpenAI)
+python scripts/daily_run.py
+```
+
+**For Fiction Mode storytelling:**
+
+```bash
+python scripts/configure_rider_profile.py example
+python scripts/run_fiction_mode.py --preview
+``` — Agentic AI for Every Athlete
 
 Named after the iconic "lanterne rouge" — the rider who finishes last at the Tour de France — this project embodies resilience, consistency, and intelligent endurance. It’s not about being first; it’s about finishing your own race, every stage, every day.
 
@@ -41,14 +76,21 @@ Follow these steps to set up Lanterne Rouge:
    pip install -r requirements.txt
    ```
 
-4. **Initialize the SQLite database:**
+4. **Configure your rider profile for Fiction Mode (Optional but recommended):**
+
+   ```bash
+   python scripts/configure_rider_profile.py example
+   python scripts/configure_rider_profile.py edit
+   ```
+
+5. **Initialize the SQLite database:**
 
    ```bash
    python -c "from lanterne_rouge.mission_config import bootstrap; bootstrap('missions/tdf_sim_2025.toml')"
    ```
    This creates `memory/lanterne.db` seeded with your mission config. It will also be generated automatically the first time you run `daily_run.py`.
 
-5. **Configure your `.env` file with your API credentials and notification settings:**
+6. **Configure your `.env` file with your API credentials and notification settings:**
 
    ```env
    # Oura API
@@ -79,7 +121,7 @@ Follow these steps to set up Lanterne Rouge:
    GH_PAT=your_github_personal_access_token
    ```
 
-6. **Run your agent daily:**
+7. **Run your agent daily:**
 
    - Locally:
      ```bash
@@ -88,53 +130,127 @@ Follow these steps to set up Lanterne Rouge:
    - Automatically via GitHub Actions:
      Copy your mission config (for example `missions/tdf_sim_2025.toml`) into `missions/` and then enable the `.github/workflows/daily.yml` workflow to trigger `scripts/daily_run.py` each morning.
 
-7. **Review your coaching report:**
+8. **Review your coaching report:**
    - Check the daily coaching report to understand your readiness and training focus.
    - Ride, recover, and let the AI adapt your plan as you progress.
 
-8. **Experience Fiction Mode (Optional):**
-   - Generate literary cycling narratives from your TDF simulation rides:
+9. **Experience Fiction Mode (Enhanced):**
+   - Configure your rider profile and generate immersive cycling narratives:
      ```bash
+     python scripts/configure_rider_profile.py example
      python scripts/run_fiction_mode.py --preview
      python scripts/run_fiction_mode.py --style krabbe
      ```
    - See [Fiction Mode Documentation](docs/fiction_mode.md) for full details.
 
-9. **Review and update documentation:**
+10. **Review and update documentation:**
    - Regularly review the project documentation to ensure it remains accurate and up-to-date.
    - Follow the Documentation Review Process outlined below to make necessary updates.
 
 This system is designed to fit into your routine, helping you build consistency and resilience without overwhelm.
 
-## Current Version: v0.5.1
+## Current Version: v0.7.0
+
+**🎉 Major Release: Complete Fiction Mode Integration & Codebase Reorganization**
 
 Release highlights:
-- **Power-Based Activity Analysis** - Scientific training load assessment using Intensity Factor (IF) and Training Stress Score (TSS)
-- **LLM-Powered TDF Simulation** - Intelligent stage analysis with AI-driven performance evaluation
-- **Fiction Mode** - Automated literary cycling narratives from your Strava rides and real race data
-- **Enhanced Security & Validation** - Robust input validation and sanitization for all LLM interactions
-- **Smart Ride Mode Detection** - GC vs Breakaway classification based on power zones and athlete FTP
-- **Comprehensive Post-Stage Analysis** - Strategic guidance and recovery recommendations
-- **Fallback Reliability** - Rule-based analysis when LLM services are unavailable
-- **TDF Points System** - 21-stage gamified Tour de France simulation
-- **Automated Workflows** - Morning briefings and evening points tracking
-- **Achievement Bonuses** - 5 bonus categories with strategic gameplay
-- **GitHub Actions Integration** - Complete automation with 4 new workflows
-- **Backwards Compatibility** - Existing coaching system unchanged
+- **🚀 Complete Fiction Mode System** - Full dynamic event generation with personalized rider profiles and literary narrative styles
+- **🏋️ Enhanced Core Coaching** - Improved daily analysis, recovery monitoring, and adaptive training recommendations
+- **🗂️ Professional Project Structure** - Comprehensive reorganization with proper separation of concerns:
+  - Demo scripts in `scripts/demo/`
+  - Utility scripts in `scripts/utils/`
+  - All documentation consolidated in `docs/`
+  - Tests properly organized in `tests/`
+- **📚 Enhanced Documentation** - Complete release notes and improved project documentation
+- **🎭 Immersive TDF Simulation** - AI-powered storytelling that adapts to your riding style and creates compelling race narratives
+- **⚡ Enhanced Reasoning System** - Multiple analysis modes for deeper insights and better coaching recommendations
+- **🔧 Better Developer Experience** - Clean, maintainable codebase with improved organization
+- **📦 Production Ready** - Professional structure suitable for scaling and continued development
 
-### New Power Analysis Features
-- **FTP-Based Calculations**: All power metrics relative to individual athlete's Functional Threshold Power
-- **Scientific Accuracy**: Uses established sports science metrics instead of subjective suffer scores
-- **Intelligent Classification**: LLM analyzes power data contextually for strategic recommendations
-- **Training Load Management**: TSS-based recovery recommendations and strategic planning
+### Core Features (v0.7.0)
 
-See the full [Release Notes for v0.5.1](docs/RELEASE_NOTES_v0.5.1.md) for detailed information.
+**🏋️ AI-Powered Coaching System:**
+- **Daily Analysis**: Comprehensive readiness assessment using Oura Ring recovery data
+- **Adaptive Training Plans**: Dynamic workout adjustments based on your fitness and fatigue levels
+- **Performance Tracking**: Power-based analysis with IF, TSS, and FTP calculations
+- **Recovery Monitoring**: Sleep, HRV, and stress analysis for optimal training timing
+- **Smart Notifications**: Morning briefings and evening updates via email/SMS
+
+**🏆 TDF Simulation Experience:**
+- **21-Stage Tour**: Complete Tour de France 2025 indoor simulation
+- **Points & Classifications**: KOM, Sprint, GC, and stage victory tracking
+- **Strategic Gameplay**: Tactical decisions that affect your virtual race position
+- **Real Performance Integration**: Your actual power data drives simulation results
+
+### Fiction Mode Features
+- **Personalized Rider Profiles**: Create custom profiles with literary voice, goals, and preferences
+- **Dynamic Event Generation**: AI creates realistic race scenarios based on your performance data
+- **Literary Narrative Styles**: Choose from various writing styles (Tim Krabbé, etc.) for your race stories
+- **Real-time Storytelling**: Transform your indoor TDF simulation into compelling cycling literature
+- **Strategic Analysis**: Combine performance data with narrative context for deeper insights
+
+### Project Organization Improvements
+- **`scripts/demo/`**: All demonstration and showcase scripts
+- **`scripts/utils/`**: Diagnostic and utility tools for development
+- **`docs/`**: Comprehensive documentation and release notes
+- **`src/lanterne_rouge/fiction_mode/`**: Core Fiction Mode functionality with proper module structure
+- **`tests/`**: All test files properly organized and maintained
+
+See the full [Release Notes for v0.7.0](docs/RELEASE_NOTES_v0.7.0.md) for detailed information.
 
 ## Looking Ahead
 
-With version **v0.5.1**, Lanterne Rouge delivers a sophisticated agent-based coaching system with LLM-powered reasoning at its core, enhanced TDF Points System, reliable GitHub Actions workflows, and a clean, organized project structure for optimal maintainability.
+With version **v0.7.0**, Lanterne Rouge delivers a mature, professional-grade agent-based coaching system with comprehensive Fiction Mode capabilities, clean project organization, and enhanced storytelling features. The project now provides both sophisticated training analysis and immersive narrative experiences.
 
-In our TO DO:
+## Project Structure
+
+```
+lanterne-rouge/
+├── src/lanterne_rouge/          # Core application modules
+│   ├── fiction_mode/            # Fiction Mode system
+│   ├── ai/                      # AI clients and reasoning
+│   └── ...                      # Other core modules
+├── scripts/                     # Executable scripts
+│   ├── demo/                    # Demo and showcase scripts
+│   ├── utils/                   # Diagnostic utilities
+│   └── *.py                     # Main CLI scripts
+├── docs/                        # All documentation
+├── tests/                       # Test suite
+├── config/                      # Configuration files
+├── missions/                    # Mission definitions
+└── output/                      # Generated reports
+```
+
+## Key Features & Capabilities
+
+### 🏋️ **Core Coaching System**
+- **AI-Powered Daily Analysis**: LLM-driven coaching with personalized recommendations based on recovery and performance data
+- **Adaptive Training Plans**: Dynamic workout adjustments that respond to your readiness and life circumstances  
+- **Recovery Integration**: Oura Ring sleep, HRV, and readiness data combined with Strava performance metrics
+- **Scientific Training Load**: Power-based analysis using Intensity Factor (IF), Training Stress Score (TSS), and FTP calculations
+- **Smart Periodization**: Automatic plan adjustments for optimal training progression and recovery
+
+### 🏆 **Tour de France Simulation**
+- **Complete 21-Stage Experience**: Full TDF 2025 simulation with realistic stage profiles and tactics
+- **Multiple Classifications**: General Classification (GC), King of the Mountains (KOM), Sprint points, and stage victories
+- **Strategic Gameplay**: Tactical decisions (attacks, positioning, pacing) that influence your virtual race results
+- **Real Performance Integration**: Your actual power data and training efforts directly impact simulation outcomes
+- **Achievement System**: Unlock jerseys, stage wins, and special recognition based on your riding
+
+### 📖 **Fiction Mode** 
+- **Immersive Storytelling**: Transform your rides into compelling cycling literature with customizable narrative styles
+- **Personalized Rider Profiles**: Create custom profiles with literary voice, goals, and racing preferences
+- **Dynamic Event Generation**: AI creates realistic race scenarios and dramatic moments based on your performance data
+- **Literary Narrative Styles**: Choose from various writing styles (Tim Krabbé, etc.) for your race stories
+- **Real-time Story Development**: Your training data becomes the foundation for evolving cycling narratives
+
+### ⚡ **Automation & Integration**
+- **GitHub Actions Workflows**: Automated daily runs, morning briefings, and evening analysis
+- **Multi-platform Notifications**: Email, SMS, and GitHub integration for seamless updates
+- **Data Pipeline**: Seamless integration between Oura Ring, Strava, and AI analysis
+- **Memory System**: SQLite database maintains training history and context for intelligent recommendations
+
+In our roadmap:
 - Refining recommendations and data visualization.
 - Exploration of n8n for workflow orchestration.
 - Deeper trend analysis.

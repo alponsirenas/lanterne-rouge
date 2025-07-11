@@ -69,7 +69,7 @@ jobs:
               
               if [ $time_diff -le 7200 ]; then  # 2 hours = 7200 seconds
                 # Check if narrative already exists for this stage
-                narrative_file="docs/tdf-2025-hallucinations/stage${stages_completed}.md"
+                narrative_file="docs_src/tdf-simulation/tdf-2025-hallucinations/stage${stages_completed}.md"
                 
                 if [ -f "$narrative_file" ]; then
                   echo "✅ Narrative already exists for stage $stages_completed: $narrative_file"
@@ -140,7 +140,7 @@ jobs:
         if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'docs/tdf-2025-hallucinations/*.md'
+          add: 'docs_src/tdf-simulation/tdf-2025-hallucinations/*.md'
           author_name: lanterne-rouge-fiction-bot
           author_email: fiction-bot@users.noreply.github.com
           message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
@@ -155,10 +155,10 @@ jobs:
           else
             echo "🎭 Fiction Mode Narrative Generated!" >> $GITHUB_STEP_SUMMARY
             echo "A cycling narrative has been automatically created." >> $GITHUB_STEP_SUMMARY
-            echo "Check the docs/tdf-2025-hallucinations/ directory for the generated story." >> $GITHUB_STEP_SUMMARY
+            echo "Check the docs_src/tdf-simulation/tdf-2025-hallucinations/ directory for the generated story." >> $GITHUB_STEP_SUMMARY
             
             # Add narrative preview to summary if file exists
-            stage_file="docs/tdf-2025-hallucinations/stage${{ steps.check-stage.outputs.stages_completed }}.md"
+            stage_file="docs_src/tdf-simulation/tdf-2025-hallucinations/stage${{ steps.check-stage.outputs.stages_completed }}.md"
             if [ -f "$stage_file" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
               echo "### Latest Narrative Preview:" >> $GITHUB_STEP_SUMMARY
@@ -182,14 +182,14 @@ jobs:
           from scripts.notify import send_email
           
           stage_num = '${{ steps.check-stage.outputs.stages_completed }}'
-          stage_file = f'docs/tdf-2025-hallucinations/stage{stage_num}.md'
+          stage_file = f'docs_src/tdf-simulation/tdf-2025-hallucinations/stage{stage_num}.md'
           
           if os.path.exists(stage_file):
               with open(stage_file, 'r') as f:
                   narrative = f.read()
               
               subject = f'🎭 Your TDF Stage {stage_num} Fiction Mode Narrative is Ready!'
-              body = f'Your cycling narrative for Stage {stage_num} has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/docs/tdf-2025-hallucinations/stage{stage_num}.md'
+              body = f'Your cycling narrative for Stage {stage_num} has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/docs_src/tdf-simulation/tdf-2025-hallucinations/stage{stage_num}.md'
               
               send_email(subject, body, os.getenv('TO_EMAIL'))
               print(f'📧 Fiction mode notification sent for Stage {stage_num}!')

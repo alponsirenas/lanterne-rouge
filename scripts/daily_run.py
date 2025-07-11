@@ -83,6 +83,12 @@ if __name__ == "__main__":
     # Update GitHub secret with new token
     subprocess.run(["python", "scripts/update_github_secret.py"], check=True, shell=False)
 
+    # Update TDF documentation if simulation is active
+    try:
+        subprocess.run(["python", "scripts/integrate_tdf_docs.py"], check=True, shell=False)
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  TDF documentation update failed: {e}")
+
     subject = "Lanterne Rouge: Daily Training Plan"
     email_recipient = os.getenv("TO_EMAIL")
     sms_recipient = os.getenv("TO_PHONE")
