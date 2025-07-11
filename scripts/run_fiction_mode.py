@@ -54,6 +54,31 @@ def run_fiction_mode(activity_id: Optional[int] = None,
         
         print(f"📝 Generating narrative for stage {stage_number} (activity {activity_id})")
     
+    # If stage is provided but no activity_id, look it up from TDF points
+    if stage_number and not activity_id:
+        try:
+            sys.path.insert(0, str(project_root))
+            from lanterne_rouge.tdf_tracker import TDFTracker
+            
+            tracker = TDFTracker()
+            points_data = tracker._data
+            
+            # Find the stage data for the given stage number
+            for stage_date, stage_info in points_data.get('stages', {}).items():
+                if stage_info.get('stage_number') == stage_number:
+                    activity_id = stage_info.get('activity_id')
+                    if activity_id:
+                        print(f"🔍 Found activity {activity_id} for stage {stage_number}")
+                        break
+            
+            if not activity_id:
+                print(f"❌ No activity found for stage {stage_number}")
+                return 1
+                
+        except Exception as e:
+            print(f"❌ Error looking up activity for stage {stage_number}: {e}")
+            return 1
+    
     # Check if narrative already exists (for manual runs)
     if stage_number:
         sys.path.insert(0, str(project_root))
