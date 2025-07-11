@@ -7,7 +7,15 @@ permissions:
 
 on:
   workflow_run:
-    workflows: ["TDF Evening Check"]
+    workflows: ["      - name: Commit and push narrative
+        if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'docs/tdf-2025-hallucinations/*.md'
+          author_name: lanterne-rouge-fiction-bot
+          author_email: fiction-bot@users.noreply.github.com
+          message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
+          github_token: ${{ secrets.GH_PAT }}ng Check"]
     types:
       - completed
     branches: [main]
@@ -140,7 +148,7 @@ jobs:
         if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'docs/tdf-2025-hallucinations/*.md output/*.txt output/*.md'
+          add: 'docs/tdf-2025-hallucinations/*.md'
           author_name: lanterne-rouge-fiction-bot
           author_email: fiction-bot@users.noreply.github.com
           message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
@@ -189,14 +197,9 @@ jobs:
                   narrative = f.read()
               
               subject = f'🎭 Your TDF Stage {stage_num} Fiction Mode Narrative is Ready!'
+              body = f'Your cycling narrative for Stage {stage_num} has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/docs/tdf-2025-hallucinations/stage{stage_num}.md'
               
-              send_email(
-                  subject=subject,
-                  message=f'Your cycling narrative for Stage {stage_num} has been generated!\n\n{narrative[:500]}...\n\nView the full narrative at: https://github.com/alponsirenas/lanterne-rouge/blob/main/docs/tdf-2025-hallucinations/stage{stage_num}.md',
-                  sender_email=os.getenv('EMAIL_ADDRESS'),
-                  sender_pass=os.getenv('EMAIL_PASS'),
-                  recipient_email=os.getenv('TO_EMAIL')
-              )
+              send_email(subject, body, os.getenv('TO_EMAIL'))
               print(f'📧 Fiction mode notification sent for Stage {stage_num}!')
           else:
               print(f'⚠️  No narrative file found for Stage {stage_num}')
