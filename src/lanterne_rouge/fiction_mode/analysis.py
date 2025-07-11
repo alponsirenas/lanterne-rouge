@@ -136,6 +136,7 @@ Power Profile: Avg {ride_analysis['avg_power_pct_ftp']:.0f}% FTP, Max {ride_anal
 
         # Format stage report summary
         stage_summary = f"""Stage: {stage_data.stage_name}
+Stage Type: {stage_data.stage_type}
 Timeline: Start to finish over {stage_data.distance_km}km
 Key Events: {self._format_stage_events(stage_data.events)}
 Winner: {stage_data.winner}
@@ -155,11 +156,15 @@ ACTUAL STAGE'S OFFICIAL RACE REPORT SUMMARY:
 {stage_summary}
 
 Instructions:
-1. Identify high-effort intervals in the user's ride (e.g., surges, sustained efforts, or rest periods).
-2. Map these intervals to real events in the stage (e.g., a surge at 35 min corresponds to the crosswind split at 60 km; a steady block matches a period when the peloton chased the break).
-3. Assign the user a plausible "virtual role" for the stage (in the break, in the peloton, working for a sprinter, etc.) based on their performance and effort profile, while considering the stage context and their TDF simulation progress.
-4. Annotate key moments where the user's data aligns with actual race events (e.g., "you held a high effort as the peloton reacted to a late attack").
-5. Output a timeline of the user's ride mapped to stage events and a brief characterization of their day's role in the race.
+1. Consider the stage type (flat/hilly/mountain for road stages, tt/itt/mtn_itt for time trials)
+2. For time trial stages: Focus on solo pacing, power management, and aerodynamic position - no peloton dynamics
+3. For road stages: Identify high-effort intervals in the user's ride (e.g., surges, sustained efforts, or rest periods)
+4. Map these intervals to real events in the stage (e.g., a surge at 35 min corresponds to the crosswind split at 60 km; a steady block matches a period when the peloton chased the break)
+5. Assign the user a plausible "virtual role" for the stage based on their performance, effort profile, and stage type
+6. For time trials, use roles like "time_trial_aggressive" or "time_trial_steady"
+7. For road stages, use roles like "breakaway", "peloton", "domestique", "chase_group"
+8. Annotate key moments where the user's data aligns with actual race events
+9. Output a timeline of the user's ride mapped to stage events and a brief characterization of their day's role in the race
 
 Respond with JSON format:
 {{
