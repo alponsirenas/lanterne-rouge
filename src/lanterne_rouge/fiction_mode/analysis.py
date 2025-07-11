@@ -220,8 +220,20 @@ Respond with JSON format:
         duration_minutes = ride_analysis['duration_minutes']
         stage_type = stage_data.stage_type
 
-        # Role assignment logic based on effort pattern and stage type
-        if high_efforts >= 3 and effort_level in ['hard', 'maximal']:
+        # Time trial stages are fundamentally different - individual effort against the clock
+        if stage_type in ['tt', 'itt', 'mtn_itt', 'time_trial']:
+            # Time trials: solo effort, no peloton dynamics
+            if effort_level in ['hard', 'maximal']:
+                role_type = 'time_trial_aggressive'
+                position = 'solo'
+                tactical = "pushing hard in the time trial, going for a strong result"
+            else:
+                role_type = 'time_trial_steady'
+                position = 'solo'
+                tactical = "riding a controlled time trial, focusing on sustainable power"
+        
+        # Road race stages with peloton dynamics
+        elif high_efforts >= 3 and effort_level in ['hard', 'maximal']:
             # High effort with multiple surges = breakaway or aggressive racing
             if stage_type == 'flat':
                 role_type = 'breakaway'

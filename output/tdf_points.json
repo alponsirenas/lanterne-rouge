@@ -1,5 +1,5 @@
 {
-  "total_points": 44,
+  "total_points": 38,
   "stages_completed": 6,
   "consecutive_stages": 1,
   "breakaway_count": 0,
@@ -80,9 +80,9 @@
     },
     "2025-07-09": {
       "stage_number": 5,
-      "stage_type": "hilly",
+      "stage_type": "itt",
       "ride_mode": "gc",
-      "points_earned": 10,
+      "points_earned": 4,
       "completed_at": "2025-07-10T03:04:46.259385",
       "activity_data": {
         "moving_time": 3610.0,
