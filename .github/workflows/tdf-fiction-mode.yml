@@ -7,15 +7,7 @@ permissions:
 
 on:
   workflow_run:
-    workflows: ["      - name: Commit and push narrative
-        if: steps.check-stage.outputs.generate_narrative == 'true' || github.event_name == 'workflow_dispatch'
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'docs/tdf-2025-hallucinations/*.md'
-          author_name: lanterne-rouge-fiction-bot
-          author_email: fiction-bot@users.noreply.github.com
-          message: 'feat(fiction): auto-generated narrative for stage ${{ steps.check-stage.outputs.stages_completed }} [skip ci]'
-          github_token: ${{ secrets.GH_PAT }}ng Check"]
+    workflows: ["TDF Evening Check"]
     types:
       - completed
     branches: [main]
