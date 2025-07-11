@@ -13,13 +13,7 @@ import openai
 
 from .memory_bus import fetch_recent_memories
 
-# Models that natively        # Stage type mapping to match documentation
-        stage_type_map = {
-            'flat': ('🏁', 'Flat Sprint Stage'),
-            'hilly': ('⛰️', 'Hilly Punchy Stage'),
-            'mountain': ('🏔️', 'Mountain Stage'),
-            'itt': ('⏱️', 'Individual Time Trial')
-        }t the `response_format={"type": "json_object"}` parameter
+# Models that natively support the `response_format={"type": "json_object"}` parameter
 _MODELS_WITH_JSON_SUPPORT = {
     "gpt-4o-preview",
     "gpt-4o-mini",
