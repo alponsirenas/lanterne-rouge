@@ -76,7 +76,7 @@ def update_stage_file(stage_num, stage_data, total_points_at_stage):
         distance = f"{activity_data.get('distance_km', activity_data.get('distance', 0) / 1000):.1f} km"
         avg_power = f"{activity_data.get('average_watts', 'N/A')} W"
         weighted_power = f"{activity_data.get('normalized_power', activity_data.get('weighted_average_watts', 'N/A'))} W"
-        avg_hr = f"{activity_data.get('average_heartrate', 'N/A')} bpm"
+        avg_hr = "Sensitive data redacted"
         tss = f"{activity_data.get('tss', 'N/A')}"
         effort_level = activity_data.get('effort_level', 'N/A').title()
         activity_id = stage_data.get('activity_id', 'N/A')
