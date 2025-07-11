@@ -46,9 +46,9 @@ def update_stage_for_briefing(stage_num):
     """Update stage to show Recommended + Planned tabs when briefing is available."""
     print(f"📋 Adding morning briefing to Stage {stage_num}...")
     
-    # Run the existing populate_briefings script for this stage
+    # Run the populate_briefings script for this stage
     subprocess.run([
-        "python", "scripts/populate_stage_data.py"
+        "python", "scripts/populate_briefings.py"
     ], cwd=".")
     
     print(f"✅ Stage {stage_num} now shows Recommended + Planned tabs")
