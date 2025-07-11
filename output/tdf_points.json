@@ -1,5 +1,5 @@
 {
-  "total_points": 39,
+  "total_points": 44,
   "stages_completed": 6,
   "consecutive_stages": 1,
   "breakaway_count": 0,
@@ -110,10 +110,10 @@
       "activity_id": 15064156755
     },
     "2025-07-11": {
-      "stage_number": 7,
-      "stage_type": "flat",
+      "stage_number": 6,
+      "stage_type": "mountain",
       "ride_mode": "gc",
-      "points_earned": 5,
+      "points_earned": 10,
       "completed_at": "2025-07-11T03:05:52.096849",
       "activity_data": {
         "moving_time": 4501.0,

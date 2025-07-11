@@ -141,9 +141,18 @@ class TourCoach:
                 from datetime import datetime
                 start_date = datetime.fromisoformat(start_date).date()
 
-            # Calculate stage number (1-based)
-            days_since_start = (current_date - start_date).days
-            stage_number = days_since_start + 1
+            # Check if we're within the TDF date range
+            end_date = tdf_config.get('end_date')
+            if isinstance(end_date, str):
+                end_date = datetime.fromisoformat(end_date).date()
+            
+            if current_date < start_date or (end_date and current_date > end_date):
+                return None
+
+            # Use TDFTracker to get the next expected stage number
+            from lanterne_rouge.tdf_tracker import TDFTracker
+            tracker = TDFTracker()
+            stage_number = tracker.get_next_stage_number()
 
             # Validate stage number
             if stage_number < 1 or stage_number > tdf_config.get('total_stages', 21):
