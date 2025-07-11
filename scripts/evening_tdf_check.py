@@ -109,7 +109,31 @@ def analyze_activity_with_llm(activity, stage_info, mission_cfg):
     if use_llm:
         try:
             # Build comprehensive system prompt for intelligent analysis
-            system_prompt = f"""Classify this TDF stage effort with intelligent analysis. Be encouraging and informative.
+            # Time trials have different dynamics than mass start stages
+            if stage_type in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+                system_prompt = f"""Classify this TIME TRIAL effort with intelligent analysis. Be encouraging and informative.
+
+JSON format:
+{{
+  "ride_mode": "gc",
+  "confidence": 0.8,
+  "rationale": "Informative coaching feedback addressing the rider directly with power insights for TT",
+  "performance_indicators": ["IF", "TSS", "duration", "pacing"],
+  "effort_assessment": "conservative|moderate|aggressive"
+}}
+
+TIME TRIAL Rules: Always classify as "gc" (individual effort). Focus on pacing strategy and sustained power.
+
+Rationale guidelines for TIME TRIALS:
+- Be encouraging and personal (use "you/your")
+- Focus on pacing strategy and power distribution
+- Mention sustained effort quality and IF consistency
+- Include aerodynamic positioning insights if relevant
+- Target 300-400 characters for informative feedback
+- Examples: "Excellent TT pacing! Your sustained IF of 0.84 shows perfect time trial effort distribution.", "Solid time trial - your consistent power output maximized speed against the clock."
+"""
+            else:
+                system_prompt = f"""Classify this TDF stage effort with intelligent analysis. Be encouraging and informative.
 
 JSON format:
 {{
@@ -132,7 +156,24 @@ Rationale guidelines:
 """
 
             # Build user prompt with activity data
-            user_prompt = f"""Analyze this Stage {stage_number} ride:
+            if stage_type in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+                user_prompt = f"""Analyze this TIME TRIAL Stage {stage_number} ride:
+
+YOUR POWER DATA:
+• Duration: {activity_data['duration_minutes']:.1f} minutes
+• Power: {activity_data['normalized_power']}W (vs {ftp}W FTP)
+• Intensity Factor: {activity_data['intensity_factor']:.3f}
+• Training Load: {activity_data['tss']:.1f} TSS
+• Effort Zone: {activity_data['effort_level']}
+
+RIDE DETAILS:
+• Distance: {activity_data['distance_km']:.1f}km
+• Elevation: {activity_data.get('total_elevation_gain', 'N/A')}m
+• Activity: "{activity_data['name']}"
+
+How was your time trial pacing and power distribution? Analyze the sustained effort quality."""
+            else:
+                user_prompt = f"""Analyze this Stage {stage_number} ride:
 
 YOUR POWER DATA:
 • Duration: {activity_data['duration_minutes']:.1f} minutes
@@ -206,8 +247,17 @@ What's your verdict - was this a GC effort, breakaway attempt, or recovery ride?
     gc_if_threshold = detection_config.get('gc_intensity_threshold', 0.70)
     gc_tss_threshold = detection_config.get('gc_tss_threshold', 40)
     
-    # Power-based classification
-    if intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
+    # Time trials use different logic - always "gc" mode, focus on sustained effort
+    if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+        ride_mode = "gc"  # Time trials are always individual effort
+        if intensity_factor >= 0.80:
+            rationale = f"Excellent time trial! Your sustained IF {intensity_factor:.2f} and TSS {tss:.0f} show perfect TT pacing in the {effort_level} zone."
+        elif intensity_factor >= 0.70:
+            rationale = f"Solid time trial effort! IF {intensity_factor:.2f}, TSS {tss:.0f} - good sustained power against the clock."
+        else:
+            rationale = f"Conservative TT approach! IF {intensity_factor:.2f}, TSS {tss:.0f} - smart pacing for the distance."
+    # Power-based classification for mass start stages
+    elif intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
         ride_mode = "breakaway"
         rationale = f"You nailed a breakaway effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show you pushed hard in the {effort_level} zone."
     elif intensity_factor >= gc_if_threshold and tss >= gc_tss_threshold:
@@ -235,6 +285,12 @@ def calculate_stage_points(stage_type, ride_mode, mission_cfg):
     """Calculate points based on stage type and ride mode using mission config."""
     tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
     points_config = tdf_config.get('points', {})
+    
+    # Handle time trial type aliases
+    if stage_type in ['tt', 'time_trial']:
+        stage_type = 'itt'  # Normalize to individual time trial
+    elif stage_type in ['mtn_tt', 'mountain_time_trial']:
+        stage_type = 'mtn_itt'  # Normalize to mountain time trial
     
     stage_points_config = points_config.get(stage_type, {'gc': 5, 'breakaway': 8})
     return stage_points_config.get(ride_mode, 5)
