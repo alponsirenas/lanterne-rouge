@@ -1,35 +1,35 @@
-🏆 TDF Simulation - Stage 6
-🏔️ Stage Type: Mountain Stage
+🏆 TDF Simulation - Stage 7
+🏔️ Stage Type: Flat Stage
 ==================================================
 
 📊 READINESS CHECK:
-• Readiness Score: 87/100
-• TSB (Form): -13.9
-• CTL (Fitness): 39.4
+• Readiness Score: 86/100
+• TSB (Form): -21.0
+• CTL (Fitness): 41.9
 
 🎯 TODAY'S RECOMMENDATION:
-• Ride Mode: BREAKAWAY
-• Expected Points: 15
-• Rationale: Given the mountain stage type and your current readiness, opting for Breakaway Mode offers the best opportunity for maximizing points. Despite the inherent challenges of a mountain stage, your improved physiological state and the strategic importance of beginning to target the Breakaway Stages bonus make this an opportune moment to be more aggressive. This approach not only aims to secure the higher points available in Breakaway Mode but also positions you to start making progress towards the bonus for breakaway stages, which could be crucial in the later stages of the Tour.
+• Ride Mode: GC
+• Expected Points: 5
+• Rationale: Given your TSB is at -21.0, it's evident you're experiencing substantial fatigue, which could be detrimental if pushed too hard. Opting for GC Mode today allows you to score base points while conserving energy. This approach aligns with the need to manage your fatigue, ensuring you remain competitive in the longer term of the TDF Simulation, especially with the flat stage type where strategic conservation of energy can be more beneficial.
 
 📈 POINTS STATUS:
-• Current Total: 34 points
-• Stages Completed: 5/21
+• Current Total: 44 points
+• Stages Completed: 6/21
 
 🏆 BONUS OPPORTUNITIES:
-   • 10 Breakaway Stages
-   • All Mountains in Breakaway
+   • 5 Consecutive Stages
+   • All GC Mode
 
 🎖️ BONUS PROGRESS:
-   • 5 consecutive: 5/5
+   • 5 consecutive: 1/5
    • 10 breakaways: 0/10
 
 🧠 TRAINING STRATEGY:
-• Training Focus: Push
-• Intensity: High
-• Reasoning: Your readiness score has shown a significant improvement, indicating that you're well-recovered and capable of handling a more demanding effort. Despite your TSB being negative, which suggests some underlying fatigue, the high readiness score compensates for this, allowing you to safely exert yourself more aggressively without risking your health. This push strategy aligns with the peak phase of your training, aiming to capitalize on your current physical condition to gain a competitive edge.
+• Training Focus: Maintain
+• Intensity: Moderate
+• Reasoning: Considering your current physiological state, with a readiness score of 86 which indicates a high level of readiness, and a TSB of -21.0 suggesting you're carrying a significant amount of fatigue, it's crucial to strike a balance between leveraging your readiness and managing fatigue. Today, maintaining your effort will help you capitalize on your readiness while not exacerbating your fatigue levels.
 
 📝 STRATEGIC NOTES:
-Today's decision to push in Breakaway Mode is a calculated move to leverage your current strengths and readiness, aiming for a high reward in terms of points and strategic bonuses. It's vital to manage your effort efficiently throughout the stage, pacing yourself on the climbs to ensure you can capitalize on your strengths without overextending. This aggressive stance is in line with your goal of maximizing points accumulation during this critical phase of the competition, while still keeping an eye on long-term sustainability.
+Your goal for today's stage is to focus on energy conservation while securing base points in GC Mode. This will aid in managing your current fatigue levels and prepare you for the upcoming stages. Additionally, pursuing the All GC Mode bonus could yield a significant points advantage. It's also important to keep an eye on the cumulative fatigue and readiness scores to make informed decisions in the stages ahead.
 
-🚀 Time to attack Stage 6! Your body is ready for an aggressive ride. Go get those bonus points!
+💪 Steady and smart for Stage 7. Every point counts, and consistency wins the long game!
