@@ -42,7 +42,7 @@ def test_fiction_mode():
         print("\n✅ Fiction mode test completed successfully!")
         
         # Check if output files were created
-        fiction_dir = Path("docs/tdf-2025-hallucinations")
+        fiction_dir = Path("docs_src/tdf-simulation/tdf-2025-hallucinations")
         if fiction_dir.exists():
             files = list(fiction_dir.glob("stage*.md"))
             if files:
@@ -50,9 +50,9 @@ def test_fiction_mode():
                 for file in sorted(files)[-3:]:  # Show last 3
                     print(f"   - {file.name}")
             else:
-                print("⚠️  No stage*.md files found in docs/tdf-2025-hallucinations/")
+                print("⚠️  No stage*.md files found in docs_src/tdf-simulation/tdf-2025-hallucinations/")
         else:
-            print("⚠️  docs/tdf-2025-hallucinations/ directory not found")
+            print("⚠️  docs_src/tdf-simulation/tdf-2025-hallucinations/ directory not found")
     else:
         print("\n❌ Fiction mode test failed")
     

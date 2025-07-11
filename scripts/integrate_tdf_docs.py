@@ -260,6 +260,216 @@ def update_stage_data_if_completed():
     return False
 
 
+def update_simulation_status():
+    """Update the Current Status section in the main TDF simulation index."""
+    index_file = Path("docs_src/tdf-simulation/index.md")
+    
+    if not index_file.exists():
+        print("⚠️  TDF simulation index not found")
+        return False
+    
+    try:
+        # Get latest data from tdf_points.json
+        points_file = Path("output/tdf_points.json")
+        if not points_file.exists():
+            print("⚠️  TDF points data not found")
+            return False
+            
+        with open(points_file, 'r') as f:
+            data = json.load(f)
+        
+        # Calculate current values
+        total_points = data.get("total_points", 0)
+        stages_completed = data.get("stages_completed", 0)
+        bonuses_earned = data.get("bonuses_earned", [])
+        gc_count = data.get("gc_count", 0)
+        breakaway_count = data.get("breakaway_count", 0)
+        
+        # Calculate completion percentage
+        completion_percent = (stages_completed / 21) * 100
+        
+        # Determine strategy description
+        if breakaway_count == 0:
+            strategy_desc = "All GC mode so far - consistent and sustainable approach"
+        elif gc_count == 0:
+            strategy_desc = "All breakaway mode - high-risk, high-reward approach"
+        else:
+            strategy_desc = f"Mixed strategy: {gc_count} GC, {breakaway_count} breakaway rides"
+        
+        # Calculate bonus points and descriptions
+        bonus_points = 0
+        bonus_descriptions = []
+        for bonus in bonuses_earned:
+            if bonus == "consecutive_5":
+                bonus_points += 10
+                bonus_descriptions.append("5 Consecutive Stages (+10 points)")
+            elif bonus == "consecutive_10":
+                bonus_points += 20
+                bonus_descriptions.append("10 Consecutive Stages (+20 points)")
+            elif bonus == "breakaway_specialist":
+                bonus_points += 15
+                bonus_descriptions.append("Breakaway Specialist (+15 points)")
+            elif bonus == "mountain_king":
+                bonus_points += 15
+                bonus_descriptions.append("Mountain King (+15 points)")
+        
+        bonus_text = ", ".join(bonus_descriptions) if bonus_descriptions else "None yet"
+        
+        # Get current date
+        today = datetime.date.today()
+        date_str = today.strftime("%B %d, %Y")
+        
+        # Read current index file
+        with open(index_file, 'r') as f:
+            content = f.read()
+        
+        # Find the Current Status section
+        lines = content.split('\n')
+        start_idx = None
+        end_idx = None
+        
+        for i, line in enumerate(lines):
+            if line.strip() == "## 🎮 Current Status":
+                start_idx = i
+            elif start_idx is not None and line.startswith("## ") and "Current Status" not in line:
+                end_idx = i
+                break
+        
+        if start_idx is None:
+            print("⚠️  Current Status section not found in index")
+            return False
+        
+        # If no end found, assume it goes to the next major section (look for ---)
+        if end_idx is None:
+            for i in range(start_idx + 1, len(lines)):
+                if lines[i].strip() == "---":
+                    end_idx = i
+                    break
+        
+        if end_idx is None:
+            print("⚠️  Could not determine end of Current Status section")
+            return False
+        
+        # Create new status section
+        new_status = [
+            "## 🎮 Current Status",
+            "",
+            f"### {date_str}",
+            f"- **📈 Total Points**: {total_points} points across {stages_completed} completed stages",
+            f"- **🏆 Bonuses Achieved**: {bonus_text}",
+            f"- **📊 Completion Rate**: {stages_completed}/21 stages ({completion_percent:.1f}% complete)",
+            f"- **💪 My Strategy**: {strategy_desc}",
+            ""
+        ]
+        
+        # Replace the section
+        new_lines = lines[:start_idx] + new_status + lines[end_idx:]
+        new_content = '\n'.join(new_lines)
+        
+        # Write back to file
+        with open(index_file, 'w') as f:
+            f.write(new_content)
+        
+        print(f"✅ Updated simulation status: {total_points} points, {stages_completed} stages")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error updating simulation status: {e}")
+        return False
+
+
+def update_mkdocs_navigation():
+    """Update mkdocs.yml navigation to include all available narrative files."""
+    mkdocs_file = Path("mkdocs.yml")
+    
+    if not mkdocs_file.exists():
+        print("⚠️  mkdocs.yml not found")
+        return False
+    
+    try:
+        # Get list of existing narrative files
+        narrative_dir = Path("docs_src/tdf-simulation/tdf-2025-hallucinations")
+        if not narrative_dir.exists():
+            print("⚠️  Narratives directory not found")
+            return False
+        
+        narrative_files = sorted([f for f in narrative_dir.glob("stage*.md") if f.name.startswith("stage")])
+        
+        # Extract stage numbers and sort them
+        stages_with_narratives = []
+        for file in narrative_files:
+            try:
+                stage_num = int(file.stem.replace("stage", ""))
+                stages_with_narratives.append(stage_num)
+            except ValueError:
+                continue
+        
+        stages_with_narratives.sort()
+        
+        if not stages_with_narratives:
+            print("⚠️  No narrative files found")
+            return False
+        
+        # Read current mkdocs.yml
+        with open(mkdocs_file, 'r') as f:
+            content = f.read()
+        
+        lines = content.split('\n')
+        
+        # Find "The Indoor Rider" section
+        indoor_rider_start = None
+        indoor_rider_end = None
+        
+        for i, line in enumerate(lines):
+            if "- The Indoor Rider:" in line:
+                indoor_rider_start = i
+            elif indoor_rider_start is not None and line.strip().startswith("- ") and ":" in line and "tdf-simulation" not in line:
+                # Found the next main section
+                indoor_rider_end = i
+                break
+        
+        if indoor_rider_start is None:
+            print("⚠️  'The Indoor Rider' section not found in mkdocs.yml")
+            return False
+        
+        # If no end found, assume it goes to the next main section
+        if indoor_rider_end is None:
+            # Look for the next section that starts with "- " and has a ":" but isn't indented
+            for i in range(indoor_rider_start + 1, len(lines)):
+                line = lines[i]
+                if line.startswith("  - ") and ":" in line and not line.strip().startswith("- Stage"):
+                    indoor_rider_end = i
+                    break
+        
+        if indoor_rider_end is None:
+            print("⚠️  Could not determine end of 'The Indoor Rider' section")
+            return False
+        
+        # Generate new Indoor Rider section
+        new_indoor_rider_lines = [
+            "      - The Indoor Rider:",
+            "        - tdf-simulation/tdf-2025-hallucinations/index.md"
+        ]
+        
+        for stage_num in stages_with_narratives:
+            new_indoor_rider_lines.append(f"        - Stage {stage_num}: tdf-simulation/tdf-2025-hallucinations/stage{stage_num}.md")
+        
+        # Replace the section
+        new_lines = lines[:indoor_rider_start] + new_indoor_rider_lines + lines[indoor_rider_end:]
+        new_content = '\n'.join(new_lines)
+        
+        # Write back to file
+        with open(mkdocs_file, 'w') as f:
+            f.write(new_content)
+        
+        print(f"✅ Updated mkdocs navigation with {len(stages_with_narratives)} narrative stages")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error updating mkdocs navigation: {e}")
+        return False
+
+
 def main():
     """Main integration function - should be called after daily_run.py."""
     print("🚴 TDF Documentation Update Integration")
@@ -282,6 +492,9 @@ def main():
             # Update stage completion data if needed
             stage_data_updated = update_stage_data_if_completed()
             
+            # Update the main simulation status
+            update_simulation_status()
+            
             # Update all stage tabs based on current status
             update_all_stages()
             
@@ -290,6 +503,12 @@ def main():
                 briefing_stage = get_briefing_stage()
                 if briefing_stage:
                     print(f"📋 Morning briefing active for Stage {briefing_stage}")
+            
+            # Update the simulation status in the index
+            update_simulation_status()
+            
+            # Update mkdocs navigation to reflect new narratives
+            update_mkdocs_navigation()
             
             print("🎯 Documentation update complete!")
             

@@ -46,12 +46,12 @@ def get_latest_completed_stage() -> Optional[dict]:
 
 def narrative_already_exists(stage_number: int) -> bool:
     """Check if a narrative already exists for the given stage number"""
-    narrative_file = Path(f"docs/tdf-2025-hallucinations/stage{stage_number}.md")
+    narrative_file = Path(f"docs_src/tdf-simulation/tdf-2025-hallucinations/stage{stage_number}.md")
     return narrative_file.exists()
 
 def list_existing_narratives() -> list:
     """List all existing narrative files"""
-    fiction_dir = Path("docs/tdf-2025-hallucinations")
+    fiction_dir = Path("docs_src/tdf-simulation/tdf-2025-hallucinations")
     if not fiction_dir.exists():
         return []
     

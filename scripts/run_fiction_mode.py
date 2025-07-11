@@ -34,7 +34,7 @@ def run_fiction_mode(activity_id: Optional[int] = None,
         
         # Import utilities
         sys.path.insert(0, str(project_root))
-        from fiction_mode_utils import get_narrative_status
+        from scripts.utils.fiction_mode_utils import get_narrative_status
         
         status = get_narrative_status()
         
@@ -82,7 +82,7 @@ def run_fiction_mode(activity_id: Optional[int] = None,
     # Check if narrative already exists (for manual runs)
     if stage_number:
         sys.path.insert(0, str(project_root))
-        from fiction_mode_utils import narrative_already_exists
+        from scripts.utils.fiction_mode_utils import narrative_already_exists
         if narrative_already_exists(stage_number):
             print(f"⚠️  Narrative already exists for stage {stage_number}")
             print("   Use --force to overwrite (not implemented yet)")

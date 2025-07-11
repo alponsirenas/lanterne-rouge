@@ -65,6 +65,7 @@
 
 	#### 📝 Strategic Notes:
 	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace. Early Tour stages set the rhythm - establish your pattern and stay consistent.
+	
 === "Planned"
 
 	### 🚴 Stage 1 Ride Options
