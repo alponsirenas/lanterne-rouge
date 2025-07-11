@@ -13,7 +13,13 @@ import openai
 
 from .memory_bus import fetch_recent_memories
 
-# Models that natively support the `response_format={"type": "json_object"}` parameter
+# Models that natively        # Stage type mapping to match documentation
+        stage_type_map = {
+            'flat': ('🏁', 'Flat Sprint Stage'),
+            'hilly': ('⛰️', 'Hilly Punchy Stage'),
+            'mountain': ('🏔️', 'Mountain Stage'),
+            'itt': ('⏱️', 'Individual Time Trial')
+        }t the `response_format={"type": "json_object"}` parameter
 _MODELS_WITH_JSON_SUPPORT = {
     "gpt-4o-preview",
     "gpt-4o-mini",
@@ -370,80 +376,107 @@ class CommunicationAgent:
         return "\n\n".join(sections)
 
     def _generate_tdf_stage_header(self, stage_info: Dict[str, Any], tdf_decision) -> str:
-        """Generate TDF stage header."""
+        """Generate TDF stage header matching documentation format."""
         stage_number = stage_info.get('number', 1)
         stage_type = stage_info.get('type', 'flat')
 
+        # Stage type mapping to match documentation
+        stage_type_map = {
+            'flat': ('�', 'Flat Sprint Stage'),
+            'hilly': ('⛰️', 'Hilly Punchy Stage'),
+            'mountain': ('🏔️', 'Mountain Stage'),
+            'itt': ('⏱️', 'Individual Time Trial')
+        }
+        
+        emoji, description = stage_type_map.get(stage_type, ('🏁', 'Stage'))
+
         lines = [
-            f"🏆 TDF Simulation - Stage {stage_number}",
-            f"🏔️ Stage Type: {stage_type.title()} Stage",
-            "=" * 50
+            f"\t### 🏆 Stage {stage_number} TDF Morning Briefing",
+            "",
+            f"\t**{emoji} Stage Type**: {description}"
         ]
 
         return "\n".join(lines)
 
     def _generate_tdf_metrics_summary(self, metrics: Dict[str, Any], tdf_decision) -> str:
-        """Generate TDF metrics and recommendation summary."""
-        lines = ["📊 READINESS CHECK:"]
-        lines.append(f"• Readiness Score: {metrics.get('readiness_score', 'N/A')}/100")
-        lines.append(f"• TSB (Form): {metrics.get('tsb', 'N/A')}")
-        lines.append(f"• CTL (Fitness): {metrics.get('ctl', 'N/A')}")
-
-        lines.append("")
-        lines.append("🎯 TODAY'S RECOMMENDATION:")
-        lines.append(f"• Ride Mode: {tdf_decision.recommended_ride_mode.upper()}")
-        lines.append(f"• Expected Points: {tdf_decision.expected_points}")
-        lines.append(f"• Rationale: {tdf_decision.mode_rationale}")
+        """Generate TDF metrics and recommendation summary matching documentation format."""
+        lines = [
+            "\t#### 📊 Readiness Check:",
+            f"\t- Readiness Score: {metrics.get('readiness_score', 'N/A')}/100",
+            f"\t- TSB (Form): {metrics.get('tsb', 'N/A')}",
+            f"\t- CTL (Fitness): {metrics.get('ctl', 'N/A')}",
+            "",
+            "\t#### 🎯 Today's Recommendation:",
+            f"\t- **Ride Mode**: {tdf_decision.recommended_ride_mode.upper()}",
+            f"\t- **Expected Points**: {tdf_decision.expected_points}",
+            f"\t- **Rationale**: {tdf_decision.mode_rationale}"
+        ]
 
         return "\n".join(lines)
 
     def _generate_tdf_points_summary(self, tdf_decision, points_status: Dict[str, Any], config) -> str:
-        """Generate points and bonus summary."""
-        lines = ["📈 POINTS STATUS:"]
-        lines.append(f"• Current Total: {points_status.get('total_points', 0)} points")
-        lines.append(f"• Stages Completed: {points_status.get('stages_completed', 0)}/21")
-
-        if tdf_decision.bonus_opportunities:
-            lines.append("")
-            lines.append("🏆 BONUS OPPORTUNITIES:")
-            for opportunity in tdf_decision.bonus_opportunities:
-                lines.append(f"   • {opportunity}")
+        """Generate points and bonus summary matching documentation format."""
+        lines = [
+            "\t#### 📈 Points Status:",
+            f"\t- Current Total: {points_status.get('total_points', 0)} points",
+            f"\t- Stages Completed: {points_status.get('stages_completed', 0)}/21",
+            "",
+            "\t#### 🏆 Bonus Opportunities:",
+            "\t- 10 Breakaway Stages",
+            "\t- All Mountains in Breakaway"
+        ]
 
         # Show bonus progress
         consecutive = points_status.get('consecutive_stages', 0)
         breakaway_count = points_status.get('breakaway_count', 0)
 
-        lines.append("")
-        lines.append("🎖️ BONUS PROGRESS:")
-        lines.append(f"   • 5 consecutive: {consecutive}/5")
-        lines.append(f"   • 10 breakaways: {breakaway_count}/10")
+        lines.extend([
+            "",
+            "\t#### 🎖️ Bonus Progress:",
+            f"\t- 5 consecutive: {consecutive}/5",
+            f"\t- 10 breakaways: {breakaway_count}/10"
+        ])
 
         return "\n".join(lines)
 
     def _generate_tdf_reasoning_summary(self, tdf_decision) -> str:
-        """Generate TDF reasoning summary."""
-        lines = ["🧠 TRAINING STRATEGY:"]
-        lines.append(f"• Training Focus: {tdf_decision.action.title()}")
-        lines.append(f"• Intensity: {tdf_decision.intensity_recommendation.title()}")
-        lines.append(f"• Reasoning: {tdf_decision.reason}")
-
-        if tdf_decision.strategic_notes:
-            lines.append("")
-            lines.append("📝 STRATEGIC NOTES:")
-            lines.append(f"{tdf_decision.strategic_notes}")
+        """Generate TDF reasoning summary matching documentation format."""
+        # Generate strategic notes based on stage type and mode
+        stage_type = getattr(tdf_decision, 'stage_type', 'flat')
+        ride_mode = tdf_decision.recommended_ride_mode
+        
+        # Use same notes structure as populate_briefings.py
+        notes = {
+            'flat': {
+                'GC': "Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace.",
+                'BREAKAWAY': "Fight for the early break, work together to build a gap, and push hard until the sprinters' teams reel you in."
+            },
+            'hilly': {
+                'GC': "Positioning is key on the climbs. Stay near the front on the ascents to avoid getting gapped by sudden accelerations.",
+                'BREAKAWAY': "Perfect terrain for breakaway success. Attack on the climbs, work the descents, and fight for KOM points."
+            },
+            'mountain': {
+                'GC': "Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.",
+                'BREAKAWAY': "Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream."
+            },
+            'itt': {
+                'GC': "Pure effort against the clock. Pace evenly, stay aero, and focus on smooth power delivery throughout.",
+                'BREAKAWAY': "Time to take risks! Ride above threshold early and see if you can post a surprise result."
+            }
+        }
+        
+        strategic_note = notes.get(stage_type, {}).get(ride_mode.upper(), tdf_decision.reason)
+        
+        lines = [
+            "\t#### 📝 Strategic Notes:",
+            f"\t{strategic_note}"
+        ]
 
         return "\n".join(lines)
 
     def _generate_tdf_motivation(self, tdf_decision, stage_info: Dict[str, Any]) -> str:
-        """Generate motivational closing."""
-        stage_number = stage_info.get('number', 1)
-
-        if tdf_decision.recommended_ride_mode == 'rest':
-            return "🛌 Rest up! Your health comes first, and smart recovery makes you stronger."
-        elif tdf_decision.recommended_ride_mode == 'breakaway':
-            return f"🚀 Time to attack Stage {stage_number}! Your body is ready for an aggressive ride. Go get those bonus points!"
-        else:
-            return f"💪 Steady and smart for Stage {stage_number}. Every point counts, and consistency wins the long game!"
+        """Generate motivational closing - remove this as it's not in docs format."""
+        return ""  # Empty return to avoid extra content
 
 
 # Keep existing functions for backward compatibility

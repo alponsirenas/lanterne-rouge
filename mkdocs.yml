@@ -50,6 +50,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 3
   - pymdownx.blocks.caption
   - pymdownx.details
   - pymdownx.emoji:
@@ -80,7 +81,17 @@ nav:
       - Recovery Monitoring: ai-coach/recovery-monitoring.md
   - TDF 2025 Simulation:
       - tdf-simulation/index.md
-      - Stage Profiles: tdf-simulation/stage-profiles.md
+      - Stages: 
+          - tdf-simulation/stages/index.md
+          - Stage 1: tdf-simulation/stages/stage1.md
+          - Stage 2: tdf-simulation/stages/stage2.md
+          - Stage 3: tdf-simulation/stages/stage3.md
+          - Stage 4: tdf-simulation/stages/stage4.md
+          - Stage 5: tdf-simulation/stages/stage5.md
+          - Stage 6: tdf-simulation/stages/stage6.md
+          - Stage 7: tdf-simulation/stages/stage7.md
+          - Stage 8: tdf-simulation/stages/stage8.md
+          - Stage 9: tdf-simulation/stages/stage9.md
       - Points System: tdf-simulation/points-system.md
       - Strategy Guide: tdf-simulation/strategy.md
   - Documentation:
