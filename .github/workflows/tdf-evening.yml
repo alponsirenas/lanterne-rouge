@@ -83,16 +83,17 @@ jobs:
         if: steps.tdf-check.outputs.stage_completed == 'true'
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'output/tdf_points.json output/*.txt output/*.csv'
+          add: 'output/tdf_points.json output/*.txt output/*.csv docs/tdf-2025-sim/completion-summary/*.md'
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
-          message: 'feat(tdf): stage completed - points updated [skip ci]'
+          message: 'feat(tdf): stage completed - points and summary updated [skip ci]'
           github_token: ${{ secrets.GH_PAT }}
 
       - name: Create Stage Completion Summary
         if: steps.tdf-check.outputs.stage_completed == 'true'
         run: |
           echo "🎉 TDF Stage Completed!" >> $GITHUB_STEP_SUMMARY
-          echo "Points have been updated automatically." >> $GITHUB_STEP_SUMMARY
+          echo "Points and completion summary have been updated automatically." >> $GITHUB_STEP_SUMMARY
           echo "Check your email/SMS for the detailed summary." >> $GITHUB_STEP_SUMMARY
+          echo "Summary file saved to docs/tdf-2025-sim/completion-summary/" >> $GITHUB_STEP_SUMMARY
           echo "Fiction Mode narrative generation will begin shortly..." >> $GITHUB_STEP_SUMMARY
