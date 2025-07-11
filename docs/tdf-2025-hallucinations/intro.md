@@ -18,14 +18,16 @@ Each day of the Tour, I complete the stage on my indoor trainer, matching the of
 
 **2. Data Integration**: Fiction Mode automatically processes:
    - My power curves, heart rate zones, and effort patterns
+   - Stage configurations from the mission profile (flat, hilly, mountain, time trials)
    - Official stage reports and race results from letour.fr  
    - Weather conditions, tactical developments, and key moments
 
-**3. Role Assignment**: Based on my power profile and the day's events, I'm given a realistic role:
-   - **GC Contender**: When my steady power suggests conservative tactics
+**3. Role Assignment**: Based on my power profile, stage type, and the day's events, I'm given a realistic role:
+   - **Time Trial Specialist**: For individual time trials, focusing on solo pacing and aerodynamic efficiency
+   - **GC Contender**: When my steady power suggests conservative tactics in road stages
    - **Breakaway Artist**: When high-intensity efforts match escape attempts  
    - **Domestique**: When my riding supports the day's tactical narrative
-   - **Opportunist**: When my efforts align with late-race moves
+   - **Mountain Goat**: For challenging climbs where sustained power matters most
 
 **4. Literary Translation**: My training data transforms into prose in the style of Tim Krabbé's *The Rider*—mathematical precision meets existential cycling drama.
 
@@ -35,22 +37,25 @@ These narratives draw their voice from Tim Krabbé's cycling masterpiece *The Ri
 
 - **The Internal Race**: My thoughts, calculations, and tactical decisions during the ride
 - **Technical Reality**: Power data, heart rate zones, and effort patterns woven naturally into the prose
-- **Authentic Drama**: Real race events, weather, and outcomes from the official Tour
+- **Stage-Specific Drama**: From solo time trial battles against the clock to tactical peloton warfare
+- **Authentic Context**: Real race events, weather, and outcomes from the official Tour
 - **Honest Emotion**: The genuine experience of suffering, strategy, and small victories on the trainer
 
 *"Cycling is not about the legs, it's about the heart. But the heart, as any cyclist knows, is just another muscle."*
 
-## A Sample from Stage 6
+## A Sample from Stage 5
 
-Here's how my 75-minute mountain stage simulation became literature:
+Here's how my 60-minute time trial simulation became literature:
 
-*"Ana Luisa Ponsirenas sets off from Bayeux, her heart rate settling at 153.3 bpm—the rhythm of controlled ambition. Today she is not chasing breakaways or sprinting for glory. She is playing the longer game, the GC contender's chess match where every watt is calculated.*
+*"In the hush of Caen, Ana Luisa Ponsirenas stands solitary, her whispered calculations a mantra for the coming hour. The city is a mirror, its silence reflecting her focus. She's been here before, on the precipice of the lone time trial, where strategy boils down to one raw question: how much can she bear?*
 
-*At 25km, the day's break forms ahead. She watches them go, maintaining her 102.2W average power. This is not her move. Her place is in the peloton's tactical heart, reading the race's geometry, conserving energy for battles yet to come..."*
+*She clips in, the familiar click a final goodbye to the comfort of the group. It's a stage for the lone wolf, a chance for the time trialist to etch their name into history. But for Ana Luisa, it's a test of resilience, a mission to sustain her steady 101 watts..."*
 
 ## The Complete Archive
 
 Browse the stage narratives below to follow my journey through the 2025 Tour de France—one training session, one story at a time. Each narrative includes my power analysis, role assignment, and the day's racing context that shaped the story.
+
+From sprint finishes to mountain battles, from tactical road stages to solo time trial efforts against the clock, experience the full spectrum of Tour de France racing through the lens of indoor training transformed into literature.
 
 ⸻
 
