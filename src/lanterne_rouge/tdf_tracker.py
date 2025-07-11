@@ -235,6 +235,30 @@ class TDFTracker:
             "last_updated": self._data["last_updated"]
         }
 
+    def is_activity_already_used(self, activity_id: int) -> bool:
+        """Check if an activity ID has already been used for a previous stage."""
+        if "used_activity_ids" not in self._data:
+            self._data["used_activity_ids"] = []
+        return activity_id in self._data["used_activity_ids"]
+
+    def get_next_stage_number(self) -> int:
+        """Get the next expected stage number based on completed stages."""
+        if not self._data["stages"]:
+            return 1
+        
+        # Get all completed stage numbers
+        completed_stages = [
+            stage_data["stage_number"] 
+            for stage_data in self._data["stages"].values()
+        ]
+        
+        if not completed_stages:
+            return 1
+        
+        # Return the next sequential stage number
+        max_completed = max(completed_stages)
+        return max_completed + 1
+
 
 # Convenience functions for backward compatibility
 def load_points_status() -> Dict[str, Any]:

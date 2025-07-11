@@ -39,6 +39,10 @@ def get_todays_cycling_activity():
     
     print(f"📅 Checking for activities on {today} (or {yesterday} due to timezone)")
 
+    # First, try to find an activity from today
+    todays_activity = None
+    yesterdays_activity = None
+    
     for activity in activities:
         try:
             # Parse activity date (this is in athlete's local time)
@@ -46,19 +50,25 @@ def get_todays_cycling_activity():
                 activity["start_date_local"].replace("Z", "")
             ).date()
 
-            # Check if it's today OR yesterday (to handle timezone differences)
-            # When GitHub Actions runs in UTC, "today" might be tomorrow for the athlete
-            if (activity_date in [today, yesterday] and
-                activity.get("sport_type") in ["Ride", "VirtualRide"]):
-
+            if (activity.get("sport_type") in ["Ride", "VirtualRide"]):
                 # Check minimum duration (from mission config)
                 duration_minutes = activity.get("moving_time", 0) / 60
                 if duration_minutes >= 30:  # Minimum stage duration
-                    print(f"✅ Found qualifying activity: {activity.get('name')} ({activity_date})")
-                    return activity
+                    if activity_date == today:
+                        todays_activity = activity
+                    elif activity_date == yesterday:
+                        yesterdays_activity = activity
 
         except (ValueError, KeyError):
             continue
+
+    # Prefer today's activity, fall back to yesterday's only if no today activity
+    if todays_activity:
+        print(f"✅ Found qualifying activity from today: {todays_activity.get('name')}")
+        return todays_activity
+    elif yesterdays_activity:
+        print(f"✅ Found qualifying activity from yesterday: {yesterdays_activity.get('name')} (timezone difference)")
+        return yesterdays_activity
 
     print("❌ No qualifying cycling activity found for today or yesterday")
     print("   (Need cycling activity >30 minutes uploaded to Strava)")
@@ -99,7 +109,31 @@ def analyze_activity_with_llm(activity, stage_info, mission_cfg):
     if use_llm:
         try:
             # Build comprehensive system prompt for intelligent analysis
-            system_prompt = f"""Classify this TDF stage effort with intelligent analysis. Be encouraging and informative.
+            # Time trials have different dynamics than mass start stages
+            if stage_type in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+                system_prompt = f"""Classify this TIME TRIAL effort with intelligent analysis. Be encouraging and informative.
+
+JSON format:
+{{
+  "ride_mode": "gc",
+  "confidence": 0.8,
+  "rationale": "Informative coaching feedback addressing the rider directly with power insights for TT",
+  "performance_indicators": ["IF", "TSS", "duration", "pacing"],
+  "effort_assessment": "conservative|moderate|aggressive"
+}}
+
+TIME TRIAL Rules: Always classify as "gc" (individual effort). Focus on pacing strategy and sustained power.
+
+Rationale guidelines for TIME TRIALS:
+- Be encouraging and personal (use "you/your")
+- Focus on pacing strategy and power distribution
+- Mention sustained effort quality and IF consistency
+- Include aerodynamic positioning insights if relevant
+- Target 300-400 characters for informative feedback
+- Examples: "Excellent TT pacing! Your sustained IF of 0.84 shows perfect time trial effort distribution.", "Solid time trial - your consistent power output maximized speed against the clock."
+"""
+            else:
+                system_prompt = f"""Classify this TDF stage effort with intelligent analysis. Be encouraging and informative.
 
 JSON format:
 {{
@@ -122,7 +156,24 @@ Rationale guidelines:
 """
 
             # Build user prompt with activity data
-            user_prompt = f"""Analyze this Stage {stage_number} ride:
+            if stage_type in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+                user_prompt = f"""Analyze this TIME TRIAL Stage {stage_number} ride:
+
+YOUR POWER DATA:
+• Duration: {activity_data['duration_minutes']:.1f} minutes
+• Power: {activity_data['normalized_power']}W (vs {ftp}W FTP)
+• Intensity Factor: {activity_data['intensity_factor']:.3f}
+• Training Load: {activity_data['tss']:.1f} TSS
+• Effort Zone: {activity_data['effort_level']}
+
+RIDE DETAILS:
+• Distance: {activity_data['distance_km']:.1f}km
+• Elevation: {activity_data.get('total_elevation_gain', 'N/A')}m
+• Activity: "{activity_data['name']}"
+
+How was your time trial pacing and power distribution? Analyze the sustained effort quality."""
+            else:
+                user_prompt = f"""Analyze this Stage {stage_number} ride:
 
 YOUR POWER DATA:
 • Duration: {activity_data['duration_minutes']:.1f} minutes
@@ -196,8 +247,17 @@ What's your verdict - was this a GC effort, breakaway attempt, or recovery ride?
     gc_if_threshold = detection_config.get('gc_intensity_threshold', 0.70)
     gc_tss_threshold = detection_config.get('gc_tss_threshold', 40)
     
-    # Power-based classification
-    if intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
+    # Time trials use different logic - always "gc" mode, focus on sustained effort
+    if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+        ride_mode = "gc"  # Time trials are always individual effort
+        if intensity_factor >= 0.80:
+            rationale = f"Excellent time trial! Your sustained IF {intensity_factor:.2f} and TSS {tss:.0f} show perfect TT pacing in the {effort_level} zone."
+        elif intensity_factor >= 0.70:
+            rationale = f"Solid time trial effort! IF {intensity_factor:.2f}, TSS {tss:.0f} - good sustained power against the clock."
+        else:
+            rationale = f"Conservative TT approach! IF {intensity_factor:.2f}, TSS {tss:.0f} - smart pacing for the distance."
+    # Power-based classification for mass start stages
+    elif intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
         ride_mode = "breakaway"
         rationale = f"You nailed a breakaway effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show you pushed hard in the {effort_level} zone."
     elif intensity_factor >= gc_if_threshold and tss >= gc_tss_threshold:
@@ -225,6 +285,12 @@ def calculate_stage_points(stage_type, ride_mode, mission_cfg):
     """Calculate points based on stage type and ride mode using mission config."""
     tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
     points_config = tdf_config.get('points', {})
+    
+    # Handle time trial type aliases
+    if stage_type in ['tt', 'time_trial']:
+        stage_type = 'itt'  # Normalize to individual time trial
+    elif stage_type in ['mtn_tt', 'mountain_time_trial']:
+        stage_type = 'mtn_itt'  # Normalize to mountain time trial
     
     stage_points_config = points_config.get(stage_type, {'gc': 5, 'breakaway': 8})
     return stage_points_config.get(ride_mode, 5)
@@ -359,6 +425,44 @@ def generate_completion_summary(stage_info, ride_mode, points_earned, total_poin
     return "\n".join(lines)
 
 
+def save_completion_summary(stage_number: int, summary: str) -> str:
+    """Save completion summary to a markdown file"""
+    try:
+        # Create completion summary directory if it doesn't exist
+        summary_dir = Path("docs/tdf-2025-sim/completion-summary")
+        summary_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create filename with timestamp
+        completion_time = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        filename = f"stage{stage_number}.md"
+        filepath = summary_dir / filename
+        
+        # Create markdown content with metadata
+        markdown_content = f"""# TDF Stage {stage_number} Completion Summary
+
+**Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
+**Stage:** {stage_number}
+
+---
+
+{summary}
+
+---
+
+*Auto-generated by Lanterne Rouge TDF simulation system*
+"""
+        
+        # Write to file
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(markdown_content)
+        
+        print(f"📄 Completion summary saved to: {filepath}")
+        return str(filepath)
+        
+    except Exception as e:
+        print(f"⚠️ Error saving completion summary: {e}")
+        return ""
+
 def main():
     """Main evening check workflow."""
     print("🏆 LLM-Powered TDF Evening Check")
@@ -411,6 +515,13 @@ def main():
         if not activity:
             print("❌ No qualifying activity found")
             print("   Complete a cycling workout (>30 min) and upload to Strava")
+            return
+        
+        # Check if this activity has already been used for a previous stage
+        activity_id = activity.get('id')
+        if activity_id and tracker.is_activity_already_used(activity_id):
+            print(f"❌ Activity {activity_id} already used for a previous stage")
+            print("   Upload a new cycling workout to Strava")
             return
         
         # Log activity detection without any sensitive details
@@ -472,6 +583,10 @@ def main():
                         rationale, activity_data, mission_cfg
                     )
                     subject = f"🎉 TDF Stage {stage_number} Complete - LLM Analysis"
+                    
+                    # Save completion summary to file
+                    save_completion_summary(stage_number, notification_summary)
+                    
                     send_email(subject, notification_summary, email_recipient)
                     print("📧 Email notification sent with LLM analysis")
                 except Exception:

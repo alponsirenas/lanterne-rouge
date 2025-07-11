@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from ..strava_api import strava_get, get_athlete_id
 from ..validation import validate_activity_data
 from ..ai_clients import call_llm
+from ..mission_config import MissionConfig, bootstrap
 
 
 @dataclass
@@ -744,12 +745,23 @@ Return ONLY valid JSON array, no other text."""
             import json
             import re
             
+            # Handle empty or whitespace-only responses
+            if not response or not response.strip():
+                print(f"Empty response from LLM for stage {stage_number} results extraction")
+                return []
+            
             # Try to extract JSON from response
             json_match = re.search(r'\[.*\]', response, re.DOTALL)
             if json_match:
                 results = json.loads(json_match.group())
             else:
-                results = json.loads(response)
+                # Try to parse the entire response as JSON
+                try:
+                    results = json.loads(response)
+                except json.JSONDecodeError:
+                    # If response contains text but no valid JSON, it likely means no results found
+                    print(f"LLM returned non-JSON response for stage {stage_number}: {response[:100]}...")
+                    return []
             
             # Validate that it's a list
             if isinstance(results, list):
@@ -766,6 +778,7 @@ Return ONLY valid JSON array, no other text."""
                 
         except json.JSONDecodeError as e:
             print(f"JSON decode error in results extraction for stage {stage_number}: {e}")
+            print(f"Response was: {response[:200] if response else 'None'}...")
             return []
         except Exception as e:
             print(f"Failed to extract results with LLM for stage {stage_number}: {e}")
@@ -774,22 +787,32 @@ Return ONLY valid JSON array, no other text."""
     def fetch_stage_data(self, stage_number: int, stage_date: datetime) -> Optional[StageRaceData]:
         """Fetch complete race data for a stage from official sources"""
         
-        # Step 1: Try to scrape stage report from letour.fr
+        # Step 1: Try to get stage type from mission config first
+        stage_config = self._get_stage_config(stage_number)
+        if stage_config:
+            print(f"✅ Using stage type from mission config: {stage_config['stage_type']}")
+        
+        # Step 2: Try to scrape stage report from letour.fr
         stage_report = self.scrape_letour_stage_report(stage_number, 2025)
         if not stage_report:
             print(f"Warning: Could not fetch stage report for stage {stage_number}")
             return None
         
-        # Step 2: Extract stage details using LLM from the scraped report
+        # Step 3: Extract stage details using LLM from the scraped report
         stage_details = self._extract_stage_details_with_llm(stage_report, stage_number, stage_date)
         if not stage_details:
             print(f"Warning: Could not extract stage details for stage {stage_number}")
             return None
         
-        # Step 3: Parse events from the report
+        # Step 4: Override stage type with mission config if available
+        if stage_config and 'stage_type' in stage_config:
+            print(f"🔧 Overriding stage type: {stage_details['stage_type']} → {stage_config['stage_type']}")
+            stage_details['stage_type'] = stage_config['stage_type']
+        
+        # Step 5: Parse events from the report
         events = self.parse_stage_events(stage_report, stage_number)
         
-        # Step 4: Get results
+        # Step 6: Get results
         results = self.get_stage_results(stage_number)
         
         return StageRaceData(
@@ -1055,3 +1078,24 @@ Return ONLY valid JSON."""
             print(f"Stage discovery failed: {e}")
         
         return None
+
+    def _get_stage_config(self, stage_number: int) -> Optional[Dict[str, Any]]:
+        """Get stage configuration from mission config if available"""
+        try:
+            # Bootstrap config from the standard mission config path
+            config_path = "missions/tdf_sim_2025.toml"
+            config = bootstrap(config_path)
+            if not config or not config.tdf_simulation:
+                return None
+            
+            tdf_config = config.tdf_simulation
+            stages_config = tdf_config.get('stages', {})
+            stage_type = stages_config.get(str(stage_number))
+            
+            if stage_type:
+                return {'stage_type': stage_type}
+            
+            return None
+        except Exception as e:
+            print(f"Could not load stage config for stage {stage_number}: {e}")
+            return None
