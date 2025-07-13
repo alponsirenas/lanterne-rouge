@@ -12,12 +12,6 @@
 
 ## Stage Report
 
-=== "Recommended"
-
-	### 🏆 Morning Briefing
-
-	*Briefing not yet available for this stage.*
-
 === "Completed"
 
 	### 🎉 TDF Stage 4 Complete!
@@ -42,6 +36,12 @@
 	---
 	**Stage completed on:** July 8, 2025  
 	**Activity ID:** 15052645086
+
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 

@@ -91,9 +91,9 @@ def update_stage_tabs(stage_num, status):
     
     # Add appropriate tabs based on status
     if status == 'completed':
-        # Show all tabs: Recommended, Completed (with fresh data), Planned
-        new_lines.extend(get_recommended_tab_content(stage_num))
+        # Show all tabs: Completed (with fresh data), Recommended, Planned
         new_lines.extend(get_completed_tab_with_data(content, stage_num))
+        new_lines.extend(get_recommended_tab_content(stage_num))
         new_lines.extend(get_existing_tab_content(content, 'Planned'))
     elif status == 'current':
         # Show Recommended (with current briefing), Planned (no Completed until stage is done)
@@ -272,7 +272,9 @@ def get_recommended_tab_content(stage_num):
                 briefing_lines = briefing_content.split('\n')
                 for line in briefing_lines:
                     if line.strip():
-                        tab_lines.append(f'\t{line}')
+                        # Remove existing tabs and add proper single tab indentation
+                        clean_line = line.lstrip('\t')
+                        tab_lines.append(f'\t{clean_line}')
                     else:
                         tab_lines.append('')
             else:

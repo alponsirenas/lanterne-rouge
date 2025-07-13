@@ -11,12 +11,6 @@
 
 ## Stage Report
 
-=== "Recommended"
-
-	### 🏆 Morning Briefing
-
-	*Briefing not yet available for this stage.*
-
 === "Completed"
 
 	### 🎉 TDF Stage 8 Complete!
@@ -53,6 +47,12 @@
 	---
 	**Stage completed on**: 2025-07-13  
 	**Activity ID**: 15093826613
+
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 

@@ -15,32 +15,32 @@
 
 	### 🏆 Stage 9 TDF Morning Briefing
 
-		**🏁 Stage Type**: Flat Stage
+	**🏁 Stage Type**: Flat Stage
 
-		#### 📊 Readiness Check:
-		- Readiness Score: 81/100
-		- TSB (Form): -11.8
-		- CTL (Fitness): 41.9
+	#### 📊 Readiness Check:
+	- Readiness Score: 81/100
+	- TSB (Form): -11.8
+	- CTL (Fitness): 41.9
 
-		#### 🎯 Today's Recommendation:
-		- **Ride Mode**: BREAKAWAY
-		- **Expected Points**: 15
-		- **Rationale**: Choosing Breakaway Mode today aligns with the need to start accumulating points towards the 10 Breakaway Stages bonus and taking advantage of your current high readiness and improving TSB. Given that we're at Stage 9 and you have a stable physiological state, it's an opportune moment to go for higher points and bonuses, which could be pivotal for your overall standings. Additionally, engaging in a breakaway on a mountain stage can set a strong precedent for your performance capabilities and mental resilience.
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 15
+	- **Rationale**: Choosing Breakaway Mode today aligns with the need to start accumulating points towards the 10 Breakaway Stages bonus and taking advantage of your current high readiness and improving TSB. Given that we're at Stage 9 and you have a stable physiological state, it's an opportune moment to go for higher points and bonuses, which could be pivotal for your overall standings. Additionally, engaging in a breakaway on a mountain stage can set a strong precedent for your performance capabilities and mental resilience.
 
-		#### 📈 Points Status:
-		- Current Total: 48 points
-		- Stages Completed: 8/21
+	#### 📈 Points Status:
+	- Current Total: 48 points
+	- Stages Completed: 8/21
 
-		#### 🏆 Bonus Opportunities:
-		- 10 Breakaway Stages
-		- All Mountains in Breakaway
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
 
-		#### 🎖️ Bonus Progress:
-		- 5 consecutive: 3/5
-		- 10 breakaways: 0/10
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 3/5
+	- 10 breakaways: 0/10
 
-		#### 📝 Strategic Notes:
-		Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
+	#### 📝 Strategic Notes:
+	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
 === "Planned"
 
 	### 🚴 Stage 9 Ride Options

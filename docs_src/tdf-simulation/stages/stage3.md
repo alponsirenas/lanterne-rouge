@@ -11,12 +11,6 @@
 
 ## Stage Report
 
-=== "Recommended"
-
-	### 🏆 Morning Briefing
-
-	*Briefing not yet available for this stage.*
-
 === "Completed"
 
 	### 🎉 TDF Stage 3 Complete!
@@ -41,6 +35,12 @@
 	---
 	**Stage completed on:** July 7, 2025  
 	**Activity ID:** N/A
+
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 

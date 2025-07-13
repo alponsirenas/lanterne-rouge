@@ -11,12 +11,6 @@
 
 ## Stage Report
 
-=== "Recommended"
-
-	### 🏆 Morning Briefing
-
-	*Briefing not yet available for this stage.*
-
 === "Completed"
 
 	### 🎉 TDF Stage 1 Complete!
@@ -41,3 +35,9 @@
 	---
 	**Stage completed on:** July 07, 2025  
 	**Activity ID:** Test Data
+
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*

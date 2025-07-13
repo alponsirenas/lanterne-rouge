@@ -11,12 +11,6 @@
 
 ## Stage Report
 
-=== "Recommended"
-
-	### 🏆 Morning Briefing
-
-	*Briefing not yet available for this stage.*
-
 === "Completed"
 
 	### 🎉 TDF Stage 6 Complete!
@@ -54,6 +48,12 @@
 	---
 	**Stage completed on:** 2025-07-11  
 	**Activity ID:** 15074897659
+
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 
