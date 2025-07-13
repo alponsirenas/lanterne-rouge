@@ -1,29 +1,29 @@
-	### 🏆 Stage 8 TDF Morning Briefing
+	### 🏆 Stage 9 TDF Morning Briefing
 
-	**⛰️ Stage Type**: Hilly Punchy Stage
+	**🏔️ Stage Type**: Mountain Stage
 
 	#### 📊 Readiness Check:
-	- Readiness Score: 82/100
-	- TSB (Form): -15.5
-	- CTL (Fitness): 41.8
+	- Readiness Score: 81/100
+	- TSB (Form): -11.8
+	- CTL (Fitness): 41.9
 
 	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 7
-	- **Rationale**: Choosing GC Mode for today's hilly stage is strategic, considering your current points position and the stage's potential for earning base points without overly taxing yourself. This approach allows you to continue accumulating points steadily, keeping you competitive in the overall standings, while also conserving energy for stages where you might opt for a more aggressive, breakaway strategy. It's about playing the long game, ensuring you're in a strong position for the latter part of the Tour.
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 15
+	- **Rationale**: Choosing Breakaway Mode today aligns with the need to start accumulating points towards the 10 Breakaway Stages bonus and taking advantage of your current high readiness and improving TSB. Given that we're at Stage 9 and you have a stable physiological state, it's an opportune moment to go for higher points and bonuses, which could be pivotal for your overall standings. Additionally, engaging in a breakaway on a mountain stage can set a strong precedent for your performance capabilities and mental resilience.
 
 	#### 📈 Points Status:
-	- Current Total: 43 points
-	- Stages Completed: 7/21
+	- Current Total: 48 points
+	- Stages Completed: 8/21
 
 	#### 🏆 Bonus Opportunities:
 	- 10 Breakaway Stages
 	- All Mountains in Breakaway
 
 	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 2/5
+	- 5 consecutive: 3/5
 	- 10 breakaways: 0/10
 
 	#### 📝 Strategic Notes:
-	Positioning is key on the climbs. Stay near the front on the ascents to avoid getting gapped by sudden accelerations.
+	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
 
