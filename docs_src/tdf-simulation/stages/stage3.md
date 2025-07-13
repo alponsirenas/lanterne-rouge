@@ -1,4 +1,4 @@
-# Stage 3 — Flat Crosswind Stage
+# Stage 3 — Valenciennes > Dunkerque
 
 ## Stage Profile and Strategy
 

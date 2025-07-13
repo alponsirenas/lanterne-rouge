@@ -1,4 +1,4 @@
-# Stage 2 — Hilly Punchy Stage
+# Stage 2 — Lauwin-Planque > Boulogne-sur-Mer
 
 ## Stage Profile and Strategy
 

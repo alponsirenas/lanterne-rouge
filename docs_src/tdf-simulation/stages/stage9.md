@@ -1,4 +1,4 @@
-# Stage 9 — Flat Crosswind Stage
+# Stage 9 — Chinon > Châteauroux
 
 ## Stage Profile and Strategy
 

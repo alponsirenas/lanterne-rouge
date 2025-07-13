@@ -1,4 +1,4 @@
-# Stage 4 — Rolling Hills/Breakaway Stage
+# Stage 4 — Amiens Métropole > Rouen
 
 ## Stage Profile and Strategy
 

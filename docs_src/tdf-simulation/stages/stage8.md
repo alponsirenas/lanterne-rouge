@@ -1,4 +1,4 @@
-# Stage 8 — Flat Sprint Stage
+# Stage 8 — Saint-Méen-le-Grand > Laval
 
 ## Stage Profile and Strategy
 

@@ -1,4 +1,4 @@
-# Stage 7 — Punchy Finale Stage
+# Stage 7 — Saint-Malo > Mûr-de-Bretagne
 
 ## Stage Profile and Strategy
 

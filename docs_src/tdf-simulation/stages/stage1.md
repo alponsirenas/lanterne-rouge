@@ -1,4 +1,4 @@
-# Stage 1 — Flat Sprint Stage
+# Stage 1 — Lille Métropole > Lille Métropole
 
 ## Stage Profile and Strategy
 

@@ -1,4 +1,4 @@
-# Stage 5 — Individual Time Trial
+# Stage 5 — Caen > Caen (ITT)
 
 ## Stage Profile and Strategy
 
