@@ -101,7 +101,7 @@ class FictionModeOrchestrator:
                 )
 
             # Check minimum duration
-            duration_minutes = ride_data.duration_seconds / 60
+            duration_minutes = (ride_data.duration_seconds or 0) / 60
             if duration_minutes < self.config.require_min_duration:
                 return PipelineResult(
                     success=False,

@@ -133,8 +133,8 @@ class DeliveryAgent:
             metadata.update({
                 'ride_data': {
                     'activity_id': analysis.ride_data.activity_id,
-                    'duration_minutes': analysis.ride_data.duration_seconds / 60,
-                    'distance_km': analysis.ride_data.distance_meters / 1000,
+                    'duration_minutes': (analysis.ride_data.duration_seconds or 0) / 60,
+                    'distance_km': (analysis.ride_data.distance_meters or 0) / 1000,
                     'avg_power': analysis.ride_data.avg_power,
                     'avg_hr': analysis.ride_data.avg_hr
                 }

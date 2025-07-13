@@ -17,6 +17,7 @@ from ..mission_config import MissionConfig, bootstrap
 
 
 @dataclass
+@dataclass
 class RideData:
     """Structured ride data from Strava"""
     activity_id: int
@@ -304,7 +305,7 @@ Focus on intervals that tell a story about the rider's tactical choices."""
         """Fallback effort extraction using basic activity summary data"""
         intervals = []
 
-        moving_time = activity.get('moving_time', 0)
+        moving_time = activity.get('moving_time', 0) or 0
         avg_power = activity.get('average_watts')
         max_power = activity.get('max_watts')
 
@@ -354,8 +355,8 @@ Focus on intervals that tell a story about the rider's tactical choices."""
         return RideData(
             activity_id=activity['id'],
             start_time=start_time,
-            duration_seconds=validated_activity.get('moving_time', 0),
-            distance_meters=validated_activity.get('distance', 0),
+            duration_seconds=validated_activity.get('moving_time') or 0,
+            distance_meters=validated_activity.get('distance') or 0,
             avg_power=validated_activity.get('average_watts'),
             max_power=validated_activity.get('max_watts'),
             avg_hr=validated_activity.get('average_heartrate'),

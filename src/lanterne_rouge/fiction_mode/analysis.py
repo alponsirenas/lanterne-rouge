@@ -67,7 +67,7 @@ class AnalysisMappingAgent:
         # Convert RideData to activity_data format for calculate_power_metrics
         activity_data = {
             'weighted_average_watts': ride_data.avg_power or 0,
-            'duration_minutes': ride_data.duration_seconds / 60,
+            'duration_minutes': (ride_data.duration_seconds or 0) / 60,
             'max_watts': ride_data.max_power or 0
         }
         
