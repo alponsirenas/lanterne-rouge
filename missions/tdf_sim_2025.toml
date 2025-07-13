@@ -34,29 +34,29 @@ start_date = 2025-07-05
 end_date = 2025-07-27
 total_stages = 21
 
-# Stage schedule with types
+# Stage schedule with types - OFFICIAL 2025 Tour de France
 [tdf_simulation.stages]
-1 = "flat"
-2 = "hilly" 
-3 = "hilly"
-4 = "flat"
-5 = "itt"      # Individual time trial stage in Caen
-6 = "mountain"
-7 = "flat"
-8 = "flat"     # Flat sprint stage
-9 = "flat"     # Flat crosswind stage
-10 = "hilly"
-11 = "mountain"
-12 = "hilly"
-13 = "itt"
-14 = "hilly"
-15 = "mountain"
-16 = "mountain"
-17 = "hilly"
-18 = "mountain"
-19 = "hilly"
-20 = "mtn_itt"
-21 = "flat"
+1 = "flat"     # FLAT: Lille Métropole > Lille Métropole (184.9km)
+2 = "hilly"    # HILLY: Lauwin-Planque > Boulogne-sur-Mer (209.1km)
+3 = "flat"     # FLAT: Valenciennes > Dunkerque (178.3km)
+4 = "hilly"    # HILLY: Amiens Métropole > Rouen (174.2km)
+5 = "itt"      # ITT: Caen > Caen (33km)
+6 = "hilly"    # HILLY: Bayeux > Vire Normandie (201.5km)
+7 = "hilly"    # HILLY: Saint-Malo > Mûr-de-Bretagne (197km)
+8 = "flat"     # FLAT: Saint-Méen-le-Grand > Laval (171.4km)
+9 = "flat"     # FLAT: Chinon > Châteauroux (174.1km)
+10 = "mountain" # MOUNTAIN: Ennezat > Le Mont-Dore Puy de Sancy (165.3km)
+11 = "flat"    # FLAT: Toulouse > Toulouse (156.8km)
+12 = "mountain" # MOUNTAIN: Auch > Hautacam (180.6km) - Mountain finish
+13 = "itt"     # ITT: Loudenvielle > Peyragudes (10.9km)
+14 = "mountain" # MOUNTAIN: Pau > Luchon-Superbagnères (182.6km) - Mountain finish
+15 = "hilly"   # HILLY: Muret > Carcassonne (169.3km)
+16 = "mountain" # MOUNTAIN: Montpellier > Mont Ventoux (171.5km) - Mountain finish
+17 = "hilly"   # HILLY: Bollène > Valence (160.4km)
+18 = "mountain" # MOUNTAIN: Vif > Courchevel Col de la Loze (171.5km) - Mountain finish
+19 = "mountain" # MOUNTAIN: Albertville > La Plagne (129.9km) - Mountain finish
+20 = "flat"    # FLAT: Nantua > Pontarlier (184.2km)
+21 = "flat"    # FLAT: Mantes-la-Ville > Paris Champs-Élysées (132.3km)
 
 # Points structure for different stage types and ride modes
 [tdf_simulation.points]

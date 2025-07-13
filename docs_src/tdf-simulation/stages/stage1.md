@@ -41,26 +41,3 @@
 	---
 	**Stage completed on:** July 07, 2025  
 	**Activity ID:** Test Data
-
-=== "Planned"
-
-	### 🚴 Stage 1 Ride Options
-
-	#### 🏆 Breakaway Mode
-	
-	"Go from the gun, fight to make the break, drive hard until caught near the finish, maybe dream of a miracle."
-
-	- Warm-up and initial surges as the break forms on flat roads
-	- Extended high-tempo pulls as the breakaway works together to build a gap
-	- Occasional Z4 surges to simulate TV time and KOM/sprint points, plus brief spells of recovery
-	- The intensity ramps again for the imagined "final push" before the sprinters' teams reel you in
-	- Survive, then spin it out with the peloton at the end
-	
-	#### 🦺 GC Mode
-
-	"Stay protected in the peloton, minimize risk, let the sprinters and breakaway specialists play."
-
-	- Long, controlled tempo at Z2–low Z3, shielded by teammates
-	- Only one or two brief moments of harder effort—responding to a split or late crash
-	- Emphasis is on smooth pedaling, saving energy, and staying out of trouble
-	- Cool down with the group after the finish

@@ -6,8 +6,8 @@
 ## 🎮 Current Status
 
 ### July 13, 2025
-- **📈 Total Points**: 48 points across 8 completed stages
-- **🏆 Bonuses Achieved**: 5 Consecutive Stages (+10 points)
+- **📈 Total Points**: 45 points across 8 completed stages
+- **🏆 Bonuses Achieved**: 5 Consecutive Stages (+5 points)
 - **📊 Completion Rate**: 8/21 stages (38.1% complete)
 - **💪 My Strategy**: All GC mode so far - consistent and sustainable approach
 

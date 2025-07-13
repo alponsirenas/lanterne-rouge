@@ -385,17 +385,23 @@ def update_simulation_status():
         bonus_descriptions = []
         for bonus in bonuses_earned:
             if bonus == "consecutive_5":
-                bonus_points += 10
-                bonus_descriptions.append("5 Consecutive Stages (+10 points)")
+                bonus_points += 5
+                bonus_descriptions.append("5 Consecutive Stages (+5 points)")
             elif bonus == "consecutive_10":
-                bonus_points += 20
-                bonus_descriptions.append("10 Consecutive Stages (+20 points)")
-            elif bonus == "breakaway_specialist":
+                bonus_points += 10
+                bonus_descriptions.append("10 Consecutive Stages (+10 points)")
+            elif bonus == "breakaway_10_stages":
                 bonus_points += 15
                 bonus_descriptions.append("Breakaway Specialist (+15 points)")
-            elif bonus == "mountain_king":
-                bonus_points += 15
-                bonus_descriptions.append("Mountain King (+15 points)")
+            elif bonus == "all_mountains_breakaway":
+                bonus_points += 10
+                bonus_descriptions.append("Mountain King (+10 points)")
+            elif bonus == "final_week_complete":
+                bonus_points += 10
+                bonus_descriptions.append("Final Week Complete (+10 points)")
+            elif bonus == "all_gc_mode":
+                bonus_points += 25
+                bonus_descriptions.append("GC Mode Purist (+25 points)")
         
         bonus_text = ", ".join(bonus_descriptions) if bonus_descriptions else "None yet"
         
@@ -575,9 +581,6 @@ def main():
             
             # Update stage completion data if needed
             stage_data_updated = update_stage_data_if_completed()
-            
-            # Update the main simulation status
-            update_simulation_status()
             
             # Update all stage tabs based on current status
             update_all_stages()

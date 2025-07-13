@@ -79,11 +79,19 @@ jobs:
             echo "stage_completed=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Update TDF Documentation
+        if: steps.tdf-check.outputs.stage_completed == 'true'
+        env:
+          STRAVA_ATHLETE_ID: ${{ secrets.STRAVA_ATHLETE_ID }}
+        run: |
+          echo "Updating TDF documentation with latest stage completion..."
+          python scripts/integrate_tdf_docs.py
+
       - name: Commit TDF Points Update
         if: steps.tdf-check.outputs.stage_completed == 'true'
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'output/tdf_points.json output/*.txt output/*.csv docs/tdf-2025-sim/completion-summary/*.md'
+          add: 'output/tdf_points.json output/*.txt output/*.csv docs/tdf-2025-sim/completion-summary/*.md docs_src/tdf-simulation/stages/*.md docs_src/tdf-simulation/index.md mkdocs.yml'
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
           message: 'feat(tdf): stage completed - points and summary updated [skip ci]'

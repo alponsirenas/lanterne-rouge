@@ -50,10 +50,17 @@ jobs:
           USE_TWILIO: ${{ secrets.USE_TWILIO }}
         run: python scripts/morning_tdf_briefing.py
 
+      - name: Update TDF Documentation
+        env:
+          STRAVA_ATHLETE_ID: ${{ secrets.STRAVA_ATHLETE_ID }}
+        run: |
+          echo "Updating TDF documentation with morning briefing..."
+          python scripts/integrate_tdf_docs.py
+
       - name: Commit TDF Points Data
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'output/tdf_points.json output/*.txt output/*.csv'
+          add: 'output/tdf_points.json output/*.txt output/*.csv docs_src/tdf-simulation/stages/*.md docs_src/tdf-simulation/index.md mkdocs.yml'
           author_name: lanterne-rouge-tdf-bot
           author_email: tdf-bot@users.noreply.github.com
           message: 'feat(tdf): morning briefing and points update [skip ci]'
