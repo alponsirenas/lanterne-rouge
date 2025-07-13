@@ -11,6 +11,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Completed"
 
 	### 🎉 TDF Stage 3 Complete!
@@ -36,35 +42,6 @@
 	**Stage completed on:** July 7, 2025  
 	**Activity ID:** N/A
 
-=== "Recommended"
-	### 🏆 Stage 3 TDF Morning Briefing
-
-	**⛰️ Stage Type**: Hilly Punchy Stage
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 77/100
-	- TSB (Form): -19.0
-	- CTL (Fitness): 37.4
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 7
-	- **Rationale**: Readiness score of 77% supports steady climbing. GC mode allows measured effort on punchy climbs while staying with key groups.
-
-	#### 📈 Points Status:
-	- Current Total: 12 points
-	- Stages Completed: 2/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 2/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Positioning is key on the climbs. Stay near the front on the ascents to avoid getting gapped by sudden accelerations. Early Tour stages set the rhythm - establish your pattern and stay consistent.
 === "Planned"
 
 	### 🚴 Stage 3 Ride Options

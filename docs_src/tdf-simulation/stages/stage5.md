@@ -11,6 +11,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Completed"
 
 	### 🎉 TDF Stage 5 Complete!
@@ -38,35 +44,6 @@
 
 
 
-=== "Recommended"
-	### 🏆 Stage 5 TDF Morning Briefing
-
-	**⏱️ Stage Type**: Individual Time Trial
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 87/100
-	- TSB (Form): -23.0
-	- CTL (Fitness): 39.8
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 4
-	- **Rationale**: Readiness of 87% supports time trial intensity. GC pacing strategy maximizes points while managing fatigue for upcoming stages.
-
-	#### 📈 Points Status:
-	- Current Total: 24 points
-	- Stages Completed: 4/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 4/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Pure effort against the clock. Pace evenly, stay aero, and focus on smooth power delivery throughout. You're building good momentum in the simulation - maintain this approach.
 === "Planned"
 
 	### 🚴 Stage 5 Ride Options

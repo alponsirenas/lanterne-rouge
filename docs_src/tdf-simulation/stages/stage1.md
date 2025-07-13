@@ -11,6 +11,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Completed"
 
 	### 🎉 TDF Stage 1 Complete!
@@ -36,36 +42,6 @@
 	**Stage completed on:** July 07, 2025  
 	**Activity ID:** Test Data
 
-=== "Recommended"
-	### 🏆 Stage 1 TDF Morning Briefing
-
-	**🏁 Stage Type**: Flat Sprint Stage
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 83/100
-	- TSB (Form): -15.0
-	- CTL (Fitness): 35.0
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 5
-	- **Rationale**: With readiness at 83%, flat stage suits controlled GC riding. Focus on staying safe in the peloton while avoiding crashes and positioning issues.
-
-	#### 📈 Points Status:
-	- Current Total: 0 points
-	- Stages Completed: 0/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 0/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace. Early Tour stages set the rhythm - establish your pattern and stay consistent.
-	
 === "Planned"
 
 	### 🚴 Stage 1 Ride Options

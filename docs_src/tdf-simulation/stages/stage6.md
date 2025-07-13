@@ -11,6 +11,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Completed"
 
 	### 🎉 TDF Stage 6 Complete!
@@ -48,41 +54,6 @@
 	---
 	**Stage completed on:** 2025-07-11  
 	**Activity ID:** 15074897659
-
-=== "Recommended"
-
-	### 🏆 Stage 6 TDF Morning Briefing
-
-	**🏔️ Stage Type**: Mountain Stage
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 87/100
-	- TSB (Form): -13.9
-	- CTL (Fitness): 39.4
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Given the mountain stage type and your current readiness, opting for Breakaway Mode offers the best opportunity for maximizing points. Despite the inherent challenges of a mountain stage, your improved physiological state and the strategic importance of beginning to target the Breakaway Stages bonus make this an opportune moment to be more aggressive. This approach not only aims to secure the higher points available in Breakaway Mode but also positions you to start making progress towards the bonus for breakaway stages, which could be crucial in the later stages of the Tour.
-
-	#### 📈 Points Status:
-	- Current Total: 34 points
-	- Stages Completed: 5/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 5/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Today's decision to push in Breakaway Mode is a calculated move to leverage your current strengths and readiness, aiming for a high reward in terms of points and strategic bonuses. It's vital to manage your effort efficiently throughout the stage, pacing yourself on the climbs to ensure you can capitalize on your strengths without overextending. This aggressive stance is in line with your goal of maximizing points accumulation during this critical phase of the competition, while still keeping an eye on long-term sustainability.
-
-	!!! tip ""
-
-		🚀 Time to attack Stage 6! Your body is ready for an aggressive ride. Go get those bonus points!
 
 === "Planned"
 

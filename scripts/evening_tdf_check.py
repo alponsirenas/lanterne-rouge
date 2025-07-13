@@ -320,40 +320,70 @@ def generate_llm_stage_evaluation(stage_info, ride_mode, points_earned, total_po
         completion_percentage = (stage_number / total_stages) * 100
         
         # Build comprehensive system prompt
-        system_prompt = """You're a cycling coach giving a post-stage TDF debrief. Keep it personal, informative, and actionable.
+        system_prompt = """You're a cycling coach creating a stage completion summary in a specific markdown format.
 
-Write a brief evaluation (under 300 words) covering:
-1. How you performed today (mention specific power metrics)
-2. Your points position and strategy
-3. Recovery needs for tomorrow
-4. Quick motivation and what to focus on next
+Generate a completion summary following this EXACT format:
 
-Use "you/your" throughout. Be encouraging but realistic. Include relevant power data insights. Be specific about what the numbers tell us."""
+🎉 TDF Stage [NUMBER] Complete!
+
+🏔️ Stage Type: [TYPE]
+🚴 Mode Completed: [MODE]
+⭐ Points Earned: +[POINTS]
+📊 Total Points: [TOTAL]
+
+📈 Performance Metrics:
+• Duration: [X] minutes
+• Distance: [X] km
+• Average Power: [X]W
+• Weighted Power: [X]W
+• Average HR: [X] bpm
+• TSS: [X]
+• Effort Level: [ZONE]
+
+🏆 STAGE ANALYSIS:
+[Write 2-3 sentences about performance, mentioning specific metrics and how they relate to the stage type. Be encouraging and analytical.]
+
+[Write 1-2 sentences about points earned and total progress.]
+
+📊 Stages Completed: [NUMBER]/21
+
+Tomorrow: Next stage awaits!
+
+Keep crushing it! 🚀
+
+---
+Stage completed on: [DATE]
+Activity ID: [ACTIVITY_ID]
+
+Use the exact emoji placement and formatting. Be encouraging and data-driven in the analysis section."""
 
         # Build detailed user prompt
-        user_prompt = f"""STAGE {stage_number} COMPLETE! 
+        user_prompt = f"""Create a stage completion summary for Stage {stage_number}.
 
-Your Performance:
-• Mode: {ride_mode.upper()} (+{points_earned} points)
+Stage Data:
+• Stage Number: {stage_number}
+• Stage Type: {stage_type.title()}
+• Mode Completed: {ride_mode.upper()}
+• Points Earned: {points_earned}
 • Total Points: {total_points}
-• Power: {activity_data.get('normalized_power', 'N/A')}W, IF {activity_data.get('intensity_factor', 0):.2f}
-• Training Load: {activity_data.get('tss', 0):.0f} TSS
-• Duration: {activity_data.get('duration_minutes', 0):.0f} minutes
 
-Campaign Status:
-• Progress: {stage_number}/{total_stages} stages ({completion_percentage:.0f}% done)
-• Stages remaining: {stages_remaining}"""
+Performance Data:
+• Duration: {activity_data.get('duration_minutes', 0):.1f} minutes
+• Distance: {activity_data.get('distance_km', 0):.1f} km
+• Average Power: {activity_data.get('weighted_average_watts', activity_data.get('normalized_power', 'N/A'))}W
+• Weighted Power: {activity_data.get('normalized_power', 'N/A')}W
+• Average HR: {activity_data.get('average_heartrate', 'N/A')} bpm
+• TSS: {activity_data.get('tss', 0):.1f}
+• Effort Level: {activity_data.get('effort_level', 'N/A')}
 
-        if bonuses:
-            user_prompt += f"\n• BONUSES: {len(bonuses)} unlocked this stage! 🏆"
-        else:
-            user_prompt += "\n• No bonuses this stage"
+Additional Info:
+• Today's Date: {datetime.now().strftime('%Y-%m-%d')}
+• Activity ID: {activity_data.get('id', 'N/A')}
+• Stages Completed: {stage_number}
 
-        user_prompt += f"""
+Analysis Context: {rationale}
 
-Analysis: {rationale}
-
-Give me your quick coach debrief - how did I do and what's next?"""
+Generate the completion summary following the exact format specified in the system prompt."""
 
         messages = [
             {"role": "system", "content": system_prompt},
@@ -364,7 +394,13 @@ Give me your quick coach debrief - how did I do and what's next?"""
         response = call_llm(messages, model=os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview"))
         print("✅ LLM stage evaluation completed")
         
-        # Save LLM analysis for documentation integration
+        # Save completion summary in proper format
+        try:
+            save_completion_summary(stage_number, response)
+        except Exception as e:
+            print(f"⚠️  Could not save completion summary: {e}")
+        
+        # Also save a copy for backward compatibility in output directory
         try:
             output_dir = os.path.join(project_root, 'output')
             os.makedirs(output_dir, exist_ok=True)
@@ -374,26 +410,8 @@ Give me your quick coach debrief - how did I do and what's next?"""
         except Exception as e:
             print(f"⚠️  Could not save analysis: {e}")
         
-        # Format the response with header
-        evaluation = f"""🎉 TDF Stage {stage_number} Complete!
-{'=' * 50}
-
-{response}
-
-{'=' * 50}
-📊 STAGE SUMMARY:
-• Points Earned: +{points_earned}
-• Total Points: {total_points}
-• Mode: {ride_mode.upper()}
-• Progress: {stage_number}/{total_stages} stages
-"""
-        
-        if bonuses:
-            evaluation += "\n🏆 BONUSES UNLOCKED:\n"
-            for bonus in bonuses:
-                evaluation += f"   • {bonus['type']}: +{bonus['points']} points\n"
-                
-        return evaluation
+        # Return the formatted completion summary directly
+        return response
         
     except Exception as e:
         print(f"⚠️ LLM evaluation failed: {e}, using standard summary")
@@ -436,35 +454,19 @@ def generate_completion_summary(stage_info, ride_mode, points_earned, total_poin
 
 
 def save_completion_summary(stage_number: int, summary: str) -> str:
-    """Save completion summary to a markdown file"""
+    """Save completion summary to a markdown file in the new documentation structure"""
     try:
         # Create completion summary directory if it doesn't exist
-        summary_dir = Path("docs/tdf-2025-sim/completion-summary")
+        summary_dir = Path("docs_src/tdf-simulation/stages/completion-summary")
         summary_dir.mkdir(parents=True, exist_ok=True)
         
-        # Create filename with timestamp
-        completion_time = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        # Create filename
         filename = f"stage{stage_number}.md"
         filepath = summary_dir / filename
         
-        # Create markdown content with metadata
-        markdown_content = f"""# TDF Stage {stage_number} Completion Summary
-
-**Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Stage:** {stage_number}
-
----
-
-{summary}
-
----
-
-*Auto-generated by Lanterne Rouge TDF simulation system*
-"""
-        
-        # Write to file
+        # Write to file (summary already includes proper markdown format)
         with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(markdown_content)
+            f.write(summary)
         
         print(f"📄 Completion summary saved to: {filepath}")
         return str(filepath)

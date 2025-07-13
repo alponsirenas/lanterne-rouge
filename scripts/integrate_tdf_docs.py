@@ -91,13 +91,13 @@ def update_stage_tabs(stage_num, status):
     
     # Add appropriate tabs based on status
     if status == 'completed':
-        # Show all tabs: Completed (with fresh data), Recommended, Planned
+        # Show all tabs: Recommended, Completed (with fresh data), Planned
+        new_lines.extend(get_recommended_tab_content(stage_num))
         new_lines.extend(get_completed_tab_with_data(content, stage_num))
-        new_lines.extend(get_existing_tab_content(content, 'Recommended'))
         new_lines.extend(get_existing_tab_content(content, 'Planned'))
     elif status == 'current':
-        # Show Recommended, Planned (no Completed until stage is done)
-        new_lines.extend(get_existing_tab_content(content, 'Recommended'))
+        # Show Recommended (with current briefing), Planned (no Completed until stage is done)
+        new_lines.extend(get_recommended_tab_content(stage_num))
         new_lines.extend(get_existing_tab_content(content, 'Planned'))
     else:  # future
         # Show only Planned
@@ -211,6 +211,90 @@ def get_latest_evening_analysis(stage_num):
         pass
     
     return None
+
+
+def get_recommended_tab_content(stage_num):
+    """Generate Recommended tab with fresh morning briefing data."""
+    tab_lines = []
+    tab_lines.append('=== "Recommended"')
+    tab_lines.append('')
+    
+    # Try to read morning briefing file
+    briefing_file = Path("output/morning_tdf_briefing.txt")
+    if briefing_file.exists():
+        try:
+            with open(briefing_file, 'r') as f:
+                briefing_content = f.read().strip()
+            
+            # Check if this briefing is for the current stage
+            if f"Stage {stage_num} TDF Morning Briefing" in briefing_content:
+                # Get mission config to determine correct stage type
+                from lanterne_rouge.mission_config import bootstrap
+                try:
+                    mission_cfg = bootstrap("missions/tdf_sim_2025.toml")
+                    tdf_config = getattr(mission_cfg, 'tdf_simulation', {})
+                    stage_types = tdf_config.get('stages', {})
+                    correct_stage_type = stage_types.get(stage_num, 'flat')
+                    
+                    # Map stage types to display format
+                    stage_type_display = {
+                        'flat': 'Flat Stage',
+                        'hilly': 'Hilly Stage', 
+                        'mountain': 'Mountain Stage',
+                        'itt': 'Individual Time Trial',
+                        'mtn_itt': 'Mountain Time Trial'
+                    }
+                    display_type = stage_type_display.get(correct_stage_type, correct_stage_type.title())
+                    
+                    # Map stage types to emoji
+                    stage_emoji = {
+                        'flat': '🏁',
+                        'hilly': '⛰️',
+                        'mountain': '🏔️',
+                        'itt': '🕐',
+                        'mtn_itt': '🏔️'
+                    }
+                    emoji = stage_emoji.get(correct_stage_type, '🏁')
+                    
+                    # Replace incorrect stage type in briefing with correct one
+                    briefing_content = briefing_content.replace(
+                        "**🏔️ Stage Type**: Mountain Stage",
+                        f"**{emoji} Stage Type**: {display_type}"
+                    ).replace(
+                        "**⛰️ Stage Type**: Hilly Punchy Stage", 
+                        f"**{emoji} Stage Type**: {display_type}"
+                    )
+                    
+                except Exception as e:
+                    print(f"⚠️ Could not load mission config: {e}")
+                
+                # Indent the briefing content for markdown tabs
+                briefing_lines = briefing_content.split('\n')
+                for line in briefing_lines:
+                    if line.strip():
+                        tab_lines.append(f'\t{line}')
+                    else:
+                        tab_lines.append('')
+            else:
+                # No briefing for this stage, add placeholder
+                tab_lines.append('\t### 🏆 Morning Briefing')
+                tab_lines.append('')
+                tab_lines.append('\t*Briefing not yet available for this stage.*')
+                tab_lines.append('')
+        except Exception as e:
+            print(f"⚠️ Error reading briefing: {e}")
+            tab_lines.append('\t### 🏆 Morning Briefing')
+            tab_lines.append('')
+            tab_lines.append('\t*Error loading briefing data.*')
+            tab_lines.append('')
+    else:
+        # No briefing file, add placeholder
+        tab_lines.append('\t### 🏆 Morning Briefing')
+        tab_lines.append('')
+        tab_lines.append('\t*Morning briefing not yet available.*')
+        tab_lines.append('')
+    
+    return tab_lines
 
 
 def update_all_stages():

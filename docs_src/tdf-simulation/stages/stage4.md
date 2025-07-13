@@ -12,6 +12,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Completed"
 
 	### 🎉 TDF Stage 4 Complete!
@@ -37,35 +43,6 @@
 	**Stage completed on:** July 8, 2025  
 	**Activity ID:** 15052645086
 
-=== "Recommended"
-	### 🏆 Stage 4 TDF Morning Briefing
-
-	**🏁 Stage Type**: Flat Sprint Stage
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 78/100
-	- TSB (Form): -21.0
-	- CTL (Fitness): 38.6
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 5
-	- **Rationale**: With readiness at 78%, flat stage suits controlled GC riding. Focus on staying safe in the peloton while avoiding crashes and positioning issues.
-
-	#### 📈 Points Status:
-	- Current Total: 19 points
-	- Stages Completed: 3/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 3/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace. You're building good momentum in the simulation - maintain this approach.
 === "Planned"
 
 	### 🚴 Stage 4 Ride Options
