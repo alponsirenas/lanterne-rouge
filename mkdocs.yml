@@ -104,31 +104,31 @@ nav:
         - Stage 6: tdf-simulation/tdf-2025-hallucinations/stage6.md
         - Stage 7: tdf-simulation/tdf-2025-hallucinations/stage7.md
         - Stage 8: tdf-simulation/tdf-2025-hallucinations/stage8.md
-  - Documentation:
-      - documentation/index.md
-      - Getting Started:
-          - documentation/getting-started/index.md
-          - Quick Start: documentation/getting-started/quick-start.md
-          - Installation: documentation/getting-started/installation.md
-          - Configuration: documentation/getting-started/configuration.md
-      - Reference:
-          - documentation/reference/index.md
-          - Architecture: documentation/reference/architecture.md
-          - API Reference: documentation/reference/api.md
-          - Configuration Options: documentation/reference/configuration.md
-          - Power Analysis: documentation/reference/power-analysis.md
-      - User Guides:
-          - documentation/guides/index.md
-          - Daily Workflow: documentation/guides/daily-workflow.md
-          - Fiction Mode Setup: documentation/guides/fiction-mode-setup.md
-          - GitHub Actions: documentation/guides/github-actions.md
-          - Troubleshooting: documentation/guides/troubleshooting.md
-      - Development:
-          - documentation/development/index.md
-          - Contributing: documentation/contributing.md
-          - Project Structure: documentation/project-structure.md
-          - Testing: documentation/testing.md
-          - Release Notes: documentation/release-notes.md
+  # - Documentation:
+  #     - documentation/index.md
+  #     - Getting Started:
+  #         - documentation/getting-started/index.md
+  #         - Quick Start: documentation/getting-started/quick-start.md
+  #         - Installation: documentation/getting-started/installation.md
+  #         - Configuration: documentation/getting-started/configuration.md
+  #     - Reference:
+  #         - documentation/reference/index.md
+  #         - Architecture: documentation/reference/architecture.md
+  #         - API Reference: documentation/reference/api.md
+  #         - Configuration Options: documentation/reference/configuration.md
+  #         - Power Analysis: documentation/reference/power-analysis.md
+  #     - User Guides:
+  #         - documentation/guides/index.md
+  #         - Daily Workflow: documentation/guides/daily-workflow.md
+  #         - Fiction Mode Setup: documentation/guides/fiction-mode-setup.md
+  #         - GitHub Actions: documentation/guides/github-actions.md
+  #         - Troubleshooting: documentation/guides/troubleshooting.md
+  #     - Development:
+  #         - documentation/development/index.md
+  #         - Contributing: documentation/contributing.md
+  #         - Project Structure: documentation/project-structure.md
+  #         - Testing: documentation/testing.md
+  #         - Release Notes: documentation/release-notes.md
 extra:
   social:
     - icon: fontawesome/brands/github
