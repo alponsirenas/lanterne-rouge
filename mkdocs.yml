@@ -104,6 +104,7 @@ nav:
         - Stage 6: tdf-simulation/tdf-2025-hallucinations/stage6.md
         - Stage 7: tdf-simulation/tdf-2025-hallucinations/stage7.md
         - Stage 8: tdf-simulation/tdf-2025-hallucinations/stage8.md
+        - Stage 9: tdf-simulation/tdf-2025-hallucinations/stage9.md
     - icon: fontawesome/brands/github
       link: https://github.com/alponsirenas/lanterne-rouge
   version:

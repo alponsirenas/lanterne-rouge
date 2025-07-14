@@ -1,29 +1,29 @@
-	### 🏆 Stage 9 TDF Morning Briefing
+	### 🏆 Stage 10 TDF Morning Briefing
 
 	**🏔️ Stage Type**: Mountain Stage
 
 	#### 📊 Readiness Check:
-	- Readiness Score: 81/100
-	- TSB (Form): -11.8
-	- CTL (Fitness): 41.9
+	- Readiness Score: 77/100
+	- TSB (Form): -10.2
+	- CTL (Fitness): 42.1
 
 	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Choosing Breakaway Mode today aligns with the need to start accumulating points towards the 10 Breakaway Stages bonus and taking advantage of your current high readiness and improving TSB. Given that we're at Stage 9 and you have a stable physiological state, it's an opportune moment to go for higher points and bonuses, which could be pivotal for your overall standings. Additionally, engaging in a breakaway on a mountain stage can set a strong precedent for your performance capabilities and mental resilience.
+	- **Ride Mode**: GC
+	- **Expected Points**: 10
+	- **Rationale**: Considering the stage type and your current points position, opting for GC mode today is strategic. Although Breakaway mode offers higher points, it also comes with increased risk and exertion. Given that you've completed 4 consecutive stages and are approaching the halfway mark of the Tour, it's crucial to secure points steadily without compromising your recovery and readiness for upcoming stages. GC mode will allow you to collect base points, maintain a competitive position, and still be in contention for the bonus for 5 consecutive stages without unnecessarily draining your reserves.
 
 	#### 📈 Points Status:
-	- Current Total: 48 points
-	- Stages Completed: 8/21
+	- Current Total: 50 points
+	- Stages Completed: 9/21
 
 	#### 🏆 Bonus Opportunities:
 	- 10 Breakaway Stages
 	- All Mountains in Breakaway
 
 	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 3/5
+	- 5 consecutive: 4/5
 	- 10 breakaways: 0/10
 
 	#### 📝 Strategic Notes:
-	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
+	Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.
 
