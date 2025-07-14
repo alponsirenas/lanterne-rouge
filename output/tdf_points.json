@@ -1,9 +1,9 @@
 {
-  "total_points": 45,
-  "stages_completed": 8,
-  "consecutive_stages": 3,
+  "total_points": 50,
+  "stages_completed": 9,
+  "consecutive_stages": 4,
   "breakaway_count": 0,
-  "gc_count": 8,
+  "gc_count": 9,
   "mountain_breakaway_count": 0,
   "bonuses_earned": [
     "consecutive_5"
@@ -201,14 +201,46 @@
         "effort_level": "aerobic"
       },
       "activity_id": 15093826613
+    },
+    "2025-07-14": {
+      "stage_number": 9,
+      "stage_type": "flat",
+      "ride_mode": "gc",
+      "points_earned": 5,
+      "completed_at": "2025-07-14T00:55:26.690926",
+      "activity_data": {
+        "moving_time": 3601.0,
+        "distance": 24546.1,
+        "average_watts": 86.2,
+        "weighted_average_watts": 89.0,
+        "suffer_score": 77.0,
+        "intensity_factor": 0.695,
+        "average_heartrate": 138.0,
+        "max_heartrate": 150.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 6.816,
+        "max_speed": 7.62,
+        "name": "Peloton - 60 min Just Ride",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 60.016666666666666,
+        "distance_km": 24.5461,
+        "id": 15105024947,
+        "tss": 48.4,
+        "normalized_power": 89.0,
+        "effort_level": "aerobic"
+      },
+      "activity_id": 15105024947
     }
   },
-  "last_updated": "2025-07-13T01:34:14.593089",
+  "last_updated": "2025-07-14T00:55:26.690952",
   "used_activity_ids": [
     15052645086,
     15064156755,
     15074897659,
     15083897787,
-    15093826613
+    15093826613,
+    15105024947
   ]
 }
