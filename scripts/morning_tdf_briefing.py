@@ -32,6 +32,17 @@ def load_points_status():
 def generate_briefing():
     """Generate the morning TDF briefing using LLM-powered TourCoach."""
     try:
+        # Check for rest days first
+        today = date.today()
+        rest_days = [
+            date(2025, 7, 15),  # Rest Day 1 after Stage 10
+            date(2025, 7, 22),  # Rest Day 2 after Stage 16
+        ]
+        
+        if today in rest_days:
+            rest_day_num = rest_days.index(today) + 1
+            return f"🛌 Rest Day {rest_day_num} - No stage recommendation today\n\nEnjoy your recovery day! The Tour continues tomorrow."
+        
         # Get current metrics
         readiness, *_ = get_oura_readiness()
         ctl, atl, tsb = get_ctl_atl_tsb()
@@ -53,7 +64,6 @@ def generate_briefing():
         coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm, llm_model=llm_model)
         
         # Check if TDF is active - if not, fall back to regular coaching
-        today = date.today()
         if not coach._is_tdf_active(today):
             return f"TDF simulation not active today ({today}). TDF period: July 5-27, 2025"
         
