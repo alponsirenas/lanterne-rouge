@@ -19,13 +19,12 @@
 	
 	"Go with the early break, entertain the crowds, but expect to be caught for the sprint!"
 
-	- 3m @ 64W    (50%)   [Warm-up through Toulouse streets]
-	- 5m @ 115W   (90%)   [Attack for the breakaway, high intensity]
-	- 20m @ 109W  (85%)   [Sustained break tempo, IF target]
-	- 15m @ 112W  (87%)   [Working hard as sprinters' teams chase]
-	- 10m @ 102W  (80%)   [Break under pressure, gap closing]
-	- 5m @ 90W    (70%)   [Absorbed by peloton, recover]
-	- 2m @ 64W    (50%)   [Cool-down laps]
+	- 5m @ 96W    (75%)   [Controlled warm-up through Toulouse]
+	- 8m @ 118W   (92%)   [Attack for the breakaway, high intensity]
+	- 22m @ 115W  (90%)   [Sustained break tempo, IF target]
+	- 15m @ 118W  (92%)   [Working hard as sprinters' teams chase]
+	- 8m @ 112W   (87%)   [Final push, gap closing]
+	- 2m @ 102W   (80%)   [Absorbed by peloton]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 

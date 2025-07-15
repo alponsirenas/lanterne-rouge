@@ -19,22 +19,20 @@
 	
 	"Attack early, fight through the Alps, but beware the thin air at altitude!"
 
-	- 3m @ 64W    (50%)   [Alpine warm-up]
-	- 5m @ 118W   (92%)   [Early mountain attack, high intensity]
-	- 15m @ 109W  (85%)   [Steady to Madeleine, IF target]
-	- 8m @ 115W   (90%)   [Col de la Madeleine KOM]
-	- 5m @ 70W    (55%)   [Descent recovery]
-	- 20m @ 112W  (87%)   [Col de la Loze lower slopes]
-	- 4m @ 102W   (80%)   [Extreme altitude finish]
+	- 5m @ 96W    (75%)   [Alpine warm-up | Rolling start through Isère valley]
+	- 8m @ 122W   (95%)   [Early mountain attack | Attack before Col de la Madeleine]
+	- 18m @ 115W  (90%)   [Sustained to Madeleine | 17km climb to La Madeleine (1,993m)]
+	- 10m @ 118W  (92%)   [Col de la Madeleine KOM | Summit battle at 1,993m altitude]
+	- 3m @ 102W   (80%)   [Brief transition | Descent toward Courchevel valley]
+	- 16m @ 115W  (90%)   [Col de la Loze sustained climb | 11.7km to 2,304m - one of highest TDF finishes]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 
 	"Survive the altitude, climb steadily, don't blow up on this extreme finish."
 
-	- 3m @ 64W    (50%)   [Easy start]
-	- 12m @ 77W   (60%)   [Valley approach]
-	- 15m @ 80W   (62%)   [Controlled to mountains]
-	- 8m @ 87W    (68%)   [Madeleine survival]
-	- 5m @ 64W    (50%)   [Descent rest]
-	- 20m @ 83W   (65%)   [Loze steady ascent]
-	- 4m @ 77W    (60%)   [High altitude finish]
+	- 5m @ 77W    (60%)   [Controlled start | Valley approach through Tarentaise]
+	- 12m @ 83W   (65%)   [Valley approach, steady tempo | Building toward Madeleine base]
+	- 15m @ 90W   (70%)   [Approaching Madeleine, tempo pace | Lower slopes of 17km Madeleine climb]
+	- 10m @ 96W   (75%)   [Col de la Madeleine - GC pace | Summit push, stay with GC group]
+	- 3m @ 77W    (60%)   [Brief descent | Technical descent to Courchevel approach]
+	- 15m @ 93W   (73%)   [Col de la Loze - defend position | 11.7km at 8.5% to 2,304m summit]

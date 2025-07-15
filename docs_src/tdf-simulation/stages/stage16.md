@@ -17,22 +17,20 @@
 
 	#### 🏆 Breakaway Mode (60m @ FTP 128)
 	
-	"Attack early, survive to Ventoux, then climb into cycling legend!"
+	"Attack early, fight through Provence, then climb into cycling legend on Ventoux!"
 
-	- 3m @ 64W    (50%)   [Warm-up through Montpellier]
-	- 5m @ 118W   (92%)   [Early attack formation, high power]
-	- 20m @ 109W  (85%)   [Tempo through Provence, IF target]
-	- 3m @ 96W    (75%)   [Approach the Giant]
-	- 25m @ 115W  (90%)   [Mont Ventoux ascent, legendary climb]
-	- 4m @ 83W    (65%)   [Summit in moonscape]
+	- 5m @ 96W    (75%)   [Controlled warm-up | Nervous start from Montpellier]
+	- 8m @ 122W   (95%)   [Early attack formation | Sprint to join break before Provence hills]
+	- 22m @ 115W  (90%)   [Sustained tempo through Provence | Rolling Languedoc vineyards and garrigue]
+	- 3m @ 109W   (85%)   [Approach the Giant | Bédoin village, base of legendary Ventoux]
+	- 22m @ 118W  (92%)   [Mont Ventoux ascent | 21.8km at 7.4% - Bédoin > summit via forest then moonscape]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 
-	"Climb steadily up Ventoux, respect the mountain, minimize losses."
+	"Respect the Giant of Provence - climb steadily, survive Ventoux's brutality."
 
-	- 3m @ 64W    (50%)   [Easy rollout]
-	- 15m @ 77W   (60%)   [Controlled approach]
-	- 15m @ 80W   (62%)   [Steady to base]
-	- 3m @ 83W    (65%)   [Base of Ventoux]
-	- 25m @ 90W   (70%)   [Ventoux steady climb]
-	- 4m @ 70W    (55%)   [Summit recovery]
+	- 5m @ 77W    (60%)   [Controlled rollout | Easy start from Mediterranean Montpellier]
+	- 15m @ 83W   (65%)   [Steady approach tempo | Rolling through Provençal countryside]
+	- 15m @ 87W   (68%)   [Building to Ventoux base | Approaching Bédoin, tension rising]
+	- 5m @ 90W    (70%)   [Base of Ventoux | Start of 21.8km mythical climb]
+	- 20m @ 96W   (75%)   [Ventoux summit push | Through forest, then lunar landscape to weather station]

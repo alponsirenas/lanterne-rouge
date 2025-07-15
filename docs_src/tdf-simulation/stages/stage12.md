@@ -17,28 +17,26 @@
 
 	#### 🏆 Breakaway Mode (60m @ FTP 128)
 	
-	"Attack early, survive the climbs, fight for KOM points and stage glory!"
+	"Attack early, survive the Pyrenean giants, fight for KOM and Hautacam glory!"
 
-	- 3m @ 64W    (50%)   [Warm-up rollout]
-	- 5m @ 118W   (92%)   [Attack for early breakaway, high effort]
-	- 15m @ 109W  (85%)   [Steady tempo in the break, IF target]
-	- 6m @ 115W   (90%)   [Col d'Aspin KOM sprint]
-	- 3m @ 77W    (60%)   [Descent recovery]
-	- 5m @ 112W   (87%)   [Hourquette d'Ancizan push]
-	- 2m @ 70W    (55%)   [Brief valley section]
-	- 15m @ 115W  (90%)   [Hautacam final climb, KOM battle]
-	- 6m @ 102W   (80%)   [Summit finish, holding position]
+	- 5m @ 96W    (75%)   [Controlled warm-up | Rolling start from Auch through Gers farmland]
+	- 8m @ 118W   (92%)   [Early breakaway attack | Fight to get in break before mountains]
+	- 15m @ 115W  (90%)   [Sustained break tempo | Working together toward Col d'Aspin]
+	- 8m @ 118W   (92%)   [Col d'Aspin KOM battle | 12km at 7.1% - first HC climb]
+	- 2m @ 102W   (80%)   [Brief transition | Fast descent toward Arreau]
+	- 8m @ 115W   (90%)   [Hourquette d'Ancizan | 9.9km at 6.5% - second HC climb]
+	- 2m @ 102W   (80%)   [Valley transition | Final descent before Hautacam]
+	- 12m @ 118W  (92%)   [Hautacam final climb | 13.8km at 7.8% - legendary summit finish]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 
-	"Climb steadily, respond to attacks, limit losses on the mountain finish."
+	"Climb steadily through the Pyrenees, respond to attacks on iconic Hautacam."
 
-	- 3m @ 64W    (50%)   [Neutral start]
-	- 12m @ 77W   (60%)   [Peloton controlled pace]
-	- 15m @ 83W   (65%)   [Approaching climbs]
-	- 6m @ 90W    (70%)   [Col d'Aspin steady]
-	- 3m @ 70W    (55%)   [Descent]
-	- 5m @ 87W    (68%)   [Hourquette d'Ancizan]
-	- 2m @ 70W    (55%)   [Valley approach]
-	- 15m @ 96W   (75%)   [Hautacam - defend position]
-	- 4m @ 83W    (65%)   [Summit recovery]
+	- 5m @ 77W    (60%)   [Controlled start | Easy pace from Auch, saving energy]
+	- 12m @ 83W   (65%)   [Peloton steady tempo | Rolling approach through Hautes-Pyrénées]
+	- 15m @ 90W   (70%)   [Approaching climbs | Building rhythm for HC climbs ahead]
+	- 8m @ 96W    (75%)   [Col d'Aspin - GC group | 12km HC climb, stay with yellow jersey]
+	- 3m @ 77W    (60%)   [Descent recovery | Technical descent, recover for next climb]
+	- 5m @ 90W    (70%)   [Hourquette d'Ancizan | Second HC climb, control the pace]
+	- 2m @ 83W    (65%)   [Valley approach | Final valley before Hautacam]
+	- 10m @ 102W  (80%)   [Hautacam summit | 13.8km to iconic finish, limit time losses]

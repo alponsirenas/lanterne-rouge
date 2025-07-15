@@ -19,20 +19,17 @@
 	
 	"Go with the break, work the rolling hills, fight for the stage in Carcassonne!"
 
-	- 3m @ 64W    (50%)   [Warm-up]
-	- 5m @ 115W   (90%)   [Breakaway formation, high intensity]
-	- 25m @ 109W  (85%)   [Sustained tempo through hills, IF target]
-	- 10m @ 115W  (90%)   [Rolling climbs, intermediate sprints]
-	- 8m @ 112W   (87%)   [Final push to Carcassonne]
-	- 4m @ 83W    (65%)   [Cool-down in medieval city]
+	- 5m @ 96W    (75%)   [Controlled warm-up | Early nervous start from Muret]
+	- 8m @ 118W   (92%)   [Breakaway formation | Attack on first categorized climb]
+	- 25m @ 115W  (90%)   [Sustained tempo through hills | Working together over rolling Languedoc terrain]
+	- 12m @ 118W  (92%)   [Rolling climbs, intermediate sprints | Cat 3/4 climbs, fighting for KOM points]
+	- 5m @ 112W   (87%)   [Final push to Carcassonne | Downhill approach to medieval city]
 	
 	#### 🦺 GC Mode (55m @ FTP 128)
 
 	"Stay safe, manage the hills, let the breakaway take the stage while you recover."
 
-	- 3m @ 64W    (50%)   [Easy start]
-	- 12m @ 77W   (60%)   [Controlled peloton]
-	- 25m @ 80W   (62%)   [Steady through terrain]
-	- 10m @ 87W   (68%)   [Manage climbs]
-	- 3m @ 83W    (65%)   [Gentle finish]
-	- 2m @ 64W    (50%)   [Recovery cool-down]
+	- 5m @ 70W    (55%)   [Easy start | Relaxed rollout, let breakaway form]
+	- 15m @ 80W   (62%)   [Controlled peloton | Easy pace through Toulouse region]
+	- 25m @ 83W   (65%)   [Steady through rolling terrain | Peloton manages gap over undulating landscape]
+	- 10m @ 90W   (70%)   [Manage climbs, stay alert | Stay positioned on categorized climbs]

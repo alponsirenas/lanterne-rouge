@@ -19,22 +19,20 @@
 	
 	"Final mountain breakaway! Attack early, climb strong, finish the Alps with glory!"
 
-	- 3m @ 64W    (50%)   [Last Alpine warm-up]
-	- 5m @ 118W   (92%)   [Final mountain attack, maximum effort]
-	- 15m @ 109W  (85%)   [Alpine valley tempo, IF target]
-	- 8m @ 115W   (90%)   [Cormet de Roselend KOM]
-	- 3m @ 70W    (55%)   [Descent to La Plagne]
-	- 22m @ 115W  (90%)   [La Plagne final climb, legendary finish]
-	- 4m @ 83W    (65%)   [Alpine summit celebration]
+	- 5m @ 96W    (75%)   [Last Alpine warm-up]
+	- 8m @ 122W   (95%)   [Final mountain attack, maximum effort]
+	- 18m @ 115W  (90%)   [Alpine valley sustained tempo, IF target]
+	- 10m @ 118W  (92%)   [Cormet de Roselend KOM battle]
+	- 3m @ 102W   (80%)   [Brief transition to La Plagne]
+	- 16m @ 118W  (92%)   [La Plagne final climb, legendary finish]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 
 	"Last mountain defense - climb steadily, secure your final position."
 
-	- 3m @ 64W    (50%)   [Controlled start]
-	- 12m @ 77W   (60%)   [Easy valley riding]
-	- 15m @ 80W   (62%)   [Approach mountains]
-	- 8m @ 87W    (68%)   [Roselend steady]
-	- 3m @ 64W    (50%)   [Descent recovery]
-	- 22m @ 87W   (68%)   [La Plagne sustainable]
-	- 4m @ 70W    (55%)   [Final summit]
+	- 5m @ 77W    (60%)   [Controlled start]
+	- 12m @ 83W   (65%)   [Alpine valley tempo]
+	- 15m @ 87W   (68%)   [Approaching mountains]
+	- 10m @ 93W   (73%)   [Cormet de Roselend - GC pace]
+	- 3m @ 77W    (60%)   [Brief descent recovery]
+	- 15m @ 96W   (75%)   [La Plagne - final mountain battle]

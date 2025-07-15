@@ -19,26 +19,24 @@
 	
 	"Attack early, fight for KOM points, survive the Pyrenean marathon!"
 
-	- 3m @ 64W    (50%)   [Warm-up]
-	- 5m @ 118W   (92%)   [Early breakaway attack, high intensity]
-	- 12m @ 109W  (85%)   [Steady tempo to Tourmalet, IF target]
-	- 10m @ 115W  (90%)   [Col du Tourmalet KOM battle]
-	- 3m @ 70W    (55%)   [Descent recovery]
-	- 8m @ 112W   (87%)   [Col d'Aspin sustained effort]
-	- 2m @ 70W    (55%)   [Valley approach]
-	- 15m @ 115W  (90%)   [Luchon-Superbagnères final climb]
-	- 2m @ 90W    (70%)   [Summit recovery]
+	- 5m @ 96W    (75%)   [Controlled warm-up]
+	- 8m @ 122W   (95%)   [Early breakaway attack, maximum intensity]
+	- 15m @ 115W  (90%)   [Sustained tempo to Tourmalet, IF target]
+	- 12m @ 118W  (92%)   [Col du Tourmalet KOM battle]
+	- 2m @ 102W   (80%)   [Brief transition]
+	- 10m @ 115W  (90%)   [Col d'Aspin sustained effort]
+	- 2m @ 102W   (80%)   [Valley approach]
+	- 6m @ 118W   (92%)   [Luchon-Superbagnères final climb]
 	
 	#### 🦺 GC Mode (60m @ FTP 128)
 
 	"Survive the climbs, stay with the main group, limit losses on this monster stage."
 
-	- 3m @ 64W    (50%)   [Easy start]
-	- 8m @ 77W    (60%)   [Controlled peloton]
-	- 12m @ 80W   (62%)   [Steady to mountains]
-	- 10m @ 90W   (70%)   [Tourmalet survival]
-	- 3m @ 64W    (50%)   [Descent recovery]
-	- 8m @ 87W    (68%)   [Aspin steady]
-	- 2m @ 70W    (55%)   [Valley]
-	- 15m @ 93W   (73%)   [Final climb defense]
-	- 2m @ 77W    (60%)   [Summit done]
+	- 5m @ 77W    (60%)   [Controlled start]
+	- 10m @ 83W   (65%)   [Steady peloton tempo]
+	- 12m @ 87W   (68%)   [Approaching Tourmalet]
+	- 12m @ 96W   (75%)   [Tourmalet - GC group survival]
+	- 3m @ 77W    (60%)   [Descent recovery]
+	- 8m @ 90W    (70%)   [Aspin steady effort]
+	- 2m @ 80W    (62%)   [Valley transition]
+	- 8m @ 99W    (77%)   [Luchon-Superbagnères - respond to attacks]
