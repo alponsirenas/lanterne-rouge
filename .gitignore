@@ -16,3 +16,16 @@ tokens.json
 
 # MkDocs build output
 site/
+
+# Temporary/test files
+*_new.md
+*_backup.md
+test_*.py
+fix_*.py
+generate_*.py
+
+# Duplicate documentation files (should be in docs/ not root)
+LINTING_SUMMARY.md
+RELEASE_NOTES_*.md
+TDF_CLASSIFICATION_FIX_SUMMARY.md
+*_SUMMARY.md
