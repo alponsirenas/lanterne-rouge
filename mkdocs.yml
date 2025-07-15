@@ -30,8 +30,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.expand
+    - navigation.collapse
     - navigation.path
     - navigation.top
     - navigation.indexes
