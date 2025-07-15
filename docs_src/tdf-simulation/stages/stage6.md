@@ -51,9 +51,41 @@
 
 === "Recommended"
 
-	### 🏆 Morning Briefing
+	🏆 TDF Simulation - Stage 6
+	🏔️ Stage Type: Mountain Stage
+	==================================================
 
-	*Briefing not yet available for this stage.*
+	📊 READINESS CHECK:
+	• Readiness Score: 87/100
+	• TSB (Form): -13.9
+	• CTL (Fitness): 39.4
+
+	🎯 TODAY'S RECOMMENDATION:
+	• Ride Mode: BREAKAWAY
+	• Expected Points: 15
+	• Rationale: Given the mountain stage type and your current readiness, opting for Breakaway Mode offers the best opportunity for maximizing points. Despite the inherent challenges of a mountain stage, your improved physiological state and the strategic importance of beginning to target the Breakaway Stages bonus make this an opportune moment to be more aggressive. This approach not only aims to secure the higher points available in Breakaway Mode but also positions you to start making progress towards the bonus for breakaway stages, which could be crucial in the later stages of the Tour.
+
+	📈 POINTS STATUS:
+	• Current Total: 34 points
+	• Stages Completed: 5/21
+
+	🏆 BONUS OPPORTUNITIES:
+	• 10 Breakaway Stages
+	• All Mountains in Breakaway
+
+	🎖️ BONUS PROGRESS:
+	• 5 consecutive: 5/5
+	• 10 breakaways: 0/10
+
+	🧠 TRAINING STRATEGY:
+	• Training Focus: Push
+	• Intensity: High
+	• Reasoning: Your readiness score has shown a significant improvement, indicating that you're well-recovered and capable of handling a more demanding effort. Despite your TSB being negative, which suggests some underlying fatigue, the high readiness score compensates for this, allowing you to safely exert yourself more aggressively without risking your health. This push strategy aligns with the peak phase of your training, aiming to capitalize on your current physical condition to gain a competitive edge.
+
+	📝 STRATEGIC NOTES:
+	Today's decision to push in Breakaway Mode is a calculated move to leverage your current strengths and readiness, aiming for a high reward in terms of points and strategic bonuses. It's vital to manage your effort efficiently throughout the stage, pacing yourself on the climbs to ensure you can capitalize on your strengths without overextending. This aggressive stance is in line with your goal of maximizing points accumulation during this critical phase of the competition, while still keeping an eye on long-term sustainability.
+
+	🚀 Time to attack Stage 6! Your body is ready for an aggressive ride. Go get those bonus points!
 
 === "Planned"
 

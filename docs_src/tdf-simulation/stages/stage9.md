@@ -11,11 +11,69 @@
 
 ## Stage Report
 
+=== "Completed"
+
+	### 🎉 TDF Stage 9 Complete!
+
+	🏔️ Stage Type: Flat  
+	🚴 Mode Completed: GC  
+	⭐ Points Earned: +5  
+	📊 Total Points: 50
+
+	### 📈 Performance Metrics:
+	• Duration: 60.0 minutes  
+	• Distance: 24.5 km  
+	• Average Power: 89.0W  
+	• Weighted Power: 89.0W  
+	• Average HR: 138.0 bpm  
+	• TSS: 48.4  
+	• Effort Level: aerobic
+
+	### 🏆 STAGE ANALYSIS:
+	You've put in a solid effort that aligns well with a General Classification (GC) day. With an average power and weighted power both at 89.0W, alongside a consistent aerobic effort level, you've demonstrated good endurance and the ability to maintain a steady output. This is crucial for flat stages where maintaining speed and conserving energy for the final sprint are key. Your Training Stress Score (TSS) of 48.4 for a 60-minute ride further highlights your dedication to sustaining a moderate yet challenging pace throughout the stage.
+
+	The additional 5 points earned today continue to build your total points up to 50, marking a significant milestone in your Tour de France journey. Your consistent performance and strategic point accumulation are setting a strong foundation for the remaining stages.
+
+	📊 Stages Completed: 9/21
+
+	Tomorrow: Next stage awaits!
+
+	Keep crushing it! 🚀
+
+	---
+	Stage completed on: 2025-07-14  
+	Activity ID: 15105024947
+
 === "Recommended"
 
-	### 🏆 Morning Briefing
+	### 🏆 Stage 9 TDF Morning Briefing
 
-	*Briefing not yet available for this stage.*
+	**🏔️ Stage Type**: Flat
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 81/100
+	- TSB (Form): -11.8
+	- CTL (Fitness): 41.9
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 15
+	- **Rationale**: Choosing Breakaway Mode for today's flat stage aligns with your current physiological state, which is primed for a higher intensity effort. With your readiness high and TSB nearing a balanced state, you are well-positioned to take on the added challenge and stress of a breakaway. This aggressive approach not only plays to your current strengths but also offers the potential for higher points and bonus opportunities, which are crucial for improving your overall standing in the simulation.
+
+	#### 📈 Points Status:
+	- Current Total: 48 points
+	- Stages Completed: 8/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 3/5
+	- 10 breakaways: 0/10
+
+	#### 📝 Strategic Notes:
+	Flat stages reward positioning and timing. Get in the break early and use crosswinds to your advantage.
 
 === "Planned"
 

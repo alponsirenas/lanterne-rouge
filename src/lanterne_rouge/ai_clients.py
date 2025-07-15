@@ -352,15 +352,15 @@ class CommunicationAgent:
         sections.append(stage_section)
 
         # 2. Current Metrics & Recommendation
-        metrics_section = self._generate_tdf_metrics_summary(metrics, tdf_decision)
+        metrics_section = self._generate_tdf_metrics_summary(metrics, tdf_decision, stage_info)
         sections.append(metrics_section)
 
         # 3. Points Strategy
-        points_section = self._generate_tdf_points_summary(tdf_decision, points_status, config)
+        points_section = self._generate_tdf_points_summary(tdf_decision, points_status, config, stage_info)
         sections.append(points_section)
 
         # 4. Reasoning & Strategy
-        reasoning_section = self._generate_tdf_reasoning_summary(tdf_decision)
+        reasoning_section = self._generate_tdf_reasoning_summary(tdf_decision, stage_info)
         sections.append(reasoning_section)
 
         # 5. Motivational close
@@ -371,6 +371,17 @@ class CommunicationAgent:
 
     def _generate_tdf_stage_header(self, stage_info: Dict[str, Any], tdf_decision) -> str:
         """Generate TDF stage header matching documentation format."""
+        # Handle rest days first
+        if stage_info.get('is_rest_day', False):
+            rest_day_number = stage_info.get('rest_day_number', 1)
+            lines = [
+                f"\t### 🛌 Rest Day {rest_day_number} - Recovery Time",
+                "",
+                f"\t**💤 Rest Day**: Active Recovery & Mental Reset"
+            ]
+            return "\n".join(lines)
+        
+        # Handle regular stages
         stage_number = stage_info.get('number', 1)
         stage_type = stage_info.get('type', 'flat')
 
@@ -392,24 +403,60 @@ class CommunicationAgent:
 
         return "\n".join(lines)
 
-    def _generate_tdf_metrics_summary(self, metrics: Dict[str, Any], tdf_decision) -> str:
+    def _generate_tdf_metrics_summary(self, metrics: Dict[str, Any], tdf_decision, stage_info: Dict[str, Any] = None) -> str:
         """Generate TDF metrics and recommendation summary matching documentation format."""
-        lines = [
-            "\t#### 📊 Readiness Check:",
-            f"\t- Readiness Score: {metrics.get('readiness_score', 'N/A')}/100",
-            f"\t- TSB (Form): {metrics.get('tsb', 'N/A')}",
-            f"\t- CTL (Fitness): {metrics.get('ctl', 'N/A')}",
-            "",
-            "\t#### 🎯 Today's Recommendation:",
-            f"\t- **Ride Mode**: {tdf_decision.recommended_ride_mode.upper()}",
-            f"\t- **Expected Points**: {tdf_decision.expected_points}",
-            f"\t- **Rationale**: {tdf_decision.mode_rationale}"
-        ]
+        # Handle rest days differently
+        if stage_info and stage_info.get('is_rest_day', False):
+            lines = [
+                "\t#### 📊 Recovery Focus:",
+                f"\t- Readiness Score: {metrics.get('readiness_score', 'N/A')}/100",
+                f"\t- TSB (Form): {metrics.get('tsb', 'N/A')}",
+                f"\t- CTL (Fitness): {metrics.get('ctl', 'N/A')}",
+                "",
+                "\t#### 🛌 Today's Recovery Plan:",
+                "\t- **Activity**: Light active recovery or complete rest",
+                "\t- **Focus**: Nutrition, hydration, and mental reset",
+                "\t- **Duration**: Easy 30-60 minutes (optional) or full rest"
+            ]
+        else:
+            lines = [
+                "\t#### 📊 Readiness Check:",
+                f"\t- Readiness Score: {metrics.get('readiness_score', 'N/A')}/100",
+                f"\t- TSB (Form): {metrics.get('tsb', 'N/A')}",
+                f"\t- CTL (Fitness): {metrics.get('ctl', 'N/A')}",
+                "",
+                "\t#### 🎯 Today's Recommendation:",
+                f"\t- **Ride Mode**: {tdf_decision.recommended_ride_mode.upper()}",
+                f"\t- **Expected Points**: {tdf_decision.expected_points}",
+                f"\t- **Rationale**: {tdf_decision.mode_rationale}"
+            ]
 
         return "\n".join(lines)
 
-    def _generate_tdf_points_summary(self, tdf_decision, points_status: Dict[str, Any], config) -> str:
+    def _generate_tdf_points_summary(self, tdf_decision, points_status: Dict[str, Any], config, stage_info: Dict[str, Any] = None) -> str:
         """Generate points and bonus summary matching documentation format."""
+        # Handle rest days differently - still show real progress
+        if stage_info and stage_info.get('is_rest_day', False):
+            # Show real bonus progress on rest days too
+            consecutive = points_status.get('consecutive_stages', 0)
+            breakaway_count = points_status.get('breakaway_count', 0)
+            
+            lines = [
+                "\t#### 📊 Current Status:",
+                f"\t- Total Points: {points_status.get('total_points', 0)} points",
+                f"\t- Stages Completed: {points_status.get('stages_completed', 0)}/21",
+                "",
+                "\t#### 🏆 Bonus Opportunities:",
+                "\t- 10 Breakaway Stages",
+                "\t- All Mountains in Breakaway",
+                "",
+                "\t#### 🎖️ Bonus Progress:",
+                f"\t- 5 consecutive: {consecutive}/5",
+                f"\t- 10 breakaways: {breakaway_count}/10"
+            ]
+            return "\n".join(lines)
+        
+        # Regular stage points summary
         lines = [
             "\t#### 📈 Points Status:",
             f"\t- Current Total: {points_status.get('total_points', 0)} points",
@@ -433,9 +480,23 @@ class CommunicationAgent:
 
         return "\n".join(lines)
 
-    def _generate_tdf_reasoning_summary(self, tdf_decision) -> str:
+    def _generate_tdf_reasoning_summary(self, tdf_decision, stage_info: Dict[str, Any] = None) -> str:
         """Generate TDF reasoning summary matching documentation format."""
-        # Generate strategic notes based on stage type and mode
+        # Handle rest days differently
+        if stage_info and stage_info.get('is_rest_day', False):
+            lines = [
+                "\t#### 🧘 Recovery Strategy:",
+                "\tToday is an official rest day in the Tour de France. Focus on recovery, mental reset, and preparing for the stages ahead. This is crucial for maintaining performance over the full three weeks.",
+                "",
+                "\t#### 💡 Rest Day Tips:",
+                "\t- Light stretching or easy walking",
+                "\t- Proper nutrition and hydration",
+                "\t- Mental preparation for upcoming stages",
+                "\t- Equipment check and maintenance"
+            ]
+            return "\n".join(lines)
+        
+        # Generate strategic notes based on stage type and mode for regular stages
         stage_type = getattr(tdf_decision, 'stage_type', 'flat')
         ride_mode = tdf_decision.recommended_ride_mode
         

@@ -40,9 +40,41 @@
 
 === "Recommended"
 
-	### 🏆 Morning Briefing
+	🏆 TDF Simulation - Stage 5
+	🏔️ Stage Type: Hilly Stage
+	==================================================
 
-	*Briefing not yet available for this stage.*
+	📊 READINESS CHECK:
+	• Readiness Score: 78/100
+	• TSB (Form): -9.8
+	• CTL (Fitness): 38.0
+
+	🎯 TODAY'S RECOMMENDATION:
+	• Ride Mode: BREAKAWAY
+	• Expected Points: 11
+	• Rationale: Choosing breakaway mode for today's stage is based on several factors: your solid readiness score, the completion of your fifth consecutive stage which offers a bonus, and the hilly profile which suits an aggressive strategy. This mode not only maximizes your potential points gain but also positions you to take advantage of the situation by targeting the bonus for 5 consecutive stages. It's a calculated risk that aligns with your current condition and the competition's strategic landscape.
+
+	📈 POINTS STATUS:
+	• Current Total: 36 points
+	• Stages Completed: 5/21
+
+	🏆 BONUS OPPORTUNITIES:
+	• 5 Consecutive Stages
+	• 10 Breakaway Stages
+
+	🎖️ BONUS PROGRESS:
+	• 5 consecutive: 5/5
+	• 10 breakaways: 0/10
+
+	🧠 TRAINING STRATEGY:
+	• Training Focus: Push
+	• Intensity: High
+	• Reasoning: Given your current readiness score of 78, which indicates a strong physiological state, and considering today is a hilly stage which aligns well with the opportunity to gain bonus points from completing 5 consecutive stages, it's time to leverage your current form. Although your TSB is -9.8, showing you're carrying some fatigue, your consistent readiness scores and the strategic point in the competition suggest you can handle a more aggressive approach today.
+
+	📝 STRATEGIC NOTES:
+	Given we're in the early phases of the competition with many stages ahead, it's crucial to balance the pursuit of points with managing fatigue. Today's push in breakaway mode is a strategic decision to capitalize on your current readiness and the stage's characteristics. Keep a close eye on recovery post-stage to mitigate any potential negative impacts on your TSB. This aggressive move is designed to build a stronger points foundation while still early in the Tour, setting you up for a more flexible strategy in the stages to come.
+
+	🚀 Time to attack Stage 5! Your body is ready for an aggressive ride. Go get those bonus points!
 
 === "Planned"
 

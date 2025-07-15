@@ -34,6 +34,12 @@ start_date = 2025-07-05
 end_date = 2025-07-27
 total_stages = 21
 
+# Official rest days during the 2025 Tour de France
+rest_days = [
+    "2025-07-15",  # Rest Day 1 after Stage 10
+    "2025-07-22"   # Rest Day 2 after Stage 16
+]
+
 # Stage schedule with types - OFFICIAL 2025 Tour de France
 [tdf_simulation.stages]
 1 = "flat"     # FLAT: Lille Métropole > Lille Métropole (184.9km)

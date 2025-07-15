@@ -418,13 +418,27 @@ COMMUNICATION STYLE:
 - Explain WHY this strategy helps their TDF campaign
 - Balance performance with safety"""
 
-            # Build user prompt
+            # Build user prompt with rest day check
+            rest_day_info = ""
+            if tdf_data and tdf_data.get('is_rest_day'):
+                rest_day_num = tdf_data.get('rest_day_number', 1)
+                rest_day_info = f"""
+
+🛌 IMPORTANT: TODAY IS REST DAY {rest_day_num}
+- This is an official Tour de France rest day
+- NO stage recommendation should be given
+- Focus on recovery, analysis, and strategic planning
+- Recommended ride mode: REST (0 points)
+- Provide recovery advice and preparation for tomorrow's stage"""
+
             user_prompt = f"""My current metrics:
 {json.dumps(metrics, indent=2)}
 
 {training_context}
 
 {tdf_context}
+
+{rest_day_info}
 
 My recent training history:
 {json.dumps(recent_memories[-5:], indent=2) if recent_memories else "No recent history available"}

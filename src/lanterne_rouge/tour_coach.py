@@ -149,6 +149,19 @@ class TourCoach:
             if current_date < start_date or (end_date and current_date > end_date):
                 return None
 
+            # Check for rest days first
+            rest_days = []
+            if 'rest_days' in tdf_config:
+                rest_days = [date.fromisoformat(day) for day in tdf_config.get('rest_days', [])]
+            
+            if current_date in rest_days:
+                rest_day_number = rest_days.index(current_date) + 1
+                return {
+                    'is_rest_day': True,
+                    'rest_day_number': rest_day_number,
+                    'date': current_date
+                }
+
             # Use TDFTracker to get the next expected stage number
             from lanterne_rouge.tdf_tracker import TDFTracker
             tracker = TDFTracker()
@@ -165,7 +178,8 @@ class TourCoach:
             return {
                 'number': stage_number,
                 'type': stage_type,
-                'date': current_date
+                'date': current_date,
+                'is_rest_day': False
             }
         except (AttributeError, TypeError, ValueError):
             return None
