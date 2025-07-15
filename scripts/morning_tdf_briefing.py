@@ -38,31 +38,32 @@ def generate_briefing():
             date(2025, 7, 15),  # Rest Day 1 after Stage 10
             date(2025, 7, 22),  # Rest Day 2 after Stage 16
         ]
-        
+
         if today in rest_days:
             rest_day_num = rest_days.index(today) + 1
-            return f"🛌 Rest Day {rest_day_num} - No stage recommendation today\n\nEnjoy your recovery day! The Tour continues tomorrow."
-        
+            return (f"🛌 Rest Day {rest_day_num} - No stage recommendation today\n\n"
+                    "Enjoy your recovery day! The Tour continues tomorrow.")
+
         # Get current metrics
         readiness, *_ = get_oura_readiness()
         ctl, atl, tsb = get_ctl_atl_tsb()
-        
+
         metrics = {
             "readiness_score": readiness,
             "ctl": ctl,
             "atl": atl,
             "tsb": tsb
         }
-        
+
         # Load mission configuration
         mission_cfg = bootstrap("missions/tdf_sim_2025.toml")
-        
+
         # Create LLM-powered TourCoach
         use_llm = os.getenv("USE_LLM_REASONING", "true").lower() == "true"
         llm_model = os.getenv("OPENAI_MODEL", "gpt-4-turbo-preview")
-        
+
         coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm, llm_model=llm_model)
-        
+
         # Check if TDF is active - if not, fall back to regular coaching
         if not coach._is_tdf_active(today):
             return f"TDF simulation not active today ({today}). TDF period: July 5-27, 2025"
