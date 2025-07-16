@@ -46,34 +46,9 @@
 
 === "Recommended"
 
-	### 🏆 Stage 9 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏔️ Stage Type**: Flat
-
-	#### 📊 Readiness Check:
-	- Readiness Score: 81/100
-	- TSB (Form): -11.8
-	- CTL (Fitness): 41.9
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Choosing Breakaway Mode for today's flat stage aligns with your current physiological state, which is primed for a higher intensity effort. With your readiness high and TSB nearing a balanced state, you are well-positioned to take on the added challenge and stress of a breakaway. This aggressive approach not only plays to your current strengths but also offers the potential for higher points and bonus opportunities, which are crucial for improving your overall standing in the simulation.
-
-	#### 📈 Points Status:
-	- Current Total: 48 points
-	- Stages Completed: 8/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 3/5
-	- 10 breakaways: 0/10
-
-	#### 📝 Strategic Notes:
-	Flat stages reward positioning and timing. Get in the break early and use crosswinds to your advantage.
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 

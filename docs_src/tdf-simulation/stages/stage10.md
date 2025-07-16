@@ -47,34 +47,9 @@
 	
 === "Recommended"
 
-	### 🏆 Stage 10 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-    **🏔️ Stage Type**: Mountain Stage
-
-    #### 📊 Readiness Check:
-    - Readiness Score: 77/100
-    - TSB (Form): -10.2
-    - CTL (Fitness): 42.1
-
-    #### 🎯 Today's Recommendation:
-    - **Ride Mode**: GC
-    - **Expected Points**: 10
-    - **Rationale**: Considering the stage type and your current points position, opting for GC mode today is strategic. Although Breakaway mode offers higher points, it also comes with increased risk and exertion. Given that you've completed 4 consecutive stages and are approaching the halfway mark of the Tour, it's crucial to secure points steadily without compromising your recovery and readiness for upcoming stages. GC mode will allow you to collect base points, maintain a competitive position, and still be in contention for the bonus for 5 consecutive stages without unnecessarily draining your reserves.
-
-    #### 📈 Points Status:
-    - Current Total: 50 points
-    - Stages Completed: 9/21
-
-    #### 🏆 Bonus Opportunities:
-    - 10 Breakaway Stages
-    - All Mountains in Breakaway
-
-    #### 🎖️ Bonus Progress:
-    - 5 consecutive: 4/5
-    - 10 breakaways: 0/10
-
-    #### 📝 Strategic Notes:
-    Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 

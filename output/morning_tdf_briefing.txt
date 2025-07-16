@@ -1,19 +1,19 @@
-	### 🛌 Rest Day 1 - Recovery Time
+	### 🏆 Stage 11 TDF Morning Briefing
 
-	**💤 Rest Day**: Active Recovery & Mental Reset
+	**🏁 Stage Type**: Flat Sprint Stage
 
-	#### 📊 Recovery Focus:
+	#### 📊 Readiness Check:
 	- Readiness Score: 80/100
-	- TSB (Form): -20.4
-	- CTL (Fitness): 45.0
+	- TSB (Form): -6.1
+	- CTL (Fitness): 43.0
 
-	#### 🛌 Today's Recovery Plan:
-	- **Activity**: Light active recovery or complete rest
-	- **Focus**: Nutrition, hydration, and mental reset
-	- **Duration**: Easy 30-60 minutes (optional) or full rest
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: GC
+	- **Expected Points**: 5
+	- **Rationale**: Choosing the GC mode for today's flat stage aligns with our strategy to consistently score points while managing your effort. It's a strategic choice that allows you to add to your total points without the high risk and high energy expenditure of a breakaway attempt. This approach keeps you in a solid position in the overall standings while conserving your energy for upcoming stages where we might see more strategic opportunities to make significant gains.
 
-	#### 📊 Current Status:
-	- Total Points: 65 points
+	#### 📈 Points Status:
+	- Current Total: 65 points
 	- Stages Completed: 10/21
 
 	#### 🏆 Bonus Opportunities:
@@ -24,12 +24,6 @@
 	- 5 consecutive: 5/5
 	- 10 breakaways: 1/10
 
-	#### 🧘 Recovery Strategy:
-	Today is an official rest day in the Tour de France. Focus on recovery, mental reset, and preparing for the stages ahead. This is crucial for maintaining performance over the full three weeks.
-
-	#### 💡 Rest Day Tips:
-	- Light stretching or easy walking
-	- Proper nutrition and hydration
-	- Mental preparation for upcoming stages
-	- Equipment check and maintenance
+	#### 📝 Strategic Notes:
+	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace.
 

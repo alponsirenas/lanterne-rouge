@@ -50,34 +50,9 @@
 
 === "Recommended"
 
-	### 🏆 Stage 7 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-    **� Stage Type**: Flat Sprint Stage
-
-    #### 📊 Readiness Check:
-    - Readiness Score: 82/100
-    - TSB (Form): -21.0
-    - CTL (Fitness): 41.9
-
-    #### 🎯 Today's Recommendation:
-    - **Ride Mode**: GC
-    - **Expected Points**: 5
-    - **Rationale**: Given your current state, with a high readiness but a negative TSB, opting for the GC mode is the most strategic choice for today's flat stage. It allows you to score base points without the additional stress on your body that a breakaway effort might incur. This choice aligns with the long-term strategy of maintaining a good position in the overall standings while managing your energy and recovery needs. It's about playing the long game, ensuring you're in prime condition for stages where aggressive efforts can yield even greater rewards.
-
-    #### 📈 Points Status:
-    - Current Total: 38 points
-    - Stages Completed: 6/21
-	
-	#### 🏆 Bonus Opportunities:
-    - 10 Breakaway Stages
-    - All Mountains in Breakaway
-
-    #### 🎖️ Bonus Progress:
-    - 5 consecutive: 1/5
-    - 10 breakaways: 0/10
-
-    #### 📝 Strategic Notes:
-    Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace.
+	*Briefing not yet available for this stage.*
 
 === "Planned"
 
