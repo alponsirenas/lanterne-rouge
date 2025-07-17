@@ -11,6 +11,36 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Stage 12 TDF Morning Briefing
+
+	**🏁 Stage Type**: Flat Stage
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 89/100
+	- TSB (Form): -14.1
+	- CTL (Fitness): 45.2
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: GC
+	- **Expected Points**: 10
+	- **Rationale**: Given the mountain stage and your current physiological state, GC Mode is recommended. This mode will allow you to focus on achieving base points without the added pressure of breakaway attempts, which might be riskier given your current fatigue levels. The strategic aim is to solidify your position in the general classification while keeping an eye on recovery, ensuring you're in peak condition for the final week of the Tour.
+
+	#### 📈 Points Status:
+	- Current Total: 73 points
+	- Stages Completed: 11/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 6/5
+	- 10 breakaways: 2/10
+
+	#### 📝 Strategic Notes:
+	Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.
 === "Planned"
 
 	### 🚴 Stage 12 Ride Options

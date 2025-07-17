@@ -13,34 +13,10 @@
 
 === "Recommended"
 
-	### 🏆 Stage 11 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏁 Stage Type**: Flat Sprint Stage
+	*Briefing not yet available for this stage.*
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 80/100
-	- TSB (Form): -6.1
-	- CTL (Fitness): 43.0
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 5
-	- **Rationale**: Choosing the GC mode for today's flat stage aligns with our strategy to consistently score points while managing your effort. It's a strategic choice that allows you to add to your total points without the high risk and high energy expenditure of a breakaway attempt. This approach keeps you in a solid position in the overall standings while conserving your energy for upcoming stages where we might see more strategic opportunities to make significant gains.
-
-	#### 📈 Points Status:
-	- Current Total: 65 points
-	- Stages Completed: 10/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 5/5
-	- 10 breakaways: 1/10
-
-	#### 📝 Strategic Notes:
-	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace.
 === "Planned"
 
 	### 🚴 Stage 11 Ride Options
