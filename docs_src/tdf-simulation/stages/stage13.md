@@ -11,6 +11,36 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Stage 13 TDF Morning Briefing
+
+	**⏱️ Stage Type**: Individual Time Trial
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 86/100
+	- TSB (Form): -18.0
+	- CTL (Fitness): 46.7
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 6
+	- **Rationale**: Given the ITT stage type and your current total points standing, choosing Breakaway Mode allows you to gain maximum points today. ITT stages are unique opportunities where your effort alone determines your result, making it a prime day for a high-intensity effort. This approach not only aims for the stage win but also strategically places you to capitalize on bonus opportunities, moving closer to your overall Tour de France simulation goals.
+
+	#### 📈 Points Status:
+	- Current Total: 88 points
+	- Stages Completed: 12/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 1/5
+	- 10 breakaways: 3/10
+
+	#### 📝 Strategic Notes:
+	Time to take risks! Ride above threshold early and see if you can post a surprise result.
 === "Planned"
 
 	### 🚴 Stage 13 Ride Options
