@@ -247,25 +247,26 @@ What's your verdict - was this a GC effort, breakaway attempt, or recovery ride?
     gc_if_threshold = detection_config.get('gc_intensity_threshold', 0.70)
     gc_tss_threshold = detection_config.get('gc_tss_threshold', 40)
     
-    # Time trials use different logic - always "gc" mode, focus on sustained effort
-    if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
-        ride_mode = "gc"  # Time trials are always individual effort
-        if intensity_factor >= 0.80:
-            rationale = f"Excellent time trial! Your sustained IF {intensity_factor:.2f} and TSS {tss:.0f} show perfect TT pacing in the {effort_level} zone."
-        elif intensity_factor >= 0.70:
-            rationale = f"Solid time trial effort! IF {intensity_factor:.2f}, TSS {tss:.0f} - good sustained power against the clock."
-        else:
-            rationale = f"Conservative TT approach! IF {intensity_factor:.2f}, TSS {tss:.0f} - smart pacing for the distance."
-    # Power-based classification for mass start stages
-    elif intensity_factor >= breakaway_if_threshold and tss >= breakaway_tss_threshold:
+    # Power-based classification applies to ALL stage types, including time trials
+    # Use smart logic: high IF for shorter efforts, or high TSS for longer efforts
+    if intensity_factor >= breakaway_if_threshold and (tss >= breakaway_tss_threshold or duration_minutes < 60):
         ride_mode = "breakaway"
-        rationale = f"You nailed a breakaway effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show you pushed hard in the {effort_level} zone."
+        if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+            rationale = f"Breakaway-intensity time trial! Your sustained IF {intensity_factor:.2f} and TSS {tss:.0f} show aggressive TT effort in the {effort_level} zone."
+        else:
+            rationale = f"You nailed a breakaway effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show you pushed hard in the {effort_level} zone."
     elif intensity_factor >= gc_if_threshold and tss >= gc_tss_threshold:
         ride_mode = "gc"
-        rationale = f"Solid GC effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show consistent {effort_level} zone riding."
+        if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+            rationale = f"Solid time trial effort! IF {intensity_factor:.2f}, TSS {tss:.0f} - good sustained power against the clock in {effort_level} zone."
+        else:
+            rationale = f"Solid GC effort! Your IF {intensity_factor:.2f} and TSS {tss:.0f} show consistent {effort_level} zone riding."
     elif intensity_factor >= gc_if_threshold or tss >= gc_tss_threshold:
         ride_mode = "gc"
-        rationale = f"Good steady effort! IF {intensity_factor:.2f}, TSS {tss:.0f} in {effort_level} zone - smart pacing."
+        if stage_info.get('type') in ['itt', 'mtn_itt', 'tt', 'time_trial']:
+            rationale = f"Conservative TT approach! IF {intensity_factor:.2f}, TSS {tss:.0f} - smart pacing for the distance in {effort_level} zone."
+        else:
+            rationale = f"Good steady effort! IF {intensity_factor:.2f}, TSS {tss:.0f} in {effort_level} zone - smart pacing."
     else:
         # Fallback to suffer score if power data is insufficient
         suffer_score = activity_data.get("suffer_score", 0) or 0
