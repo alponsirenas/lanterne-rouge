@@ -1,29 +1,29 @@
-	### 🏆 Stage 13 TDF Morning Briefing
+	### 🏆 Stage 14 TDF Morning Briefing
 
-	**⏱️ Stage Type**: Individual Time Trial
+	**🏔️ Stage Type**: Mountain Stage
 
 	#### 📊 Readiness Check:
-	- Readiness Score: 86/100
-	- TSB (Form): -18.0
-	- CTL (Fitness): 46.7
+	- Readiness Score: 81/100
+	- TSB (Form): -14.6
+	- CTL (Fitness): 47.1
 
 	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 6
-	- **Rationale**: Given the ITT stage type and your current total points standing, choosing Breakaway Mode allows you to gain maximum points today. ITT stages are unique opportunities where your effort alone determines your result, making it a prime day for a high-intensity effort. This approach not only aims for the stage win but also strategically places you to capitalize on bonus opportunities, moving closer to your overall Tour de France simulation goals.
+	- **Ride Mode**: GC
+	- **Expected Points**: 10
+	- **Rationale**: Given the mountain stage type and your current position in the points standings, opting for GC Mode is a strategic choice. This approach ensures you're able to secure base points today without overextending yourself, which is critical for maintaining a strong physiological state for the remaining stages of the Tour. It aligns with the goal of consistently accumulating points while managing effort levels across the challenging terrain of the mountain stages. This mode also positions you well to take advantage of bonus opportunities and to make strategic moves in the stages ahead.
 
 	#### 📈 Points Status:
-	- Current Total: 88 points
-	- Stages Completed: 12/21
+	- Current Total: 92 points
+	- Stages Completed: 13/21
 
 	#### 🏆 Bonus Opportunities:
 	- 10 Breakaway Stages
 	- All Mountains in Breakaway
 
 	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 1/5
+	- 5 consecutive: 2/5
 	- 10 breakaways: 3/10
 
 	#### 📝 Strategic Notes:
-	Time to take risks! Ride above threshold early and see if you can post a surprise result.
+	Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.
 
