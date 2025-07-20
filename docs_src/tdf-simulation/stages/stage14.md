@@ -13,34 +13,10 @@
 
 === "Recommended"
 
-	### 🏆 Stage 14 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏁 Stage Type**: Flat Stage
+	*Briefing not yet available for this stage.*
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 81/100
-	- TSB (Form): -14.6
-	- CTL (Fitness): 47.1
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: GC
-	- **Expected Points**: 10
-	- **Rationale**: Given the mountain stage type and your current position in the points standings, opting for GC Mode is a strategic choice. This approach ensures you're able to secure base points today without overextending yourself, which is critical for maintaining a strong physiological state for the remaining stages of the Tour. It aligns with the goal of consistently accumulating points while managing effort levels across the challenging terrain of the mountain stages. This mode also positions you well to take advantage of bonus opportunities and to make strategic moves in the stages ahead.
-
-	#### 📈 Points Status:
-	- Current Total: 92 points
-	- Stages Completed: 13/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 2/5
-	- 10 breakaways: 3/10
-
-	#### 📝 Strategic Notes:
-	Big points available but manage effort carefully. This is where the Tour can be won or lost - balance ambition with sustainability.
 === "Planned"
 
 	### 🚴 Stage 14 Ride Options
