@@ -1,9 +1,9 @@
 {
-  "total_points": 92,
-  "stages_completed": 13,
-  "consecutive_stages": 2,
+  "total_points": 102,
+  "stages_completed": 14,
+  "consecutive_stages": 3,
   "breakaway_count": 3,
-  "gc_count": 10,
+  "gc_count": 11,
   "mountain_breakaway_count": 2,
   "bonuses_earned": [
     "consecutive_5"
@@ -356,9 +356,40 @@
         "effort_level": "threshold"
       },
       "activity_id": 15160737241
+    },
+    "2025-07-20": {
+      "stage_number": 14,
+      "stage_type": "mountain",
+      "ride_mode": "gc",
+      "points_earned": 10,
+      "completed_at": "2025-07-20T01:34:21.778782",
+      "activity_data": {
+        "moving_time": 2402.0,
+        "distance": 18155.0,
+        "average_watts": 111.4,
+        "weighted_average_watts": 116.0,
+        "suffer_score": 101.0,
+        "intensity_factor": 0.906,
+        "average_heartrate": 148.5,
+        "max_heartrate": 160.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 7.558,
+        "max_speed": 8.3,
+        "name": "Peloton - 40 min Just Ride",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 40.03333333333333,
+        "distance_km": 18.155,
+        "id": 15169883529,
+        "tss": 54.8,
+        "normalized_power": 116.0,
+        "effort_level": "threshold"
+      },
+      "activity_id": 15169883529
     }
   },
-  "last_updated": "2025-07-19T02:30:56.422557",
+  "last_updated": "2025-07-20T01:34:21.778811",
   "used_activity_ids": [
     15052645086,
     15064156755,
@@ -369,6 +400,7 @@
     15117298413,
     15137641431,
     15150570067,
-    15160737241
+    15160737241,
+    15169883529
   ]
 }
