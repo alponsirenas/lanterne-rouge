@@ -11,6 +11,36 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Stage 16 TDF Morning Briefing
+
+	**🏁 Stage Type**: Flat Stage
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 90/100
+	- TSB (Form): -15.4
+	- CTL (Fitness): 48.7
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 15
+	- **Rationale**: Choosing Breakaway Mode for today's mountain stage aligns with your strategic goal of maximizing points and taking advantage of bonus opportunities, such as completing 5 consecutive stages in Breakaway mode, which you are currently 4/5 toward achieving. With your readiness high and the tapering phase allowing for peak performance efforts, this aggressive strategy can significantly improve your standing in the Tour de France Simulation, especially with the additional points available for breakaway success and the potential for bonus points. This approach balances the risk with the significant potential reward, given your current points position and the opportunities in the remaining stages.
+
+	#### 📈 Points Status:
+	- Current Total: 113 points
+	- Stages Completed: 15/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 4/5
+	- 10 breakaways: 4/10
+
+	#### 📝 Strategic Notes:
+	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
 === "Planned"
 
 	### 🚴 Stage 16 Ride Options

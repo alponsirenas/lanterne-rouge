@@ -13,34 +13,10 @@
 
 === "Recommended"
 
-	### 🏆 Stage 15 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏁 Stage Type**: Flat Stage
+	*Briefing not yet available for this stage.*
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 86/100
-	- TSB (Form): -12.7
-	- CTL (Fitness): 47.3
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 11
-	- **Rationale**: Choosing Breakaway Mode for today's hilly stage aligns with our strategy to maximize points from bonus opportunities while leveraging your current high readiness score. This aggressive approach will not only put you in a favorable position to gain additional points but also apply pressure on your competitors in the overall standings. Given the stage type and your physiological state, this is a calculated risk with the potential for a significant reward, especially as you're well into the taper phase and showing strong readiness.
-
-	#### 📈 Points Status:
-	- Current Total: 102 points
-	- Stages Completed: 14/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 3/5
-	- 10 breakaways: 3/10
-
-	#### 📝 Strategic Notes:
-	Perfect terrain for breakaway success. Attack on the climbs, work the descents, and fight for KOM points.
 === "Planned"
 
 	### 🚴 Stage 15 Ride Options
