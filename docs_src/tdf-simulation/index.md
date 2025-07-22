@@ -6,10 +6,10 @@
 ## 🎮 Current Status
 
 ### July 22, 2025
-- **📈 Total Points**: 113 points across 15 completed stages
+- **📈 Total Points**: 117 points across 15 completed stages
 - **🏆 Bonuses Achieved**: 5 Consecutive Stages (+5 points)
 - **📊 Completion Rate**: 15/21 stages (71.4% complete)
-- **💪 My Strategy**: Mixed strategy: 11 GC, 4 breakaway rides
+- **💪 My Strategy**: Mixed strategy: 9 GC, 6 breakaway rides
 
 ## 🎯 How Lanterne Rouge Works During Tour de France
 
