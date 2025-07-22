@@ -1,19 +1,19 @@
-	### 🏆 Stage 16 TDF Morning Briefing
+	### 🛌 Rest Day 2 - Recovery Time
 
-	**🏔️ Stage Type**: Mountain Stage
+	**💤 Rest Day**: Active Recovery & Mental Reset
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 90/100
-	- TSB (Form): -15.4
-	- CTL (Fitness): 48.7
+	#### 📊 Recovery Focus:
+	- Readiness Score: 70/100
+	- TSB (Form): -1.7
+	- CTL (Fitness): 46.4
 
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Choosing Breakaway Mode for today's mountain stage aligns with your strategic goal of maximizing points and taking advantage of bonus opportunities, such as completing 5 consecutive stages in Breakaway mode, which you are currently 4/5 toward achieving. With your readiness high and the tapering phase allowing for peak performance efforts, this aggressive strategy can significantly improve your standing in the Tour de France Simulation, especially with the additional points available for breakaway success and the potential for bonus points. This approach balances the risk with the significant potential reward, given your current points position and the opportunities in the remaining stages.
+	#### 🛌 Today's Recovery Plan:
+	- **Activity**: Light active recovery or complete rest
+	- **Focus**: Nutrition, hydration, and mental reset
+	- **Duration**: Easy 30-60 minutes (optional) or full rest
 
-	#### 📈 Points Status:
-	- Current Total: 113 points
+	#### 📊 Current Status:
+	- Total Points: 113 points
 	- Stages Completed: 15/21
 
 	#### 🏆 Bonus Opportunities:
@@ -24,6 +24,12 @@
 	- 5 consecutive: 4/5
 	- 10 breakaways: 4/10
 
-	#### 📝 Strategic Notes:
-	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
+	#### 🧘 Recovery Strategy:
+	Today is an official rest day in the Tour de France. Focus on recovery, mental reset, and preparing for the stages ahead. This is crucial for maintaining performance over the full three weeks.
+
+	#### 💡 Rest Day Tips:
+	- Light stretching or easy walking
+	- Proper nutrition and hydration
+	- Mental preparation for upcoming stages
+	- Equipment check and maintenance
 
