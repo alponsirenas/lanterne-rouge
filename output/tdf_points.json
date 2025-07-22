@@ -1,10 +1,10 @@
 {
-  "total_points": 113,
+  "total_points": 117,
   "stages_completed": 15,
   "consecutive_stages": 4,
-  "breakaway_count": 4,
-  "gc_count": 11,
-  "mountain_breakaway_count": 2,
+  "breakaway_count": 6,
+  "gc_count": 9,
+  "mountain_breakaway_count": 3,
   "bonuses_earned": [
     "consecutive_5"
   ],
@@ -26,42 +26,42 @@
       "points_earned": 7,
       "completed_at": "2025-07-06T20:00:00.000000",
       "activity_data": {
-        "duration_minutes": 60.0,
-        "distance_km": 24.5,
-        "normalized_power": 87.0,
+        "duration_minutes": 75.03333333333333,
+        "distance_km": 30.6199,
+        "normalized_power": 89.0,
         "intensity_factor": 0.68,
-        "tss": 46.2,
-        "effort_level": "aerobic"
-      }
-    },
-    "2025-07-07": {
-      "stage_number": 3,
-      "stage_type": "flat",
-      "ride_mode": "gc",
-      "points_earned": 7,
-      "completed_at": "2025-07-07T20:00:00.000000",
-      "activity_data": {
-        "duration_minutes": 60.0,
-        "distance_km": 24.1,
-        "normalized_power": 165.0,
-        "intensity_factor": 0.75,
-        "tss": 67.5,
-        "effort_level": "tempo"
-      }
-    },
-    "2025-07-08": {
-      "stage_number": 4,
-      "stage_type": "hilly",
-      "ride_mode": "gc",
-      "points_earned": 5,
-      "completed_at": "2025-07-08T20:52:55.071328",
-      "activity_data": {
-        "moving_time": 4502.0,
-        "distance": 30619.9,
-        "average_watts": 85.9,
-        "weighted_average_watts": 89.0,
-        "suffer_score": 80.0,
-        "intensity_factor": 0.695,
+        "tss": 60.5,
+        "2025-07-20": {
+          "stage_number": 14,
+          "stage_type": "mountain",
+          "ride_mode": "breakaway",
+          "points_earned": 15,
+          "completed_at": "2025-07-20T01:34:21.778782",
+          "activity_data": {
+            "moving_time": 2402.0,
+            "distance": 18155.0,
+            "average_watts": 111.4,
+            "weighted_average_watts": 116.0,
+            "suffer_score": 101.0,
+            "intensity_factor": 0.906,
+            "average_heartrate": 148.5,
+            "max_heartrate": 160.0,
+            "total_elevation_gain": 0,
+            "calories": null,
+            "average_speed": 7.558,
+            "max_speed": 8.3,
+            "name": "Peloton - 40 min Just Ride",
+            "description": "",
+            "sport_type": "Ride",
+            "duration_minutes": 40.03333333333333,
+            "distance_km": 18.155,
+            "id": 15169883529,
+            "tss": 54.8,
+            "normalized_power": 116.0,
+            "effort_level": "threshold"
+          },
+          "activity_id": 15169883529
+        },
         "average_heartrate": 134.4,
         "max_heartrate": 149.0,
         "total_elevation_gain": 0,
@@ -71,10 +71,6 @@
         "name": "Peloton - 75 min Just Ride",
         "description": "",
         "sport_type": "Ride",
-        "duration_minutes": 75.03333333333333,
-        "distance_km": 30.6199,
-        "tss": 60.5,
-        "normalized_power": 89.0,
         "effort_level": "aerobic"
       }
     },
@@ -94,12 +90,12 @@
         "average_heartrate": 139.8,
         "max_heartrate": 157.0,
         "total_elevation_gain": 0,
-        "calories": null,
-        "average_speed": 7.245,
-        "max_speed": 8.22,
-        "name": "Peloton - 60 min Just Ride",
-        "description": "",
-        "sport_type": "Ride",
+        "total_points": 118,
+        "stages_completed": 15,
+        "consecutive_stages": 4,
+        "breakaway_count": 5,
+        "gc_count": 10,
+        "mountain_breakaway_count": 3,
         "duration_minutes": 60.166666666666664,
         "distance_km": 26.1556,
         "id": 15064156755,
@@ -329,8 +325,8 @@
     "2025-07-19": {
       "stage_number": 13,
       "stage_type": "itt",
-      "ride_mode": "gc",
-      "points_earned": 4,
+      "ride_mode": "breakaway",
+      "points_earned": 6,
       "completed_at": "2025-07-19T02:30:56.422531",
       "activity_data": {
         "moving_time": 2100.0,
@@ -360,8 +356,8 @@
     "2025-07-20": {
       "stage_number": 14,
       "stage_type": "mountain",
-      "ride_mode": "gc",
-      "points_earned": 10,
+      "ride_mode": "breakaway",
+      "points_earned": 12,
       "completed_at": "2025-07-20T01:34:21.778782",
       "activity_data": {
         "moving_time": 2402.0,
@@ -420,7 +416,7 @@
       "activity_id": 15181100757
     }
   },
-  "last_updated": "2025-07-21T01:34:34.597391",
+  "last_updated": "2025-07-22T00:00:00.000000",
   "used_activity_ids": [
     15052645086,
     15064156755,

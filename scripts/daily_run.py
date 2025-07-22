@@ -12,10 +12,12 @@ sys.path.insert(0, os.path.join(project_root, 'src'))
 
 from scripts.notify import send_email, send_sms
 from lanterne_rouge.strava_api import refresh_strava_token
+from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb, get_recent_workout_analysis, get_performance_trends
 from lanterne_rouge.tour_coach import TourCoach
 from lanterne_rouge.mission_config import bootstrap
 
 load_dotenv()
+
 
 def run_daily_logic():
     """Execute the new agent-based Tour Coach logic for the day."""
@@ -30,10 +32,12 @@ def run_daily_logic():
     coach = TourCoach(mission_cfg, use_llm_reasoning=use_llm_reasoning, llm_model=llm_model)
 
     # Get current metrics (similar to run_tour_coach function)
-    from lanterne_rouge.monitor import get_oura_readiness, get_ctl_atl_tsb
-
     readiness, *_ = get_oura_readiness()
     ctl, atl, tsb = get_ctl_atl_tsb()
+    
+    # Get recent workout analysis from core monitor system
+    recent_workout_analysis = get_recent_workout_analysis()
+    performance_trends = get_performance_trends(recent_workout_analysis)
 
     # Create metrics dictionary for the recommendation generator
     # Note: readiness_score is now a scalar integer, not a dictionary
@@ -50,16 +54,46 @@ def run_daily_logic():
         # Load TDF context data
         from lanterne_rouge.tdf_tracker import TDFTracker
         tracker = TDFTracker()
+        
+        # Get recent workout analysis from core monitor system
+        recent_workout_analysis = get_recent_workout_analysis()
+        performance_trends = get_performance_trends(recent_workout_analysis)
+        
+        # Check for rest days
+        rest_days = []
+        if hasattr(mission_cfg, 'tdf_simulation') and hasattr(mission_cfg.tdf_simulation, 'rest_days'):
+            rest_days = [date.fromisoformat(day) for day in mission_cfg.tdf_simulation.rest_days]
+        
+        is_rest_day = current_date in rest_days
+        rest_day_number = rest_days.index(current_date) + 1 if is_rest_day else None
+        
+        # Calculate days into TDF for competition context (not training context)
+        tdf_start = date.fromisoformat("2025-07-05")
+        days_into_tdf = (current_date - tdf_start).days + 1
+        
         tdf_data = {
             "points_status": tracker.get_points_status(),
-            "stage_completed_today": tracker.is_stage_completed_today(current_date)
+            "stage_completed_today": tracker.is_stage_completed_today(current_date),
+            "recent_workout_analysis": recent_workout_analysis,
+            "performance_trends": performance_trends,
+            "is_rest_day": is_rest_day,
+            "rest_day_number": rest_day_number,
+            "days_into_tdf": days_into_tdf,
+            "competition_phase": "ACTIVE_COMPETITION"  # Not training!
         }
         print("🏆 TDF simulation active - generating TDF-specific coaching")
         summary = coach.generate_tdf_recommendation(metrics, tdf_data)
     else:
-        # Use regular daily coaching when TDF is not active
-        print("📅 Regular training mode - generating standard coaching")
-        summary = coach.generate_daily_recommendation(metrics)
+        # Use regular daily coaching when TDF is not active - include workout analysis
+        print("📅 Regular training mode - generating standard coaching with workout analysis")
+        
+        # Enhanced metrics for regular training too
+        enhanced_metrics = {
+            **metrics,
+            "recent_workout_analysis": recent_workout_analysis,
+            "performance_trends": performance_trends
+        }
+        summary = coach.generate_daily_recommendation(enhanced_metrics)
 
     # Return summary and extract metrics for logging
     log = {

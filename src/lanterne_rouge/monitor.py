@@ -9,6 +9,7 @@ Observation‑layer utilities for Lanterne Rouge.
 
 import csv
 import os
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -298,3 +299,160 @@ def get_ctl_atl_tsb(days: int = 90):
 
     # Return the final values
     return round(ctl, 1), round(atl, 1), round(tsb, 1)
+
+
+def get_recent_workout_analysis(days_back=7):
+    """Get analysis of recent completed workouts/activities for training recommendations.
+    
+    This function analyzes recent workout completions to provide context for daily training decisions.
+    It can pull data from multiple sources:
+    1. TDF completion summaries (during simulation)
+    2. Direct Strava activity analysis (for regular training)
+    3. Stored workout analysis files
+    
+    Args:
+        days_back: Number of recent workouts to analyze
+        
+    Returns:
+        List of recent workout analysis data with power metrics, effort levels, etc.
+    """
+    try:
+        recent_analyses = []
+        
+        # First, check for TDF completion summaries (if in TDF simulation period)
+        completion_dir = Path("docs_src/tdf-simulation/stages/completion-summary")
+        if completion_dir.exists():
+            for stage_file in completion_dir.glob("stage*.md"):
+                try:
+                    content = stage_file.read_text(encoding='utf-8')
+                    
+                    # Extract key performance data if stage completed
+                    if "Stage completed on:" in content:
+                        stage_data = _extract_completion_summary_data(content)
+                        if stage_data:
+                            recent_analyses.append({
+                                'source': 'tdf_completion',
+                                'stage': stage_file.stem,
+                                'data': stage_data
+                            })
+                except Exception as e:
+                    print(f"Could not parse TDF completion {stage_file}: {e}")
+                    continue
+        
+        # TODO: Add direct Strava activity analysis for regular training
+        # This would pull recent activities and calculate IF, TSS, effort levels
+        # strava_activities = _get_recent_strava_activities(days_back)
+        # for activity in strava_activities:
+        #     analysis = _analyze_strava_activity(activity)
+        #     recent_analyses.append({
+        #         'source': 'strava_activity',
+        #         'activity_id': activity['id'],
+        #         'data': analysis
+        #     })
+        
+        # Sort by completion date/activity date (most recent first)
+        if recent_analyses:
+            # For TDF completions, sort by stage number
+            recent_analyses.sort(key=lambda x: int(x.get('stage', 'stage0').replace('stage', '') or 0), reverse=True)
+        
+        return recent_analyses[:days_back]
+        
+    except Exception as e:
+        print(f"Warning: Could not get workout analysis: {e}")
+        return []
+
+
+def _extract_completion_summary_data(content):
+    """Extract performance data from TDF completion summary content."""
+    stage_data = {}
+    lines = content.split('\n')
+    
+    for line in lines:
+        if "Mode Completed:" in line:
+            stage_data['mode'] = line.split(': ')[1].strip()
+        elif "Points Earned:" in line:
+            stage_data['points'] = line.split(': ')[1].strip()
+        elif "Duration:" in line and "minutes" in line:
+            stage_data['duration'] = line.split(': ')[1].strip()
+        elif "TSS:" in line:
+            stage_data['tss'] = line.split(': ')[1].strip()
+        elif "Intensity Factor" in line:
+            # Extract IF from text like "IF of 0.914"
+            if_match = re.search(r'IF.*?(\d+\.\d+)', line)
+            if if_match:
+                stage_data['intensity_factor'] = if_match.group(1)
+        elif "Stage completed on:" in line:
+            stage_data['date'] = line.split(': ')[1].strip()
+        elif "Effort Level:" in line:
+            stage_data['effort_level'] = line.split(': ')[1].strip()
+        elif "Average Power:" in line:
+            power_match = re.search(r'(\d+\.?\d*)W', line)
+            if power_match:
+                stage_data['avg_power'] = power_match.group(1)
+        elif "Weighted Power:" in line:
+            power_match = re.search(r'(\d+\.?\d*)W', line)
+            if power_match:
+                stage_data['weighted_power'] = power_match.group(1)
+    
+    return stage_data if stage_data else None
+
+
+def get_performance_trends(recent_analyses):
+    """Analyze performance trends from recent completed workouts.
+    
+    This function should be used by the reasoning system to understand
+    recent performance patterns for better training recommendations.
+    
+    Args:
+        recent_analyses: List of recent workout analysis data
+        
+    Returns:
+        String describing performance trends for LLM context
+    """
+    if not recent_analyses:
+        return "No recent workout data available"
+    
+    trends = []
+    
+    # Analyze effort patterns
+    high_intensity_count = 0
+    breakaway_count = 0
+    gc_count = 0
+    
+    for workout in recent_analyses:
+        data = workout.get('data', {})
+        
+        # Count effort types (for TDF data)
+        mode = data.get('mode', '').upper()
+        if mode == 'BREAKAWAY':
+            breakaway_count += 1
+        elif mode == 'GC':
+            gc_count += 1
+        
+        # Check intensity patterns
+        if_str = data.get('intensity_factor', '0.0')
+        try:
+            if_val = float(if_str)
+            if if_val >= 0.85:
+                high_intensity_count += 1
+        except (ValueError, TypeError):
+            continue
+    
+    # Generate trend descriptions
+    total_workouts = len(recent_analyses)
+    if breakaway_count >= 3:
+        trends.append("Strong high-intensity consistency")
+    elif gc_count >= 3:
+        trends.append("Conservative steady-state approach")
+    elif high_intensity_count >= 2:
+        trends.append("High-intensity capability demonstrated")
+    else:
+        trends.append("Mixed intensity approach")
+    
+    # Add recovery/workload trends
+    if total_workouts >= 4:
+        trends.append(f"Consistent activity pattern ({total_workouts} recent completions)")
+    elif total_workouts <= 2:
+        trends.append("Limited recent activity data")
+    
+    return "; ".join(trends) if trends else "Performance analysis in progress"

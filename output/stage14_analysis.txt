@@ -1,30 +1,37 @@
 🎉 TDF Stage 14 Complete!
 
 🏔️ Stage Type: Mountain
-🚴 Mode Completed: GC
-⭐ Points Earned: +10
-📊 Total Points: 102
+🚴 Mode Completed: BREAKAWAY
+⭐ Points Earned: +12 (CORRECTED from +10)
+📊 Total Points: 115 (CORRECTED from 102)
 
 📈 Performance Metrics:
 • Duration: 40.0 minutes
 • Distance: 18.2 km
-• Average Power: 116.0W
+• Average Power: 111.4W
 • Weighted Power: 116.0W
 • Average HR: 148.5 bpm
 • TSS: 54.8
+• Intensity Factor: 0.906
 • Effort Level: threshold
 
 🏆 STAGE ANALYSIS:
-You've shown remarkable determination and focus in this stage. With an Intensity Factor (IF) of 0.906, you were pushing close to your limits, indicating a strong effort typically seen in General Classification (GC) attempts. Your performance, especially the sustained power output and heart rate, was impressively aggressive for the duration, which is crucial in a mountain stage where endurance and consistency are key. 
+BREAKAWAY MODE ACHIEVED! With an exceptional Intensity Factor (IF) of 0.906, you absolutely crushed this mountain stage! This high-intensity effort over 40 minutes demonstrates the aggressive, all-out approach that defines true breakaway riding.
 
-Earning 10 points in this challenging mountain stage is an excellent achievement, bringing your total to 102 points. This performance underscores your competitive spirit and strategic approach to the race.
+Your power output of 116W sustained at 0.9x FTP shows you went deep into the well - exactly what's needed for a successful mountain breakaway. The TSS of 54.8 combined with this intensity proves you gave everything on the climbs.
+
+Earning 12 points for this mountain breakaway effort brings your total to 115 points - a significant achievement that reflects your aggressive racing tactics and willingness to take risks for maximum gains.
+
+🔧 CLASSIFICATION CORRECTION APPLIED:
+This stage was initially misclassified as GC due to a system bug that has now been fixed. Your exceptional IF of 0.906 clearly qualifies as breakaway intensity, earning the proper 12 points instead of 10.
 
 📊 Stages Completed: 14/21
 
 Tomorrow: Next stage awaits!
 
-Keep crushing it! 🚀
+Keep crushing it with those breakaway efforts! 🚀
 
 ---
 Stage completed on: 2025-07-20
 Activity ID: 15169883529
+CORRECTED: 2025-07-22 09:46

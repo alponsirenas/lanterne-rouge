@@ -204,18 +204,46 @@ Consider:
 - TSB (Training Stress Balance): Negative values indicate fatigue
 - CTL (Chronic Training Load): Long-term fitness
 - ATL (Acute Training Load): Recent fatigue
+- Recent workout analysis: Power data, effort levels, performance trends
 - Training phase and proximity to goals"""
 
-            # Build user prompt
+            # Build user prompt with workout analysis
+            workout_analysis_summary = ""
+            recent_workout_analysis = metrics.get('recent_workout_analysis', [])
+            performance_trends = metrics.get('performance_trends', '')
+            
+            if recent_workout_analysis:
+                workout_analysis_summary = "\nRecent workout analysis:\n"
+                for workout in recent_workout_analysis[-3:]:  # Last 3 workouts
+                    data = workout.get('data', {})
+                    source = workout.get('source', 'unknown')
+                    workout_id = workout.get('stage', workout.get('activity_id', 'unknown'))
+                    
+                    workout_analysis_summary += f"- {workout_id}: "
+                    if data.get('mode'):
+                        workout_analysis_summary += f"{data['mode']} mode, "
+                    if data.get('intensity_factor'):
+                        workout_analysis_summary += f"IF {data['intensity_factor']}, "
+                    if data.get('tss'):
+                        workout_analysis_summary += f"TSS {data['tss']}, "
+                    if data.get('effort_level'):
+                        workout_analysis_summary += f"{data['effort_level']} effort"
+                    workout_analysis_summary += "\n"
+            
+            if performance_trends:
+                workout_analysis_summary += f"\nPerformance trends: {performance_trends}"
+
             user_prompt = f"""My current metrics:
-{json.dumps(metrics, indent=2)}
+{json.dumps({k: v for k, v in metrics.items() if k not in ['recent_workout_analysis', 'performance_trends']}, indent=2)}
 
 {training_context}
+
+{workout_analysis_summary}
 
 My recent training history:
 {json.dumps(recent_memories, indent=2) if recent_memories else "No recent history available"}
 
-Please provide a structured training decision based on my metrics and context. Remember to speak to me directly and explain your reasoning in plain language."""
+Please provide a structured training decision based on my metrics, recent workouts, and context. Remember to speak to me directly and explain your reasoning in plain language."""
 
             messages = [
                 {"role": "system", "content": system_prompt},
@@ -352,12 +380,23 @@ Please provide a structured training decision based on my metrics and context. R
             stage_info = tdf_data.get('stage_info', {}) if tdf_data else {}
             points_status = tdf_data.get('points_status', {}) if tdf_data else {}
 
-            # Build training context
+            # Build training context with proper competition vs training distinction
             training_context = ""
             if mission_config and current_date:
-                phase = mission_config.training_phase(current_date)
-                days_to_goal = (mission_config.goal_date - current_date).days
-                training_context = f"Training Phase: {phase}\nDays to goal: {days_to_goal}\n"
+                # Check if we're in active TDF competition
+                tdf_start = date.fromisoformat("2025-07-05") if hasattr(mission_config, 'tdf_simulation') else None
+                tdf_end = date.fromisoformat("2025-07-27") if hasattr(mission_config, 'tdf_simulation') else None
+                
+                if tdf_start and tdf_end and tdf_start <= current_date <= tdf_end:
+                    # COMPETITION CONTEXT - not training!
+                    days_into_tdf = (current_date - tdf_start).days + 1
+                    remaining_days = (tdf_end - current_date).days
+                    training_context = f"Competition Status: Day {days_into_tdf} of 21-day TDF simulation\nDays remaining in TDF: {remaining_days}\n"
+                else:
+                    # Normal training context
+                    phase = mission_config.training_phase(current_date)
+                    days_to_goal = (mission_config.goal_date - current_date).days
+                    training_context = f"Training Phase: {phase}\nDays to goal: {days_to_goal}\n"
 
             # Build TDF context
             tdf_context = ""
@@ -383,8 +422,18 @@ BONUS OPPORTUNITIES:
 - All GC Mode: Alternative strategy (+25 points)
 """
 
-            # Build enhanced system prompt for TDF
-            system_prompt = f"""You are an expert cycling coach AI for the Tour de France Indoor Simulation. You're speaking directly to your athlete about today's stage.
+            # Build enhanced system prompt for TDF with competition context
+            is_in_competition = tdf_data and tdf_data.get('competition_phase') == 'ACTIVE_COMPETITION'
+            days_into_tdf = tdf_data.get('days_into_tdf', 1) if tdf_data else 1
+            
+            competition_context = ""
+            if is_in_competition:
+                competition_context = f"""
+IMPORTANT: You are coaching an athlete currently IN ACTIVE COMPETITION (Day {days_into_tdf} of TDF).
+This is NOT a training phase - focus on competition tactics, stage completion, and recovery between stages.
+Consider recent workout performance data to assess current form and capabilities."""
+
+            system_prompt = f"""You are an expert cycling coach AI for the Tour de France Indoor Simulation. You're speaking directly to your athlete about today's stage.{competition_context}
 
 You must respond with a valid JSON object containing:
 {{
@@ -442,6 +491,11 @@ COMMUNICATION STYLE:
 
 My recent training history:
 {json.dumps(recent_memories[-5:], indent=2) if recent_memories else "No recent history available"}
+
+Recent workout analysis:
+{json.dumps(tdf_data.get('recent_workout_analysis', [])[:3], indent=2) if tdf_data else "No recent workout data available"}
+
+Performance trends: {tdf_data.get('performance_trends', 'No trend analysis available') if tdf_data else 'No trend data available'}
 
 Please provide both a training decision AND a ride mode recommendation for today's TDF stage. Remember to speak to me directly and explain your reasoning for both the training approach and the strategic ride mode choice."""
 
