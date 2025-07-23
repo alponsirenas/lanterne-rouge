@@ -1,10 +1,10 @@
 {
-  "total_points": 117,
-  "stages_completed": 15,
-  "consecutive_stages": 4,
-  "breakaway_count": 6,
+  "total_points": 132,
+  "stages_completed": 16,
+  "consecutive_stages": 1,
+  "breakaway_count": 7,
   "gc_count": 9,
-  "mountain_breakaway_count": 3,
+  "mountain_breakaway_count": 4,
   "bonuses_earned": [
     "consecutive_5"
   ],
@@ -414,9 +414,40 @@
         "effort_level": "threshold"
       },
       "activity_id": 15181100757
+    },
+    "2025-07-23": {
+      "stage_number": 16,
+      "stage_type": "mountain",
+      "ride_mode": "breakaway",
+      "points_earned": 15,
+      "completed_at": "2025-07-23T04:39:02.105822",
+      "activity_data": {
+        "moving_time": 3600.0,
+        "distance": 26504.9,
+        "average_watts": 105.0,
+        "weighted_average_watts": 110.0,
+        "suffer_score": 128.0,
+        "intensity_factor": 0.859,
+        "average_heartrate": 145.3,
+        "max_heartrate": 159.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 7.362,
+        "max_speed": 8.58,
+        "name": "60 min Power Zone Ride with Matt Wilpers",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 60.0,
+        "distance_km": 26.504900000000003,
+        "id": 15205540779,
+        "tss": 73.9,
+        "normalized_power": 110.0,
+        "effort_level": "threshold"
+      },
+      "activity_id": 15205540779
     }
   },
-  "last_updated": "2025-07-22T00:00:00.000000",
+  "last_updated": "2025-07-23T04:39:02.105851",
   "used_activity_ids": [
     15052645086,
     15064156755,
@@ -429,6 +460,7 @@
     15150570067,
     15160737241,
     15169883529,
-    15181100757
+    15181100757,
+    15205540779
   ]
 }
