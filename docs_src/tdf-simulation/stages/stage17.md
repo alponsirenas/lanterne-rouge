@@ -11,6 +11,36 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Stage 17 TDF Morning Briefing
+
+	**🏁 Stage Type**: Flat Stage
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 86/100
+	- TSB (Form): -6.9
+	- CTL (Fitness): 47.6
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: BREAKAWAY
+	- **Expected Points**: 11
+	- **Rationale**: Given today's hilly stage type and your current points position, opting for breakaway mode offers a strategic opportunity to maximize points and capitalize on bonus opportunities. With a high readiness score and only a few stages left, the aggressive performance focus of breakaway mode aligns with your goal of maximizing your overall standing in the Tour. It also puts you in a strong position to achieve the bonus for 10 breakaway stages.
+
+	#### 📈 Points Status:
+	- Current Total: 132 points
+	- Stages Completed: 16/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 1/5
+	- 10 breakaways: 7/10
+
+	#### 📝 Strategic Notes:
+	Perfect terrain for breakaway success. Attack on the climbs, work the descents, and fight for KOM points.
 === "Planned"
 
 	### 🚴 Stage 17 Ride Options
