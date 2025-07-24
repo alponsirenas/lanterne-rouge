@@ -1,9 +1,9 @@
 {
-  "total_points": 132,
-  "stages_completed": 16,
-  "consecutive_stages": 1,
+  "total_points": 139,
+  "stages_completed": 17,
+  "consecutive_stages": 2,
   "breakaway_count": 7,
-  "gc_count": 9,
+  "gc_count": 10,
   "mountain_breakaway_count": 4,
   "bonuses_earned": [
     "consecutive_5"
@@ -445,9 +445,40 @@
         "effort_level": "threshold"
       },
       "activity_id": 15205540779
+    },
+    "2025-07-24": {
+      "stage_number": 17,
+      "stage_type": "hilly",
+      "ride_mode": "gc",
+      "points_earned": 7,
+      "completed_at": "2025-07-24T04:15:43.677508",
+      "activity_data": {
+        "moving_time": 3001.0,
+        "distance": 20951.2,
+        "average_watts": 91.0,
+        "weighted_average_watts": 93.0,
+        "suffer_score": 82.0,
+        "intensity_factor": 0.727,
+        "average_heartrate": 139.0,
+        "max_heartrate": 152.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 6.981,
+        "max_speed": 7.54,
+        "name": "Peloton - 50 min Just Ride",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 50.016666666666666,
+        "distance_km": 20.9512,
+        "id": 15216224274,
+        "tss": 44.0,
+        "normalized_power": 93.0,
+        "effort_level": "aerobic"
+      },
+      "activity_id": 15216224274
     }
   },
-  "last_updated": "2025-07-23T04:39:02.105851",
+  "last_updated": "2025-07-24T04:15:43.677537",
   "used_activity_ids": [
     15052645086,
     15064156755,
@@ -461,6 +492,7 @@
     15160737241,
     15169883529,
     15181100757,
-    15205540779
+    15205540779,
+    15216224274
   ]
 }
