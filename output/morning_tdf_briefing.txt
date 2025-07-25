@@ -3,14 +3,14 @@
 	**🏔️ Stage Type**: Mountain Stage
 
 	#### 📊 Readiness Check:
-	- Readiness Score: 83/100
-	- TSB (Form): -4.4
-	- CTL (Fitness): 47.5
+	- Readiness Score: 84/100
+	- TSB (Form): 6.4
+	- CTL (Fitness): 45.4
 
 	#### 🎯 Today's Recommendation:
 	- **Ride Mode**: BREAKAWAY
 	- **Expected Points**: 15
-	- **Rationale**: Given you're in the final stages of the Tour with only a few opportunities left to make significant gains, and considering your current total points position, choosing Breakaway Mode can maximize your point gain today, especially valuable as you're close to achieving several bonus opportunities. Your readiness and recent performance suggest you have the capacity to handle the increased exertion this aggressive strategy requires.
+	- **Rationale**: Choosing Breakaway Mode for today's stage aligns with your current strategy to maximize points and bonus opportunities. With only two days left in the TDF simulation and today being a mountain stage, pushing for a breakaway will not only give you the chance to earn additional points from the stage itself but also advance your position in achieving the bonus for 10 Breakaway Stages and completing all mountains in breakaway. This aggressive approach is supported by your recent performance and readiness metrics, suggesting that you have the capacity to handle the increased effort.
 
 	#### 📈 Points Status:
 	- Current Total: 139 points
