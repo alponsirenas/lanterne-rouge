@@ -13,34 +13,10 @@
 
 === "Recommended"
 
-	### 🏆 Stage 18 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏁 Stage Type**: Flat Stage
+	*Briefing not yet available for this stage.*
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 84/100
-	- TSB (Form): 6.4
-	- CTL (Fitness): 45.4
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Choosing Breakaway Mode for today's stage aligns with your current strategy to maximize points and bonus opportunities. With only two days left in the TDF simulation and today being a mountain stage, pushing for a breakaway will not only give you the chance to earn additional points from the stage itself but also advance your position in achieving the bonus for 10 Breakaway Stages and completing all mountains in breakaway. This aggressive approach is supported by your recent performance and readiness metrics, suggesting that you have the capacity to handle the increased effort.
-
-	#### 📈 Points Status:
-	- Current Total: 139 points
-	- Stages Completed: 17/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 2/5
-	- 10 breakaways: 7/10
-
-	#### 📝 Strategic Notes:
-	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
 === "Planned"
 
 	### 🚴 Stage 18 Ride Options
