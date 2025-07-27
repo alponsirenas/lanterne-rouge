@@ -1,9 +1,9 @@
 {
-  "total_points": 154,
-  "stages_completed": 18,
-  "consecutive_stages": 1,
+  "total_points": 164,
+  "stages_completed": 19,
+  "consecutive_stages": 2,
   "breakaway_count": 8,
-  "gc_count": 10,
+  "gc_count": 11,
   "mountain_breakaway_count": 5,
   "bonuses_earned": [
     "consecutive_5"
@@ -507,9 +507,40 @@
         "effort_level": "threshold"
       },
       "activity_id": 15235766573
+    },
+    "2025-07-27": {
+      "stage_number": 19,
+      "stage_type": "mountain",
+      "ride_mode": "gc",
+      "points_earned": 10,
+      "completed_at": "2025-07-27T01:34:23.720354",
+      "activity_data": {
+        "moving_time": 1912.0,
+        "distance": 13764.2,
+        "average_watts": 99.3,
+        "weighted_average_watts": 106.0,
+        "suffer_score": 42.0,
+        "intensity_factor": 0.828,
+        "average_heartrate": 135.7,
+        "max_heartrate": 152.0,
+        "total_elevation_gain": 0,
+        "calories": null,
+        "average_speed": 7.199,
+        "max_speed": 9.52,
+        "name": "Peloton - 32 min Just Ride",
+        "description": "",
+        "sport_type": "Ride",
+        "duration_minutes": 31.866666666666667,
+        "distance_km": 13.7642,
+        "id": 15247836076,
+        "tss": 36.4,
+        "normalized_power": 106.0,
+        "effort_level": "tempo"
+      },
+      "activity_id": 15247836076
     }
   },
-  "last_updated": "2025-07-26T01:33:44.712577",
+  "last_updated": "2025-07-27T01:34:23.720384",
   "used_activity_ids": [
     15052645086,
     15064156755,
@@ -525,6 +556,7 @@
     15181100757,
     15205540779,
     15216224274,
-    15235766573
+    15235766573,
+    15247836076
   ]
 }
