@@ -13,34 +13,10 @@
 
 === "Recommended"
 
-	### 🏆 Stage 19 TDF Morning Briefing
+	### 🏆 Morning Briefing
 
-	**🏁 Stage Type**: Flat Stage
+	*Briefing not yet available for this stage.*
 
-	#### 📊 Readiness Check:
-	- Readiness Score: 78/100
-	- TSB (Form): -1.3
-	- CTL (Fitness): 46.6
-
-	#### 🎯 Today's Recommendation:
-	- **Ride Mode**: BREAKAWAY
-	- **Expected Points**: 15
-	- **Rationale**: Choosing Breakaway Mode today aligns with your strategic objectives to secure bonus points for completing 10 breakaway stages, which you are currently 2 stages away from achieving. Given this is a mountain stage, it also presents a significant opportunity to leverage your readiness and capitalize on the higher points available in Breakaway Mode compared to GC Mode. This aggressive approach, while mindful of your current physiological state, supports your aim to improve your standing in the final days of the competition.
-
-	#### 📈 Points Status:
-	- Current Total: 154 points
-	- Stages Completed: 18/21
-
-	#### 🏆 Bonus Opportunities:
-	- 10 Breakaway Stages
-	- All Mountains in Breakaway
-
-	#### 🎖️ Bonus Progress:
-	- 5 consecutive: 1/5
-	- 10 breakaways: 8/10
-
-	#### 📝 Strategic Notes:
-	Mountain stages reward the brave. Go early, collect KOM points, and chase the stage dream.
 === "Planned"
 
 	### 🚴 Stage 19 Ride Options

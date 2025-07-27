@@ -122,6 +122,7 @@ nav:
         - Stage 13: tdf-simulation/tdf-2025-hallucinations/stage13.md
         - Stage 15: tdf-simulation/tdf-2025-hallucinations/stage15.md
         - Stage 17: tdf-simulation/tdf-2025-hallucinations/stage17.md
+        - Stage 19: tdf-simulation/tdf-2025-hallucinations/stage19.md
     - icon: fontawesome/brands/github
       link: https://github.com/alponsirenas/lanterne-rouge
   version:
