@@ -11,6 +11,12 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Morning Briefing
+
+	*Briefing not yet available for this stage.*
+
 === "Planned"
 
 	### 🚴 Stage 19 Ride Options

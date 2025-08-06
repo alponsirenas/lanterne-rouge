@@ -11,6 +11,36 @@
 
 ## Stage Report
 
+=== "Recommended"
+
+	### 🏆 Stage 20 TDF Morning Briefing
+
+	**🏁 Stage Type**: Flat Sprint Stage
+
+	#### 📊 Readiness Check:
+	- Readiness Score: 88/100
+	- TSB (Form): 1.1
+	- CTL (Fitness): 46.2
+
+	#### 🎯 Today's Recommendation:
+	- **Ride Mode**: GC
+	- **Expected Points**: 5
+	- **Rationale**: Given it's the last stage and you have a good readiness score, opting for GC Mode will secure base points while minimizing the risk of unnecessary fatigue or injury on the final day. This approach aligns with our priority to balance performance with safety, ensuring you conclude the Tour on a positive note.
+
+	#### 📈 Points Status:
+	- Current Total: 164 points
+	- Stages Completed: 19/21
+
+	#### 🏆 Bonus Opportunities:
+	- 10 Breakaway Stages
+	- All Mountains in Breakaway
+
+	#### 🎖️ Bonus Progress:
+	- 5 consecutive: 2/5
+	- 10 breakaways: 8/10
+
+	#### 📝 Strategic Notes:
+	Stay protected in the peloton, avoid crashes, and conserve energy. Let the sprinters' teams control the pace.
 === "Planned"
 
 	### 🚴 Stage 20 Ride Options
