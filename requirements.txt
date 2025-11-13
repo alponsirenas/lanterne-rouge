@@ -13,5 +13,17 @@ markdown>=3.6.0      # For Fiction Mode HTML formatting
 beautifulsoup4>=4.12.0  # For web scraping race data
 lxml>=4.9.0          # XML/HTML parser for BeautifulSoup
 
+# Backend API dependencies
+fastapi==0.115.*     # FastAPI framework
+uvicorn[standard]==0.32.*  # ASGI server
+sqlalchemy==2.0.*    # ORM for database operations
+alembic==1.14.*      # Database migrations
+python-jose[cryptography]==3.3.*  # JWT token handling
+passlib[bcrypt]==1.7.*  # Password hashing
+python-multipart==0.0.*  # Form data parsing
+httpx==0.28.*        # HTTP client for testing
+pydantic-settings==2.12.*  # Settings management
+email-validator==2.3.*  # Email validation
+
 # Uncomment once token counting is integrated
 # tiktoken>=0.6.0
