@@ -8,8 +8,11 @@ __pycache__/
 .venv
 tokens.json
 
-# SQLite database
-# (tracked by default)
+# SQLite database files (should not be tracked)
+*.db
+*.sqlite
+*.sqlite3
+memory/lanterne.db
 
 # MacOS system files
 .DS_Store
