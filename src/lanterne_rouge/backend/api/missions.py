@@ -1,6 +1,5 @@
 """Mission API endpoints."""
 from typing import List
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -64,7 +63,7 @@ def create_mission(
         Created mission
     """
     # Validate dates
-    if mission_data.event_end_date < mission_data.event_start_date:
+    if mission_data.event_end_date <= mission_data.event_start_date:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Event end date must be after start date"
@@ -111,7 +110,7 @@ def create_mission(
 
 @router.get("/{mission_id}", response_model=MissionResponse)
 def get_mission(
-    mission_id: UUID,
+    mission_id: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -119,7 +118,7 @@ def get_mission(
     Get a specific mission by ID.
     
     Args:
-        mission_id: Mission UUID
+        mission_id: Mission ID (UUID string)
         current_user: Current authenticated user
         db: Database session
         
@@ -129,7 +128,7 @@ def get_mission(
     Raises:
         HTTPException: If mission not found or access denied
     """
-    mission = db.query(Mission).filter(Mission.id == str(mission_id)).first()
+    mission = db.query(Mission).filter(Mission.id == mission_id).first()
     
     if not mission:
         raise HTTPException(
@@ -149,7 +148,7 @@ def get_mission(
 
 @router.put("/{mission_id}", response_model=MissionResponse)
 def update_mission(
-    mission_id: UUID,
+    mission_id: str,
     mission_data: MissionUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -158,7 +157,7 @@ def update_mission(
     Update a mission.
     
     Args:
-        mission_id: Mission UUID
+        mission_id: Mission ID (UUID string)
         mission_data: Mission update data
         current_user: Current authenticated user
         db: Database session
@@ -169,7 +168,7 @@ def update_mission(
     Raises:
         HTTPException: If mission not found or access denied
     """
-    mission = db.query(Mission).filter(Mission.id == str(mission_id)).first()
+    mission = db.query(Mission).filter(Mission.id == mission_id).first()
     
     if not mission:
         raise HTTPException(
@@ -226,7 +225,7 @@ def update_mission(
 
 @router.delete("/{mission_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_mission(
-    mission_id: UUID,
+    mission_id: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -234,14 +233,14 @@ def delete_mission(
     Delete a mission.
     
     Args:
-        mission_id: Mission UUID
+        mission_id: Mission ID (UUID string)
         current_user: Current authenticated user
         db: Database session
         
     Raises:
         HTTPException: If mission not found or access denied
     """
-    mission = db.query(Mission).filter(Mission.id == str(mission_id)).first()
+    mission = db.query(Mission).filter(Mission.id == mission_id).first()
     
     if not mission:
         raise HTTPException(
@@ -272,7 +271,7 @@ def delete_mission(
 
 @router.post("/{mission_id}/transition", response_model=MissionResponse)
 def transition_mission(
-    mission_id: UUID,
+    mission_id: str,
     transition_data: MissionTransition,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -281,7 +280,7 @@ def transition_mission(
     Manually transition a mission to a new state.
     
     Args:
-        mission_id: Mission UUID
+        mission_id: Mission ID (UUID string)
         transition_data: Transition data with target state
         current_user: Current authenticated user
         db: Database session
@@ -292,7 +291,7 @@ def transition_mission(
     Raises:
         HTTPException: If mission not found, access denied, or invalid transition
     """
-    mission = db.query(Mission).filter(Mission.id == str(mission_id)).first()
+    mission = db.query(Mission).filter(Mission.id == mission_id).first()
     
     if not mission:
         raise HTTPException(

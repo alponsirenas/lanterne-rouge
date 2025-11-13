@@ -1,7 +1,6 @@
 """Mission lifecycle service."""
 from datetime import date, datetime, timezone
 from typing import Optional
-from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -16,7 +15,7 @@ class MissionLifecycleService:
     # Valid state transitions
     VALID_TRANSITIONS = {
         MissionState.PREP: [MissionState.TRAINING],
-        MissionState.TRAINING: [MissionState.PREP, MissionState.EVENT_ACTIVE],
+        MissionState.TRAINING: [MissionState.EVENT_ACTIVE],  # PREP revert is admin-only
         MissionState.EVENT_ACTIVE: [MissionState.MISSION_COMPLETE],
         MissionState.MISSION_COMPLETE: [],  # Terminal state
     }

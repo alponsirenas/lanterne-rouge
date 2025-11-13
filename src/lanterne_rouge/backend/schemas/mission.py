@@ -1,7 +1,6 @@
 """Pydantic schemas for mission API."""
 from datetime import date, datetime
 from typing import Optional
-from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -42,7 +41,7 @@ class MissionUpdate(BaseModel):
 
 class MissionResponse(MissionBase):
     """Schema for mission response."""
-    id: UUID
+    id: str
     user_id: int
     state: str
     created_at: datetime
@@ -80,8 +79,8 @@ class MissionRunUpdate(BaseModel):
 
 class MissionRunResponse(MissionRunBase):
     """Schema for mission run response."""
-    id: UUID
-    mission_id: UUID
+    id: str
+    mission_id: str
     created_at: datetime
     updated_at: datetime
 
@@ -117,7 +116,7 @@ class EventProgressUpdate(BaseModel):
 class EventProgressResponse(EventProgressBase):
     """Schema for event progress response."""
     id: int
-    mission_id: UUID
+    mission_id: str
     created_at: datetime
 
     model_config = {"from_attributes": True}

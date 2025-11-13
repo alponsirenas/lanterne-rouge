@@ -1,7 +1,7 @@
 """Database models for missions and related entities."""
 from datetime import datetime, timezone
 from typing import Optional
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 from sqlalchemy import (
     JSON,
@@ -32,11 +32,11 @@ class Mission(Base):
     """Mission model for tracking training missions and events."""
     __tablename__ = "missions"
 
-    # Primary key - using UUID as specified
-    id: Mapped[UUID] = mapped_column(
+    # Primary key - using UUID as string (SQLite compatible)
+    id: Mapped[str] = mapped_column(
         String(36),
         primary_key=True,
-        default=uuid4,
+        default=lambda: str(uuid4()),
         nullable=False
     )
     
@@ -107,15 +107,15 @@ class MissionRun(Base):
     __tablename__ = "mission_runs"
 
     # Primary key - using UUID as specified
-    id: Mapped[UUID] = mapped_column(
+    id: Mapped[str] = mapped_column(
         String(36),
         primary_key=True,
-        default=uuid4,
+        default=lambda: str(uuid4()),
         nullable=False
     )
     
     # Foreign key to mission
-    mission_id: Mapped[UUID] = mapped_column(
+    mission_id: Mapped[str] = mapped_column(
         String(36),
         ForeignKey("missions.id", ondelete="CASCADE"),
         nullable=False,
@@ -155,7 +155,7 @@ class EventProgress(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     
     # Foreign key to mission
-    mission_id: Mapped[UUID] = mapped_column(
+    mission_id: Mapped[str] = mapped_column(
         String(36),
         ForeignKey("missions.id", ondelete="CASCADE"),
         nullable=False,
