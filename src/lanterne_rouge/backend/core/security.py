@@ -24,8 +24,13 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Create a JWT access token with unique identifier."""
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> tuple[str, str]:
+    """
+    Create a JWT access token with unique identifier.
+
+    Returns:
+        Tuple of (encoded_jwt, jti) where jti is the unique token identifier
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -34,19 +39,26 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
             minutes=settings.access_token_expire_minutes
         )
     # Add unique identifier to make each token unique
-    to_encode.update({"exp": expire, "type": "access", "jti": str(uuid.uuid4())})
+    jti = str(uuid.uuid4())
+    to_encode.update({"exp": expire, "type": "access", "jti": jti})
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
-    return encoded_jwt
+    return encoded_jwt, jti
 
 
-def create_refresh_token(data: dict) -> str:
-    """Create a JWT refresh token with unique identifier."""
+def create_refresh_token(data: dict) -> tuple[str, str]:
+    """
+    Create a JWT refresh token with unique identifier.
+
+    Returns:
+        Tuple of (encoded_jwt, jti) where jti is the unique token identifier
+    """
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_expire_days)
     # Add unique identifier to make each token unique
-    to_encode.update({"exp": expire, "type": "refresh", "jti": str(uuid.uuid4())})
+    jti = str(uuid.uuid4())
+    to_encode.update({"exp": expire, "type": "refresh", "jti": jti})
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
-    return encoded_jwt
+    return encoded_jwt, jti
 
 
 def decode_token(token: str) -> dict:

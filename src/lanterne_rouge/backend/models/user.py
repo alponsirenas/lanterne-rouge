@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import Boolean, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -38,9 +38,11 @@ class Session(Base):
     __tablename__ = "sessions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    user_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
-    token: Mapped[str] = mapped_column(String(500), unique=True, nullable=False)
-    refresh_token: Mapped[str] = mapped_column(String(500), unique=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    access_token_jti: Mapped[str] = mapped_column(String(36), unique=True, nullable=False)
+    refresh_token_jti: Mapped[str] = mapped_column(String(36), unique=True, nullable=False)
     is_valid: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -55,7 +57,9 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    user_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, index=True)
+    user_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     action: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     resource: Mapped[str] = mapped_column(String(100), nullable=False)
     resource_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)

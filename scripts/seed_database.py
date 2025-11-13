@@ -1,4 +1,12 @@
-"""Seed script to create admin and tester accounts."""
+"""Seed script to create admin and tester accounts.
+
+WARNING: This script uses hardcoded passwords for development convenience.
+In production environments:
+1. Use environment variables for passwords
+2. Generate secure random passwords
+3. Store credentials in a secure secrets management system
+4. Never log or print passwords to console
+"""
 from sqlalchemy.orm import Session
 
 from lanterne_rouge.backend.core.security import get_password_hash
@@ -9,12 +17,12 @@ from lanterne_rouge.backend.models.user import User
 def seed_users():
     """Seed admin and tester users."""
     db: Session = SessionLocal()
-    
+
     try:
         # Check if users already exist
         admin_exists = db.query(User).filter(User.email == "admin@lanterne-rouge.com").first()
         tester_exists = db.query(User).filter(User.email == "tester@lanterne-rouge.com").first()
-        
+
         if not admin_exists:
             admin = User(
                 email="admin@lanterne-rouge.com",
@@ -24,9 +32,10 @@ def seed_users():
             )
             db.add(admin)
             print("✓ Created admin user: admin@lanterne-rouge.com (password: admin_password_123)")
+            print("  WARNING: Change this password in production!")
         else:
             print("→ Admin user already exists")
-        
+
         if not tester_exists:
             tester = User(
                 email="tester@lanterne-rouge.com",
@@ -35,13 +44,17 @@ def seed_users():
                 is_admin=False,
             )
             db.add(tester)
-            print("✓ Created tester user: tester@lanterne-rouge.com (password: tester_password_123)")
+            print(
+                "✓ Created tester user: tester@lanterne-rouge.com "
+                "(password: tester_password_123)"
+            )
+            print("  WARNING: Change this password in production!")
         else:
             print("→ Tester user already exists")
-        
+
         db.commit()
         print("\n✓ Database seeding completed successfully!")
-        
+
     except Exception as e:
         print(f"✗ Error seeding database: {e}")
         db.rollback()

@@ -10,7 +10,13 @@ class UserBase(BaseModel):
 
 
 class UserRegister(UserBase):
-    """Schema for user registration."""
+    """
+    Schema for user registration.
+
+    Note: Password validation currently only enforces length (8-100 chars).
+    Consider implementing additional complexity requirements (uppercase, lowercase,
+    numbers, special characters) for production use.
+    """
     password: str = Field(..., min_length=8, max_length=100)
 
 

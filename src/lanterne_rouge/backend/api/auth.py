@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from lanterne_rouge.backend.core.config import get_settings
 from lanterne_rouge.backend.core.security import (
     create_access_token,
     create_refresh_token,
@@ -21,6 +22,7 @@ from lanterne_rouge.backend.schemas.auth import (
     UserResponse,
 )
 
+settings = get_settings()
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
@@ -104,15 +106,19 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
         )
 
     # Create tokens
-    access_token = create_access_token(data={"sub": str(user.id), "email": user.email})
-    refresh_token = create_refresh_token(data={"sub": str(user.id)})
+    access_token, access_jti = create_access_token(
+        data={"sub": str(user.id), "email": user.email}
+    )
+    refresh_token, refresh_jti = create_refresh_token(data={"sub": str(user.id)})
 
-    # Store session
-    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    # Store session with token JTIs only (not full tokens for security)
+    expires_at = datetime.now(timezone.utc) + timedelta(
+        days=settings.refresh_token_expire_days
+    )
     session = SessionModel(
         user_id=user.id,
-        token=access_token,
-        refresh_token=refresh_token,
+        access_token_jti=access_jti,
+        refresh_token_jti=refresh_jti,
         is_valid=True,
         expires_at=expires_at,
     )
@@ -161,12 +167,19 @@ def refresh(token_data: TokenRefresh, db: Session = Depends(get_db)):
             )
 
         user_id = int(payload.get("sub"))
+        refresh_jti = payload.get("jti")
 
-        # Check if session exists and is valid
+        if not refresh_jti:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token format"
+            )
+
+        # Check if session exists and is valid using JTI
         session = db.query(SessionModel).filter(
-            SessionModel.refresh_token == token_data.refresh_token,
+            SessionModel.refresh_token_jti == refresh_jti,
             SessionModel.user_id == user_id,
-            SessionModel.is_valid == True  # noqa: E712
+            SessionModel.is_valid.is_(True)
         ).first()
 
         if not session:
@@ -202,17 +215,19 @@ def refresh(token_data: TokenRefresh, db: Session = Depends(get_db)):
         db.commit()
 
         # Create new tokens
-        access_token = create_access_token(
+        access_token, access_jti = create_access_token(
             data={"sub": str(user.id), "email": user.email}
         )
-        refresh_token = create_refresh_token(data={"sub": str(user.id)})
+        refresh_token, refresh_jti = create_refresh_token(data={"sub": str(user.id)})
 
         # Create new session
-        expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+        expires_at = datetime.now(timezone.utc) + timedelta(
+            days=settings.refresh_token_expire_days
+        )
         new_session = SessionModel(
             user_id=user.id,
-            token=access_token,
-            refresh_token=refresh_token,
+            access_token_jti=access_jti,
+            refresh_token_jti=refresh_jti,
             is_valid=True,
             expires_at=expires_at,
         )

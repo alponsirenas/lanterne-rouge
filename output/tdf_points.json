@@ -1,9 +1,9 @@
 {
-  "total_points": 164,
-  "stages_completed": 21,
-  "consecutive_stages": 5,
+  "total_points": 157,
+  "stages_completed": 20,
+  "consecutive_stages": 2,
   "breakaway_count": 8,
-  "gc_count": 12,
+  "gc_count": 11,
   "mountain_breakaway_count": 5,
   "bonuses_earned": [
     "consecutive_5"
@@ -550,24 +550,9 @@
         "effort_level": "threshold"
       },
       "activity_id": 15235766573
-    },
-    "2025-07-08": {
-      "stage_number": 3,
-      "stage_type": "hilly",
-      "ride_mode": "gc",
-      "points_earned": 7,
-      "completed_at": "2025-11-13T04:28:30.138276",
-      "activity_data": {
-        "duration_minutes": 90.0,
-        "distance_km": 35.2,
-        "normalized_power": 165.0,
-        "intensity_factor": 0.75,
-        "tss": 67.5,
-        "effort_level": "tempo"
-      }
     }
   },
-  "last_updated": "2025-11-13T04:28:30.138298",
+  "last_updated": "2025-08-18T10:18:16.299298",
   "used_activity_ids": [
     15052645086,
     15064156755,
