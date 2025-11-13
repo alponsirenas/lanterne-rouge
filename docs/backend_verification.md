@@ -80,11 +80,12 @@ CREATE TABLE users (
 CREATE TABLE sessions (
     id INTEGER PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    token VARCHAR(500) UNIQUE NOT NULL,
-    refresh_token VARCHAR(500) UNIQUE NOT NULL,
+    access_token_jti VARCHAR(36) UNIQUE NOT NULL,
+    refresh_token_jti VARCHAR(36) UNIQUE NOT NULL,
     is_valid BOOLEAN NOT NULL DEFAULT TRUE,
     created_at DATETIME NOT NULL,
-    expires_at DATETIME NOT NULL
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ```
 
