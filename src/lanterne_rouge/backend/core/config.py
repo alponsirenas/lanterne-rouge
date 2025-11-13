@@ -1,7 +1,5 @@
 """Settings and configuration management for the backend API."""
-import os
 from functools import lru_cache
-from typing import Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings

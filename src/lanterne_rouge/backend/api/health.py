@@ -12,7 +12,7 @@ router = APIRouter(tags=["health"])
 def health_check():
     """
     Health check endpoint.
-    
+
     Returns:
         Health status, timestamp, and API version
     """
