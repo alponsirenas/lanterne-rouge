@@ -19,7 +19,7 @@ uvicorn[standard]==0.32.*  # ASGI server
 sqlalchemy==2.0.*    # ORM for database operations
 alembic==1.14.*      # Database migrations
 python-jose[cryptography]==3.3.*  # JWT token handling
-passlib[bcrypt]==1.7.*  # Password hashing
+bcrypt<4.1             # bcrypt package for password hashing (avoid 4.1 truncation change)
 python-multipart==0.0.*  # Form data parsing
 httpx==0.28.*        # HTTP client for testing
 pydantic-settings==2.12.*  # Settings management

@@ -253,4 +253,4 @@ def refresh(token_data: TokenRefresh, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(e)
-        )
+        ) from e
