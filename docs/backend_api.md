@@ -181,8 +181,8 @@ DEBUG=false
 |--------|------|-------------|
 | id | Integer | Primary key |
 | user_id | Integer | User reference |
-| token | String(500) | JWT access token |
-| refresh_token | String(500) | JWT refresh token |
+| access_token_jti | String(36) | JWT access token ID |
+| refresh_token_jti | String(36) | JWT refresh token ID |
 | is_valid | Boolean | Session validity |
 | created_at | DateTime | Session creation time |
 | expires_at | DateTime | Session expiration time |
