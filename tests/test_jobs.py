@@ -85,6 +85,7 @@ def test_user(client):
     }
     response = client.post("/auth/register", json=user_data)
     assert response.status_code == 201
+    user_id = response.json()["id"]
     
     # Login to get token
     response = client.post("/auth/login", json=user_data)
@@ -93,7 +94,8 @@ def test_user(client):
     
     return {
         "email": user_data["email"],
-        "token": token_data["access_token"]
+        "token": token_data["access_token"],
+        "user_id": user_id
     }
 
 
