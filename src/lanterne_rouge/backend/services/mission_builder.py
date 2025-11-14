@@ -55,7 +55,8 @@ def _load_prompt_template() -> str:
 
 def _get_fallback_prompt() -> str:
     """Fallback prompt template if file not found."""
-    return """You are an expert cycling coach AI. Generate a personalized mission configuration based on the questionnaire.
+    return """You are an expert cycling coach AI. Generate a personalized \
+mission configuration based on the questionnaire.
 
 Return valid JSON with this structure:
 {
@@ -83,7 +84,8 @@ Return valid JSON with this structure:
     "evening_summary": true,
     "weekly_review": true
   },
-  "notes": "Detailed coaching notes about periodization, weekly structure, key workouts, event strategy, and recovery."
+  "notes": "Detailed coaching notes about periodization, weekly structure, \
+key workouts, event strategy, and recovery."
 }
 
 Be realistic about timeframes and respect the athlete's constraints."""
@@ -112,7 +114,10 @@ def _redact_sensitive_data(data: dict) -> dict:
 def _build_questionnaire_prompt(questionnaire: MissionBuilderQuestionnaire) -> str:
     """Build the user prompt from questionnaire data."""
     preferred_days = questionnaire.preferred_training_days or ["Not specified"]
-    days_str = ", ".join(preferred_days) if isinstance(preferred_days, list) else str(preferred_days)
+    if isinstance(preferred_days, list):
+        days_str = ", ".join(preferred_days)
+    else:
+        days_str = str(preferred_days)
     
     constraints_str = questionnaire.constraints or "None specified"
     
@@ -192,11 +197,18 @@ async def generate_mission_draft(
     
     if error and "json" in error.lower():
         # Malformed JSON - retry with temperature=0 and clarification
-        logger.warning(f"First attempt produced malformed JSON: {error}. Retrying with temperature=0")
+        logger.warning(
+            f"First attempt produced malformed JSON: {error}. "
+            "Retrying with temperature=0"
+        )
         
         clarification_message = {
             "role": "user",
-            "content": "The previous response was not valid JSON. Please respond ONLY with valid JSON, no markdown formatting or extra text. Start directly with { and end with }."
+            "content": (
+                "The previous response was not valid JSON. "
+                "Please respond ONLY with valid JSON, no markdown formatting "
+                "or extra text. Start directly with { and end with }."
+            )
         }
         messages.append(clarification_message)
         
