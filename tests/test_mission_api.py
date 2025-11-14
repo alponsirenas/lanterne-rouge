@@ -10,7 +10,6 @@ from sqlalchemy.orm import sessionmaker
 from lanterne_rouge.backend.core.security import get_password_hash
 from lanterne_rouge.backend.db.session import get_db
 from lanterne_rouge.backend.main import app
-from lanterne_rouge.backend.models.mission import Mission, MissionState
 from lanterne_rouge.backend.models.user import Base, User
 
 # Test database
@@ -55,6 +54,7 @@ def test_user(client):
     }
     response = client.post("/auth/register", json=user_data)
     assert response.status_code == 201
+    user_id = response.json()["id"]
     
     # Login to get token
     response = client.post("/auth/login", json=user_data)
@@ -64,7 +64,7 @@ def test_user(client):
     return {
         "email": user_data["email"],
         "token": token_data["access_token"],
-        "user_id": response.json()
+        "user_id": user_id
     }
 
 

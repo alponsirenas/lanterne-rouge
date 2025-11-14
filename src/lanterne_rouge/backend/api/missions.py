@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from lanterne_rouge.backend.api.dependencies import get_current_admin_user, get_current_user
+from lanterne_rouge.backend.api.dependencies import get_current_user
 from lanterne_rouge.backend.db.session import get_db
 from lanterne_rouge.backend.models.mission import Mission
 from lanterne_rouge.backend.models.user import AuditLog, User
@@ -70,7 +70,7 @@ def create_mission(
         )
     
     if mission_data.prep_start_date and mission_data.prep_end_date:
-        if mission_data.prep_end_date < mission_data.prep_start_date:
+        if mission_data.prep_end_date <= mission_data.prep_start_date:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Prep end date must be after prep start date"
@@ -189,20 +189,19 @@ def update_mission(
     # Validate dates if updated
     event_start = update_data.get("event_start_date", mission.event_start_date)
     event_end = update_data.get("event_end_date", mission.event_end_date)
-    if event_end < event_start:
+    if event_end <= event_start:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Event end date must be after start date"
         )
     
-    if "prep_start_date" in update_data and "prep_end_date" in update_data:
-        prep_start = update_data["prep_start_date"]
-        prep_end = update_data["prep_end_date"]
-        if prep_start and prep_end and prep_end < prep_start:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Prep end date must be after prep start date"
-            )
+    prep_start = update_data.get("prep_start_date", mission.prep_start_date)
+    prep_end = update_data.get("prep_end_date", mission.prep_end_date)
+    if prep_start and prep_end and prep_end <= prep_start:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Prep end date must be after prep start date"
+        )
     
     for field, value in update_data.items():
         setattr(mission, field, value)

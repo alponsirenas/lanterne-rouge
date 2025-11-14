@@ -4,7 +4,6 @@ from typing import Optional
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from zoneinfo import ZoneInfo
 
 from lanterne_rouge.backend.models.mission import Mission, MissionState
 
@@ -167,21 +166,3 @@ class MissionLifecycleService:
             db.commit()
         
         return transitions
-    
-    @classmethod
-    def get_mission_timezone_date(cls, mission: Mission) -> date:
-        """
-        Get current date in mission's timezone.
-        
-        Args:
-            mission: Mission instance
-            
-        Returns:
-            Current date in mission timezone
-        """
-        try:
-            tz = ZoneInfo(mission.timezone)
-            return datetime.now(tz).date()
-        except Exception:
-            # Fallback to UTC if timezone is invalid
-            return datetime.now(timezone.utc).date()

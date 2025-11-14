@@ -1,11 +1,11 @@
 """Database models for missions and related entities."""
-from datetime import datetime, timezone
+import enum
+from datetime import date, datetime, timezone
 from typing import Optional
 from uuid import uuid4
 
 from sqlalchemy import (
     JSON,
-    Boolean,
     Date,
     DateTime,
     Enum as SQLEnum,
@@ -17,7 +17,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from lanterne_rouge.backend.models.user import Base
-import enum
 
 
 class MissionState(str, enum.Enum):
@@ -53,10 +52,10 @@ class Mission(Base):
     mission_type: Mapped[str] = mapped_column(String(100), nullable=False)
     
     # Date fields
-    prep_start_date: Mapped[Optional[datetime]] = mapped_column(Date, nullable=True)
-    prep_end_date: Mapped[Optional[datetime]] = mapped_column(Date, nullable=True)
-    event_start_date: Mapped[datetime] = mapped_column(Date, nullable=False)
-    event_end_date: Mapped[datetime] = mapped_column(Date, nullable=False)
+    prep_start_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
+    prep_end_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
+    event_start_date: Mapped[date] = mapped_column(Date, nullable=False)
+    event_end_date: Mapped[date] = mapped_column(Date, nullable=False)
     
     # State management
     state: Mapped[str] = mapped_column(
@@ -123,7 +122,7 @@ class MissionRun(Base):
     )
     
     # Run metadata
-    run_date: Mapped[datetime] = mapped_column(Date, nullable=False, index=True)
+    run_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Workout and metrics data stored as JSON
@@ -151,7 +150,7 @@ class EventProgress(Base):
     """Event progress tracking for multi-stage missions."""
     __tablename__ = "event_progress"
 
-    # Composite primary key
+    # Primary key - auto-incrementing integer
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     
     # Foreign key to mission
