@@ -14,7 +14,13 @@ from lanterne_rouge.backend.schemas.mission import (
     MissionTransition,
     MissionUpdate,
 )
+from lanterne_rouge.backend.schemas.mission_builder import (
+    MissionBuilderQuestionnaire,
+    MissionDraftResponse,
+    MissionDraftError,
+)
 from lanterne_rouge.backend.services.mission_lifecycle import MissionLifecycleService
+from lanterne_rouge.backend.services.mission_builder import generate_mission_draft
 
 router = APIRouter(prefix="/missions", tags=["missions"])
 
@@ -325,3 +331,51 @@ def transition_mission(
     db.commit()
 
     return mission
+
+
+@router.post("/draft", response_model=MissionDraftResponse, status_code=status.HTTP_201_CREATED)
+async def create_mission_draft(
+    questionnaire: MissionBuilderQuestionnaire,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Generate a mission draft using LLM based on questionnaire responses.
+    
+    This endpoint uses OpenAI GPT-4o-mini in JSON mode to create a personalized
+    mission configuration. The draft is NOT saved to the database - it's returned
+    for the user to review and confirm.
+    
+    Args:
+        questionnaire: User's questionnaire responses
+        current_user: Current authenticated user
+    
+    Returns:
+        MissionDraftResponse with generated mission configuration
+    
+    Raises:
+        HTTPException: 502 if LLM generation fails after retry
+        HTTPException: 500 for other server errors
+    """
+    # Log audit trail for draft generation
+    try:
+        # Generate draft using LLM
+        draft_response, error = await generate_mission_draft(questionnaire)
+        
+        if error:
+            # Return 502 Bad Gateway for LLM failures
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail=f"Failed to generate mission draft: {error}"
+            )
+        
+        return draft_response
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        # Log unexpected errors
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unexpected error generating mission draft: {str(e)}"
+        )

@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-11-14T20:31:11.729242+00:00",
+  "model": "gpt-4o-mini",
+  "questionnaire": {
+    "event_name": "Unbound 200",
+    "event_date": "2026-02-12",
+    "mission_type": "gravel_ultra",
+    "weekly_hours": {
+      "min": 8,
+      "max": 12
+    },
+    "current_ftp": "[REDACTED]",
+    "preferred_training_days": "[REDACTED]",
+    "constraints": "[REDACTED]",
+    "riding_style": "steady",
+    "notification_preferences": {
+      "morning_briefing": true,
+      "evening_summary": true,
+      "weekly_review": true
+    }
+  },
+  "draft": {
+    "name": "Unbound 200 Preparation Mission",
+    "mission_type": "gravel_ultra",
+    "prep_start": "2025-11-21",
+    "event_start": "2026-02-12",
+    "event_end": "2026-02-12",
+    "points_schema": {
+      "description": "Points reward consistency and endurance focus for ultra-distance gravel",
+      "daily_base": 15,
+      "intensity_multipliers": {
+        "easy": 1.1,
+        "moderate": 1.8,
+        "hard": 2.8
+      }
+    },
+    "constraints": {
+      "min_readiness": 70,
+      "min_tsb": -12,
+      "max_weekly_hours": 12
+    },
+    "notification_preferences": {
+      "morning_briefing": true,
+      "evening_summary": true,
+      "weekly_review": true
+    },
+    "notes": "14-week preparation focusing on progressive volume build and event-specific demands."
+  },
+  "tokens": {
+    "prompt": 500,
+    "completion": 300
+  }
+}
