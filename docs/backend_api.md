@@ -144,6 +144,139 @@ Get new tokens using a refresh token.
 }
 ```
 
+### Mission Builder
+
+#### Create Mission Draft (LLM-Powered)
+
+**POST** `/missions/draft`
+
+Generate a personalized mission configuration using AI based on a questionnaire. This endpoint uses OpenAI GPT-4o-mini in JSON mode to create a draft mission that is NOT saved to the database. The draft is returned for review and confirmation.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "event_name": "Unbound 200",
+  "event_date": "2025-06-07",
+  "mission_type": "gravel_ultra",
+  "weekly_hours": {
+    "min": 8,
+    "max": 12
+  },
+  "current_ftp": 250,
+  "preferred_training_days": ["Monday", "Wednesday", "Saturday"],
+  "constraints": "No injuries. Weekend mornings work best.",
+  "riding_style": "steady",
+  "notification_preferences": {
+    "morning_briefing": true,
+    "evening_summary": true,
+    "weekly_review": true
+  }
+}
+```
+
+**Request Fields:**
+- `event_name` (required): Name of target event (1-255 chars)
+- `event_date` (required): Event date in YYYY-MM-DD format (must be future date)
+- `mission_type` (required): Type of mission (e.g., gravel_ultra, road_century, crit_series, gran_fondo)
+- `weekly_hours` (required): Available training hours per week
+  - `min`: Minimum hours (1-40)
+  - `max`: Maximum hours (1-40, must be ≥ min)
+- `current_ftp` (required): Current Functional Threshold Power in watts (50-500)
+- `preferred_training_days` (optional): Array of preferred training days
+- `constraints` (optional): Any constraints like injuries or time windows (max 1000 chars)
+- `riding_style` (optional): Desired event riding style (default: "steady")
+  - Options: "gc", "steady", "breakaway", "aggressive", "mixed"
+- `notification_preferences` (optional): Communication preferences
+
+**Response (201 Created):**
+```json
+{
+  "draft": {
+    "name": "Unbound 200 Preparation Mission",
+    "mission_type": "gravel_ultra",
+    "prep_start": "2025-03-01",
+    "event_start": "2025-06-07",
+    "event_end": "2025-06-07",
+    "points_schema": {
+      "description": "Points reward consistency and endurance focus",
+      "daily_base": 15,
+      "intensity_multipliers": {
+        "easy": 1.1,
+        "moderate": 1.8,
+        "hard": 2.8
+      }
+    },
+    "constraints": {
+      "min_readiness": 70,
+      "min_tsb": -12,
+      "max_weekly_hours": 12
+    },
+    "notification_preferences": {
+      "morning_briefing": true,
+      "evening_summary": true,
+      "weekly_review": true
+    },
+    "notes": "14-week preparation focusing on progressive volume build..."
+  },
+  "generated_at": "2025-11-14T20:31:11.234Z",
+  "model_used": "gpt-4o-mini",
+  "prompt_tokens": 500,
+  "completion_tokens": 300
+}
+```
+
+**Error Handling:**
+- **400 Bad Request**: Validation errors (invalid dates, out-of-range values)
+- **403 Forbidden**: Authentication required
+- **422 Unprocessable Entity**: Schema validation failures
+- **502 Bad Gateway**: LLM generation failed (after retry with temperature=0)
+- **500 Internal Server Error**: Unexpected server errors
+
+**Retry Logic:**
+1. First attempt: LLM call with temperature=0.7
+2. If malformed JSON: Retry with temperature=0 and clarification prompt
+3. If second attempt fails: Return 502 error with details
+
+**Privacy & Logging:**
+- All prompts and responses are logged to `logs/mission_builder/` (excluded from git)
+- Sensitive data (FTP, constraints, training days) are redacted in logs
+- Event names are partially redacted (first and last word only)
+
+**Usage Example:**
+
+```python
+import requests
+
+# Authenticate first
+auth_response = requests.post("http://localhost:8000/auth/login", json={
+    "email": "user@example.com",
+    "password": "password"
+})
+token = auth_response.json()["access_token"]
+
+# Create mission draft
+headers = {"Authorization": f"Bearer {token}"}
+questionnaire = {
+    "event_name": "My First Century",
+    "event_date": "2025-08-15",
+    "mission_type": "road_century",
+    "weekly_hours": {"min": 6, "max": 10},
+    "current_ftp": 180,
+    "riding_style": "steady"
+}
+
+response = requests.post(
+    "http://localhost:8000/missions/draft",
+    json=questionnaire,
+    headers=headers
+)
+
+draft = response.json()["draft"]
+# Review and create actual mission using POST /missions
+```
+
 ## Configuration
 
 Settings can be configured via environment variables:
