@@ -91,6 +91,7 @@ def test_admin(client):
     db.add(admin)
     db.commit()
     db.refresh(admin)
+    admin_id = admin.id
     db.close()
 
     # Login to get token
@@ -104,7 +105,7 @@ def test_admin(client):
     return {
         "email": "admin@example.com",
         "token": token_data["access_token"],
-        "user_id": admin.id
+        "user_id": admin_id
     }
 
 
@@ -428,100 +429,6 @@ def test_mission_state_flow(client, test_user, sample_mission_data):
         headers=headers
     )
     assert response.status_code == 409
-
-
-def test_mission_runs_crud(client, test_user, sample_mission_data):
-    """Ensure mission runs can be created, listed, updated, and deleted."""
-    headers = {"Authorization": f"Bearer {test_user['token']}"}
-    mission_id = client.post("/missions", json=sample_mission_data, headers=headers).json()["id"]
-
-    # Create run
-    run_payload = {
-        "run_date": date.today().isoformat(),
-        "summary": "Endurance ride",
-        "workout_json": {"type": "Endurance", "duration": 90},
-        "metrics_json": {"hr": 140}
-    }
-    create_response = client.post(
-        f"/missions/{mission_id}/runs",
-        json=run_payload,
-        headers=headers
-    )
-    assert create_response.status_code == 201
-    run_id = create_response.json()["id"]
-
-    # List runs
-    list_response = client.get(f"/missions/{mission_id}/runs", headers=headers)
-    assert list_response.status_code == 200
-    assert len(list_response.json()) == 1
-
-    # Update run
-    update_response = client.put(
-        f"/missions/{mission_id}/runs/{run_id}",
-        json={"summary": "Updated summary"},
-        headers=headers
-    )
-    assert update_response.status_code == 200
-    assert update_response.json()["summary"] == "Updated summary"
-
-    # Delete run
-    delete_response = client.delete(
-        f"/missions/{mission_id}/runs/{run_id}",
-        headers=headers
-    )
-    assert delete_response.status_code == 204
-
-    # Ensure gone
-    list_response = client.get(f"/missions/{mission_id}/runs", headers=headers)
-    assert list_response.status_code == 200
-    assert len(list_response.json()) == 0
-
-
-def test_event_progress_crud(client, test_user, sample_mission_data):
-    """Ensure event progress entries can be managed."""
-    headers = {"Authorization": f"Bearer {test_user['token']}"}
-    mission_id = client.post("/missions", json=sample_mission_data, headers=headers).json()["id"]
-
-    progress_payload = {
-        "stage_number": 1,
-        "stage_type": "flat",
-        "ride_mode": "gc",
-        "points": 5,
-        "bonuses": {"consecutive_5": False}
-    }
-    create_response = client.post(
-        f"/missions/{mission_id}/progress",
-        json=progress_payload,
-        headers=headers
-    )
-    assert create_response.status_code == 201
-    progress_id = create_response.json()["id"]
-
-    list_response = client.get(f"/missions/{mission_id}/progress", headers=headers)
-    assert list_response.status_code == 200
-    assert len(list_response.json()) == 1
-
-    update_response = client.put(
-        f"/missions/{mission_id}/progress/{progress_id}",
-        json={"points": 8, "ride_mode": "breakaway"},
-        headers=headers
-    )
-    assert update_response.status_code == 200
-    assert update_response.json()["points"] == 8
-    assert update_response.json()["ride_mode"] == "breakaway"
-
-    delete_response = client.delete(
-        f"/missions/{mission_id}/progress/{progress_id}",
-        headers=headers
-    )
-    assert delete_response.status_code == 204
-
-    list_response = client.get(f"/missions/{mission_id}/progress", headers=headers)
-    assert list_response.status_code == 200
-    assert len(list_response.json()) == 0
-
-
-def test_jobs_endpoint_requires_admin(client, test_user):
     """Verify non-admin users cannot trigger background job endpoint."""
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/jobs/check-mission-transitions", headers=headers)

@@ -27,7 +27,17 @@ def override_get_db():
         db.close()
 
 
-app.dependency_overrides[get_db] = override_get_db
+
+@pytest.fixture(scope="module", autouse=True)
+def apply_db_override():
+    """Apply dependency override for this module only."""
+    original = app.dependency_overrides.get(get_db)
+    app.dependency_overrides[get_db] = override_get_db
+    yield
+    if original is not None:
+        app.dependency_overrides[get_db] = original
+    else:
+        app.dependency_overrides.pop(get_db, None)
 
 
 @pytest.fixture(scope="function", autouse=True)
