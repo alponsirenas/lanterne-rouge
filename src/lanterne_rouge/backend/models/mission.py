@@ -38,7 +38,7 @@ class Mission(Base):
         default=lambda: str(uuid4()),
         nullable=False
     )
-    
+
     # Foreign key to user
     user_id: Mapped[int] = mapped_column(
         Integer,
@@ -46,17 +46,17 @@ class Mission(Base):
         nullable=False,
         index=True
     )
-    
+
     # Mission metadata
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     mission_type: Mapped[str] = mapped_column(String(100), nullable=False)
-    
+
     # Date fields
     prep_start_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     prep_end_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     event_start_date: Mapped[date] = mapped_column(Date, nullable=False)
     event_end_date: Mapped[date] = mapped_column(Date, nullable=False)
-    
+
     # State management
     state: Mapped[str] = mapped_column(
         SQLEnum(MissionState),
@@ -64,17 +64,17 @@ class Mission(Base):
         nullable=False,
         index=True
     )
-    
+
     # Points schema stored as JSON
     points_schema: Mapped[dict] = mapped_column(JSON, nullable=False)
-    
+
     # Timezone for date calculations
     timezone: Mapped[str] = mapped_column(String(50), default="UTC", nullable=False)
-    
+
     # Constraints and preferences stored as JSON
     constraints: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     notification_preferences: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    
+
     # Audit fields
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -87,7 +87,7 @@ class Mission(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False
     )
-    
+
     # Relationships
     runs: Mapped[list["MissionRun"]] = relationship(
         "MissionRun",
@@ -112,7 +112,7 @@ class MissionRun(Base):
         default=lambda: str(uuid4()),
         nullable=False
     )
-    
+
     # Foreign key to mission
     mission_id: Mapped[str] = mapped_column(
         String(36),
@@ -120,15 +120,15 @@ class MissionRun(Base):
         nullable=False,
         index=True
     )
-    
+
     # Run metadata
     run_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Workout and metrics data stored as JSON
     workout_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     metrics_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    
+
     # Audit fields
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -141,7 +141,7 @@ class MissionRun(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False
     )
-    
+
     # Relationships
     mission: Mapped["Mission"] = relationship("Mission", back_populates="runs")
 
@@ -152,7 +152,7 @@ class EventProgress(Base):
 
     # Primary key - auto-incrementing integer
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    
+
     # Foreign key to mission
     mission_id: Mapped[str] = mapped_column(
         String(36),
@@ -160,28 +160,28 @@ class EventProgress(Base):
         nullable=False,
         index=True
     )
-    
+
     # Stage information
     stage_number: Mapped[int] = mapped_column(Integer, nullable=False)
     stage_type: Mapped[str] = mapped_column(String(50), nullable=False)
     ride_mode: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    
+
     # Points and completion
     points: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     completed_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),
         nullable=True
     )
-    
+
     # Bonuses stored as JSON
     bonuses: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    
+
     # Audit fields
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         nullable=False
     )
-    
+
     # Relationships
     mission: Mapped["Mission"] = relationship("Mission", back_populates="progress_entries")

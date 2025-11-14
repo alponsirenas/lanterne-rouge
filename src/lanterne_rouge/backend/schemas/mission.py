@@ -22,7 +22,6 @@ class MissionBase(BaseModel):
 
 class MissionCreate(MissionBase):
     """Schema for creating a mission."""
-    pass
 
 
 class MissionUpdate(BaseModel):
@@ -66,7 +65,6 @@ class MissionRunBase(BaseModel):
 
 class MissionRunCreate(MissionRunBase):
     """Schema for creating a mission run."""
-    pass
 
 
 class MissionRunUpdate(BaseModel):
@@ -100,7 +98,6 @@ class EventProgressBase(BaseModel):
 
 class EventProgressCreate(EventProgressBase):
     """Schema for creating event progress."""
-    pass
 
 
 class EventProgressUpdate(BaseModel):
