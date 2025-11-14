@@ -7,6 +7,7 @@ from alembic import context
 
 # Import the models and settings
 from lanterne_rouge.backend.models.user import Base
+from lanterne_rouge.backend.models.mission import Mission, MissionRun, EventProgress  # noqa: F401
 from lanterne_rouge.backend.core.config import get_settings
 
 # this is the Alembic Config object, which provides

@@ -36,6 +36,17 @@ class Settings(BaseSettings):
     # localhost:3000 is for frontend development
     cors_origins: list[str] = ["http://localhost:3000"]
 
+    # Mission scheduler
+    enable_mission_scheduler: bool = Field(
+        default=False,
+        validation_alias="ENABLE_MISSION_SCHEDULER"
+    )
+    mission_transition_check_interval_minutes: int = Field(
+        default=1440,  # 24 hours
+        validation_alias="MISSION_TRANSITION_INTERVAL_MINUTES",
+        ge=5
+    )
+
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
