@@ -17,7 +17,6 @@ from lanterne_rouge.backend.schemas.mission import (
 from lanterne_rouge.backend.schemas.mission_builder import (
     MissionBuilderQuestionnaire,
     MissionDraftResponse,
-    MissionDraftError,
 )
 from lanterne_rouge.backend.services.mission_lifecycle import MissionLifecycleService
 from lanterne_rouge.backend.services.mission_builder import generate_mission_draft
@@ -356,7 +355,6 @@ async def create_mission_draft(
         HTTPException: 502 if LLM generation fails after retry
         HTTPException: 500 for other server errors
     """
-    # Log audit trail for draft generation
     try:
         # Generate draft using LLM
         draft_response, error = await generate_mission_draft(questionnaire)

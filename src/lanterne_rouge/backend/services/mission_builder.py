@@ -13,6 +13,7 @@ from lanterne_rouge.backend.schemas.mission_builder import (
     MissionBuilderQuestionnaire,
     MissionDraft,
     MissionDraftResponse,
+    NotificationPreferences,
 )
 
 logger = logging.getLogger(__name__)
@@ -40,16 +41,21 @@ def _model_supports_json(model: str) -> bool:
 
 def _load_prompt_template() -> str:
     """Load the mission builder prompt template."""
-    # Look for prompts directory relative to project root
+    # Robustly find project root by searching for "prompts" directory
     current_file = Path(__file__)
-    project_root = current_file.parent.parent.parent.parent.parent  # Navigate to project root
+    project_root = current_file.parent
+    while project_root != project_root.parent:
+        if (project_root / "prompts").exists():
+            break
+        project_root = project_root.parent
+    
     prompt_path = project_root / "prompts" / "mission_builder.md"
     
     if not prompt_path.exists():
         logger.warning(f"Prompt template not found at {prompt_path}, using fallback")
         return _get_fallback_prompt()
     
-    with open(prompt_path, 'r') as f:
+    with open(prompt_path, 'r', encoding='utf-8') as f:
         return f.read()
 
 
@@ -111,6 +117,17 @@ def _redact_sensitive_data(data: dict) -> dict:
     return redacted
 
 
+def _format_notification_preferences(prefs: Optional[NotificationPreferences]) -> str:
+    """Format notification preferences for prompt."""
+    if prefs is None:
+        return "Not specified"
+    return (
+        f"- Morning Briefing: {prefs.morning_briefing}\n"
+        f"- Evening Summary: {prefs.evening_summary}\n"
+        f"- Weekly Review: {prefs.weekly_review}"
+    )
+
+
 def _build_questionnaire_prompt(questionnaire: MissionBuilderQuestionnaire) -> str:
     """Build the user prompt from questionnaire data."""
     preferred_days = questionnaire.preferred_training_days or ["Not specified"]
@@ -138,9 +155,7 @@ Constraints:
 {constraints_str}
 
 Notification Preferences:
-- Morning Briefing: {questionnaire.notification_preferences.morning_briefing}
-- Evening Summary: {questionnaire.notification_preferences.evening_summary}
-- Weekly Review: {questionnaire.notification_preferences.weekly_review}
+{_format_notification_preferences(questionnaire.notification_preferences)}
 
 Please generate a complete, realistic mission configuration in JSON format."""
     
@@ -170,7 +185,7 @@ async def generate_mission_draft(
         logger.error(error_msg)
         return None, error_msg
     
-    client = openai.OpenAI(api_key=api_key)
+    client = openai.AsyncOpenAI(api_key=api_key)
     
     # Load prompt template
     system_prompt = _load_prompt_template()
@@ -251,7 +266,7 @@ async def generate_mission_draft(
 
 
 async def _call_llm_with_retry(
-    client: openai.OpenAI,
+    client: openai.AsyncOpenAI,
     model: str,
     messages: list,
     temperature: float,
@@ -277,7 +292,7 @@ async def _call_llm_with_retry(
             api_params["response_format"] = {"type": "json_object"}
         
         # Make API call
-        response = client.chat.completions.create(**api_params)
+        response = await client.chat.completions.create(**api_params)
         
         # Extract content
         content = response.choices[0].message.content
@@ -291,11 +306,15 @@ async def _call_llm_with_retry(
             if "```json" in content:
                 start = content.find("```json") + 7
                 end = content.find("```", start)
+                if end == -1:
+                    raise json.JSONDecodeError("Malformed markdown code block", content, 0)
                 json_str = content[start:end].strip()
                 draft_data = json.loads(json_str)
             elif "```" in content:
                 start = content.find("```") + 3
                 end = content.find("```", start)
+                if end == -1:
+                    raise json.JSONDecodeError("Malformed markdown code block", content, 0)
                 json_str = content[start:end].strip()
                 draft_data = json.loads(json_str)
             else:
@@ -350,7 +369,7 @@ def _log_to_file(
         }
         
         # Write to file
-        with open(log_file, 'w') as f:
+        with open(log_file, 'w', encoding='utf-8') as f:
             json.dump(log_data, f, indent=2, default=str)
         
         logger.info(f"Logged mission draft to {log_file}")

@@ -2,7 +2,7 @@
 from datetime import date
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class WeeklyHours(BaseModel):
@@ -49,7 +49,7 @@ class MissionBuilderQuestionnaire(BaseModel):
         default="steady",
         description="Desired event riding style (gc/steady, breakaway/aggressive, mixed)"
     )
-    notification_preferences: Optional[NotificationPreferences] = Field(
+    notification_preferences: NotificationPreferences = Field(
         default_factory=NotificationPreferences,
         description="Communication preferences"
     )
@@ -58,9 +58,8 @@ class MissionBuilderQuestionnaire(BaseModel):
     @classmethod
     def event_must_be_future(cls, v):
         """Validate that event is in the future."""
-        from datetime import date as date_class
-        today = date_class.today()
-        if v < today:
+        today = date.today()
+        if v <= today:
             raise ValueError('Event date must be in the future')
         return v
 
@@ -126,12 +125,14 @@ class MissionDraft(BaseModel):
     )
     notes: str = Field(..., min_length=10, description="Detailed coaching notes")
 
-    def model_post_init(self, __context):
-        """Post-initialization validation."""
+    @model_validator(mode='after')
+    def validate_dates(self) -> 'MissionDraft':
+        """Validate date relationships."""
         if self.prep_start >= self.event_start:
             raise ValueError('prep_start must be before event_start')
         if self.event_end < self.event_start:
             raise ValueError('event_end must be on or after event_start')
+        return self
 
 
 class MissionDraftResponse(BaseModel):

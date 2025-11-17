@@ -14,7 +14,6 @@ from lanterne_rouge.backend.models.user import Base
 from lanterne_rouge.backend.schemas.mission_builder import (
     MissionBuilderQuestionnaire,
     MissionDraft,
-    WeeklyHours,
 )
 
 # Test database
@@ -144,7 +143,8 @@ def test_questionnaire_validation_success(sample_questionnaire):
 
 
 def test_questionnaire_validation_past_event():
-    """Test that past event dates are rejected."""
+    """Test that past event dates and today are rejected."""
+    # Test past date
     past_date = date.today() - timedelta(days=1)
     data = {
         "event_name": "Past Event",
@@ -156,6 +156,12 @@ def test_questionnaire_validation_past_event():
     
     with pytest.raises(ValueError, match="Event date must be in the future"):
         MissionBuilderQuestionnaire(**data)
+    
+    # Test today's date (also rejected)
+    today_data = data.copy()
+    today_data["event_date"] = date.today().isoformat()
+    with pytest.raises(ValueError, match="Event date must be in the future"):
+        MissionBuilderQuestionnaire(**today_data)
 
 
 def test_questionnaire_validation_invalid_hours():
@@ -239,7 +245,7 @@ def test_mission_draft_validation_invalid_dates():
         MissionDraft(**data)
 
 
-@patch('lanterne_rouge.backend.services.mission_builder.openai.OpenAI')
+@patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
 def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user, 
                                      sample_questionnaire, sample_llm_response):
@@ -247,7 +253,7 @@ def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user,
     # Mock environment variable
     mock_getenv.return_value = "fake-api-key"
     
-    # Mock OpenAI client
+    # Mock AsyncOpenAI client
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
     
@@ -258,7 +264,8 @@ def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user,
     mock_response.usage.prompt_tokens = 500
     mock_response.usage.completion_tokens = 300
     
-    mock_client.chat.completions.create.return_value = mock_response
+    # Use AsyncMock for the async create method
+    mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
     
     # Make request
     headers = {"Authorization": f"Bearer {test_user['token']}"}
@@ -274,7 +281,7 @@ def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user,
     assert data["draft"]["mission_type"] == "gravel_ultra"
 
 
-@patch('lanterne_rouge.backend.services.mission_builder.openai.OpenAI')
+@patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
 def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client, 
                                                     test_user, sample_questionnaire, 
@@ -285,10 +292,10 @@ def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client,
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
     
-    # First response: malformed JSON (with markdown)
+    # First response: malformed JSON (text prefix before JSON)
     mock_response_1 = MagicMock()
     mock_response_1.choices = [MagicMock()]
-    mock_response_1.choices[0].message.content = f"```json\n{json.dumps(sample_llm_response)}\n```"
+    mock_response_1.choices[0].message.content = "Here's your mission: " + json.dumps(sample_llm_response)
     mock_response_1.usage.prompt_tokens = 500
     mock_response_1.usage.completion_tokens = 300
     
@@ -299,11 +306,8 @@ def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client,
     mock_response_2.usage.prompt_tokens = 520
     mock_response_2.usage.completion_tokens = 300
     
-    # Note: The first response with markdown should actually parse fine
-    # Let's make the first one truly malformed
-    mock_response_1.choices[0].message.content = "Here's your mission: " + json.dumps(sample_llm_response)
-    
-    mock_client.chat.completions.create.side_effect = [mock_response_1, mock_response_2]
+    # Use AsyncMock for the async create method
+    mock_client.chat.completions.create = AsyncMock(side_effect=[mock_response_1, mock_response_2])
     
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
@@ -313,7 +317,7 @@ def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client,
     assert mock_client.chat.completions.create.call_count == 2
 
 
-@patch('lanterne_rouge.backend.services.mission_builder.openai.OpenAI')
+@patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
 def test_draft_endpoint_llm_failure(mock_getenv, mock_openai, client, test_user, 
                                          sample_questionnaire):
@@ -323,8 +327,8 @@ def test_draft_endpoint_llm_failure(mock_getenv, mock_openai, client, test_user,
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
     
-    # Mock API failure
-    mock_client.chat.completions.create.side_effect = Exception("API Error")
+    # Mock API failure - use AsyncMock for async method
+    mock_client.chat.completions.create = AsyncMock(side_effect=Exception("API Error"))
     
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
