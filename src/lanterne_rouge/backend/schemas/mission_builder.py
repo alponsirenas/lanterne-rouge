@@ -12,7 +12,7 @@ class WeeklyHours(BaseModel):
 
     @field_validator('max')
     @classmethod
-    def max_must_be_greater_than_min(cls, v, info):
+    def validate_max_gte_min(cls, v, info):
         """Validate that max is greater than or equal to min."""
         if 'min' in info.data and v < info.data['min']:
             raise ValueError('max must be greater than or equal to min')

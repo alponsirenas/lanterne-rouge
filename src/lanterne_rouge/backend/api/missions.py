@@ -1,4 +1,5 @@
 """Mission API endpoints."""
+import logging
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -21,6 +22,7 @@ from lanterne_rouge.backend.schemas.mission_builder import (
 from lanterne_rouge.backend.services.mission_lifecycle import MissionLifecycleService
 from lanterne_rouge.backend.services.mission_builder import generate_mission_draft
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/missions", tags=["missions"])
 
 
@@ -372,8 +374,9 @@ async def create_mission_draft(
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        # Log unexpected errors
+        # Log unexpected errors with full details
+        logger.error(f"Unexpected error generating mission draft: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unexpected error generating mission draft: {str(e)}"
+            detail="An unexpected error occurred while generating the mission draft"
         )

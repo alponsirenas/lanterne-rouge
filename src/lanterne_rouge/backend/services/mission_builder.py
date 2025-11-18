@@ -44,10 +44,19 @@ def _load_prompt_template() -> str:
     # Robustly find project root by searching for "prompts" directory
     current_file = Path(__file__)
     project_root = current_file.parent
+    found_prompts_dir = False
     while project_root != project_root.parent:
         if (project_root / "prompts").exists():
+            found_prompts_dir = True
             break
         project_root = project_root.parent
+    
+    if not found_prompts_dir:
+        logger.error(
+            "Could not find 'prompts' directory in any parent of %s. Using fallback prompt.",
+            current_file
+        )
+        return _get_fallback_prompt()
     
     prompt_path = project_root / "prompts" / "mission_builder.md"
     
@@ -131,10 +140,7 @@ def _format_notification_preferences(prefs: Optional[NotificationPreferences]) -
 def _build_questionnaire_prompt(questionnaire: MissionBuilderQuestionnaire) -> str:
     """Build the user prompt from questionnaire data."""
     preferred_days = questionnaire.preferred_training_days or ["Not specified"]
-    if isinstance(preferred_days, list):
-        days_str = ", ".join(preferred_days)
-    else:
-        days_str = str(preferred_days)
+    days_str = ", ".join(preferred_days)
     
     constraints_str = questionnaire.constraints or "None specified"
     
