@@ -1,18 +1,13 @@
 """API endpoints for data connections (Strava, Oura, Apple Health)."""
-import json
 import logging
 from datetime import datetime, timezone
-from typing import Optional
-from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
 from sqlalchemy.orm import Session
 
 from lanterne_rouge.backend.api.dependencies import get_current_user
 from lanterne_rouge.backend.db.session import get_db
-from lanterne_rouge.backend.models.connection import (
-    DataConnection, StravaActivity, OuraData, AppleHealthData
-)
+from lanterne_rouge.backend.models.connection import DataConnection
 from lanterne_rouge.backend.models.user import User
 from lanterne_rouge.backend.schemas.connections import (
     AllConnectionsStatus,
@@ -50,17 +45,17 @@ async def get_connections_status(
 ):
     """
     Get status of all data connections for the current user.
-    
+
     Returns connection status, last refresh time, and any error messages.
     """
     connections = {}
-    
+
     for conn_type in ["strava", "oura", "apple_health"]:
         conn = db.query(DataConnection).filter(
             DataConnection.user_id == current_user.id,
             DataConnection.connection_type == conn_type
         ).first()
-        
+
         if conn:
             connections[conn_type] = ConnectionStatus(
                 connection_type=conn.connection_type,
@@ -69,7 +64,7 @@ async def get_connections_status(
                 last_refresh_status=conn.last_refresh_status,
                 error_message=conn.error_message
             )
-    
+
     return AllConnectionsStatus(
         strava=connections.get("strava"),
         oura=connections.get("oura"),
@@ -85,19 +80,19 @@ async def authorize_strava(
 ):
     """
     Initiate Strava OAuth2 flow.
-    
+
     Returns the authorization URL to redirect the user to.
     """
     strava_service = get_strava_service()
-    
+
     try:
         auth_url = strava_service.get_authorization_url(
             redirect_uri=request.redirect_uri,
             user_id=current_user.id
         )
-        
+
         return StravaAuthResponse(authorization_url=auth_url)
-    
+
     except Exception as e:
         logger.error(f"Failed to initiate Strava OAuth: {str(e)}")
         raise HTTPException(
@@ -114,25 +109,25 @@ async def strava_callback(
 ):
     """
     Handle Strava OAuth2 callback.
-    
+
     Exchange authorization code for access and refresh tokens.
     """
     strava_service = get_strava_service()
     encryption_service = get_encryption_service()
-    
+
     try:
         # Exchange code for tokens
         tokens = strava_service.exchange_code_for_tokens(request.code)
-        
+
         # Encrypt the tokens
         encrypted = encryption_service.encrypt_credentials(tokens)
-        
+
         # Store or update connection
         conn = db.query(DataConnection).filter(
             DataConnection.user_id == current_user.id,
             DataConnection.connection_type == "strava"
         ).first()
-        
+
         if conn:
             conn.encrypted_credentials = encrypted
             conn.status = "connected"
@@ -146,12 +141,12 @@ async def strava_callback(
                 encrypted_credentials=encrypted
             )
             db.add(conn)
-        
+
         db.commit()
         db.refresh(conn)
-        
+
         logger.info(f"Strava connected successfully for user {current_user.id}")
-        
+
         return StravaConnectionResponse(
             message="Strava connected successfully",
             status=ConnectionStatus(
@@ -162,7 +157,7 @@ async def strava_callback(
                 error_message=conn.error_message
             )
         )
-    
+
     except Exception as e:
         logger.error(f"Strava callback failed: {str(e)}")
         raise HTTPException(
@@ -179,32 +174,32 @@ async def connect_oura(
 ):
     """
     Connect Oura account using Personal Access Token.
-    
+
     Validates the token and stores it securely.
     """
     oura_service = get_oura_service()
     encryption_service = get_encryption_service()
-    
+
     try:
         # Validate the token
         is_valid = oura_service.validate_token(request.personal_access_token)
-        
+
         if not is_valid:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid Oura Personal Access Token"
             )
-        
+
         # Encrypt the token
         credentials = {"personal_access_token": request.personal_access_token}
         encrypted = encryption_service.encrypt_credentials(credentials)
-        
+
         # Store or update connection
         conn = db.query(DataConnection).filter(
             DataConnection.user_id == current_user.id,
             DataConnection.connection_type == "oura"
         ).first()
-        
+
         if conn:
             conn.encrypted_credentials = encrypted
             conn.status = "connected"
@@ -218,12 +213,12 @@ async def connect_oura(
                 encrypted_credentials=encrypted
             )
             db.add(conn)
-        
+
         db.commit()
         db.refresh(conn)
-        
+
         logger.info(f"Oura connected successfully for user {current_user.id}")
-        
+
         return OuraConnectionResponse(
             message="Oura connected successfully",
             status=ConnectionStatus(
@@ -234,7 +229,7 @@ async def connect_oura(
                 error_message=conn.error_message
             )
         )
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -253,11 +248,11 @@ async def upload_apple_health(
 ):
     """
     Upload Apple Health export file (ZIP or XML).
-    
+
     Parses the export and stores daily metrics.
     """
     apple_health_service = get_apple_health_service()
-    
+
     try:
         # Validate file type
         if not (file.filename.endswith('.zip') or file.filename.endswith('.xml')):
@@ -265,24 +260,24 @@ async def upload_apple_health(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="File must be a ZIP or XML export from Apple Health"
             )
-        
+
         # Read file content
         content = await file.read()
-        
+
         # Parse and process the export
         upload_batch_id, records = apple_health_service.process_export(
-            content, 
+            content,
             file.filename,
             current_user.id,
             db
         )
-        
+
         # Update connection status
         conn = db.query(DataConnection).filter(
             DataConnection.user_id == current_user.id,
             DataConnection.connection_type == "apple_health"
         ).first()
-        
+
         if conn:
             conn.status = "connected"
             conn.last_refresh_at = datetime.now(timezone.utc)
@@ -298,17 +293,17 @@ async def upload_apple_health(
                 last_refresh_status=f"Processed {records} records"
             )
             db.add(conn)
-        
+
         db.commit()
-        
+
         logger.info(f"Apple Health data uploaded for user {current_user.id}: {records} records")
-        
+
         return AppleHealthUploadResponse(
             message="Apple Health data uploaded successfully",
             records_processed=records,
             upload_batch_id=upload_batch_id
         )
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -327,7 +322,7 @@ async def disconnect_source(
 ):
     """
     Disconnect a data source.
-    
+
     Removes stored credentials and updates connection status.
     """
     if request.connection_type not in ["strava", "oura", "apple_health"]:
@@ -335,28 +330,28 @@ async def disconnect_source(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid connection type"
         )
-    
+
     conn = db.query(DataConnection).filter(
         DataConnection.user_id == current_user.id,
         DataConnection.connection_type == request.connection_type
     ).first()
-    
+
     if not conn:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Connection not found"
         )
-    
+
     # Clear credentials and update status
     conn.encrypted_credentials = None
     conn.status = "disconnected"
     conn.error_message = None
     conn.updated_at = datetime.now(timezone.utc)
-    
+
     db.commit()
-    
+
     logger.info(f"{request.connection_type} disconnected for user {current_user.id}")
-    
+
     return DisconnectResponse(
         message=f"{request.connection_type.title()} disconnected successfully"
     )
@@ -370,7 +365,7 @@ async def refresh_data(
 ):
     """
     Manually trigger a data refresh from a connected source.
-    
+
     Fetches latest data and updates the database.
     """
     if request.connection_type not in ["strava", "oura", "apple_health"]:
@@ -378,25 +373,25 @@ async def refresh_data(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid connection type"
         )
-    
+
     conn = db.query(DataConnection).filter(
         DataConnection.user_id == current_user.id,
         DataConnection.connection_type == request.connection_type
     ).first()
-    
+
     if not conn or conn.status != "connected":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"{request.connection_type.title()} is not connected"
         )
-    
+
     # Check if manual refresh is supported
     if request.connection_type == "apple_health":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Manual refresh not supported for Apple Health. Please upload a new export."
         )
-    
+
     try:
         # Call appropriate service to refresh data
         if request.connection_type == "strava":
@@ -410,29 +405,29 @@ async def refresh_data(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid connection type"
             )
-        
+
         # Update connection status
         conn.last_refresh_at = datetime.now(timezone.utc)
         conn.last_refresh_status = f"Refreshed {records} records"
         conn.error_message = None
         db.commit()
-        
+
         return RefreshResponse(
             message=f"Successfully refreshed {request.connection_type} data",
             records_updated=records,
             last_refresh_at=conn.last_refresh_at
         )
-    
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Data refresh failed for {request.connection_type}: {str(e)}")
-        
+
         # Update connection with error
         conn.error_message = str(e)
         conn.updated_at = datetime.now(timezone.utc)
         db.commit()
-        
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to refresh {request.connection_type} data"

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import (
-    Boolean, DateTime, Enum, ForeignKey, Integer, String, Text
+    DateTime, ForeignKey, Integer, String, Text
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -18,31 +18,31 @@ class DataConnection(Base):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    
+
     # Connection type: strava, oura, apple_health
     connection_type: Mapped[str] = mapped_column(
         String(50), nullable=False, index=True
     )
-    
+
     # Connection status: connected, disconnected, error
     status: Mapped[str] = mapped_column(
         String(20), nullable=False, default="disconnected"
     )
-    
+
     # Encrypted credentials (JSON string encrypted with Fernet)
     encrypted_credentials: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Last successful data refresh
     last_refresh_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-    
+
     # Last refresh status message
     last_refresh_status: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    
+
     # Error message if connection failed
     error_message: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)
-    
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -65,20 +65,20 @@ class StravaActivity(Base):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    
+
     # Strava activity ID (from Strava API)
     strava_activity_id: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
-    
+
     # Activity details
     activity_name: Mapped[str] = mapped_column(String(255), nullable=False)
     activity_type: Mapped[str] = mapped_column(String(50), nullable=False)
     activity_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, index=True
     )
-    
+
     # Metrics (stored as JSON string for flexibility)
     metrics: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -101,21 +101,21 @@ class OuraData(Base):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    
+
     # Date for the data point
     data_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, index=True
     )
-    
+
     # Readiness score
     readiness_score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    
+
     # HRV metrics (stored as JSON string for flexibility)
     hrv_metrics: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Raw data from Oura API (stored as JSON string)
     raw_data: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -138,18 +138,18 @@ class AppleHealthData(Base):
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    
+
     # Date for the data point
     data_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, index=True
     )
-    
+
     # Daily metrics (stored as JSON string for flexibility)
     daily_metrics: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+
     # Upload batch ID (to track which upload this data came from)
     upload_batch_id: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
