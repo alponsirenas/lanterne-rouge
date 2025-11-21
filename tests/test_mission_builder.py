@@ -86,12 +86,16 @@ def sample_questionnaire():
         "event_name": "Unbound 200",
         "event_date": event_date.isoformat(),
         "mission_type": "gravel_ultra",
-        "weekly_hours": {"min": 8, "max": 12},
+        "weekly_hours": {
+            "min": 8, 
+            "max": 12
+        },
         "current_ftp": 250,
         "preferred_training_days": ["Monday", "Wednesday", "Saturday"],
         "constraints": "No injuries. Weekend mornings work best.",
         "riding_style": "steady",
         "notification_preferences": {
+            "channel": "app",
             "morning_briefing": True,
             "evening_summary": True,
             "weekly_review": True
@@ -104,7 +108,7 @@ def sample_llm_response():
     """Sample LLM response data matching expected format."""
     prep_start = date.today() + timedelta(days=7)
     event_date = date.today() + timedelta(days=90)
-    
+
     return {
         "name": "Unbound 200 Preparation Mission",
         "mission_type": "gravel_ultra",
@@ -126,6 +130,7 @@ def sample_llm_response():
             "max_weekly_hours": 12
         },
         "notification_preferences": {
+            "channel": "app",
             "morning_briefing": True,
             "evening_summary": True,
             "weekly_review": True
@@ -153,10 +158,10 @@ def test_questionnaire_validation_past_event():
         "weekly_hours": {"min": 5, "max": 10},
         "current_ftp": 200,
     }
-    
+
     with pytest.raises(ValueError, match="Event date must be in the future"):
         MissionBuilderQuestionnaire(**data)
-    
+
     # Test today's date (also rejected)
     today_data = data.copy()
     today_data["event_date"] = date.today().isoformat()
@@ -174,7 +179,7 @@ def test_questionnaire_validation_invalid_hours():
         "weekly_hours": {"min": 10, "max": 5},  # max < min
         "current_ftp": 200,
     }
-    
+
     with pytest.raises(ValueError, match="max must be greater than or equal to min"):
         MissionBuilderQuestionnaire(**data)
 
@@ -182,7 +187,7 @@ def test_questionnaire_validation_invalid_hours():
 def test_questionnaire_validation_ftp_bounds():
     """Test that FTP is within reasonable bounds."""
     future_date = date.today() + timedelta(days=30)
-    
+
     # Too low
     with pytest.raises(ValueError):
         MissionBuilderQuestionnaire(
@@ -192,7 +197,7 @@ def test_questionnaire_validation_ftp_bounds():
             weekly_hours={"min": 5, "max": 10},
             current_ftp=30  # Below minimum of 50
         )
-    
+
     # Too high
     with pytest.raises(ValueError):
         MissionBuilderQuestionnaire(
@@ -216,7 +221,7 @@ def test_mission_draft_validation_invalid_dates():
     """Test that invalid dates are rejected in draft."""
     prep_date = date.today() + timedelta(days=7)
     event_date = date.today() + timedelta(days=5)  # Event before prep
-    
+
     data = {
         "name": "Invalid Mission",
         "mission_type": "road_century",
@@ -240,41 +245,42 @@ def test_mission_draft_validation_invalid_dates():
         },
         "notes": "Test notes"
     }
-    
+
     with pytest.raises(ValueError, match="prep_start must be before event_start"):
         MissionDraft(**data)
 
 
 @patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
-def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user, 
+def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user,
                                      sample_questionnaire, sample_llm_response):
     """Test successful mission draft generation via API."""
     # Mock environment variable
     mock_getenv.return_value = "fake-api-key"
-    
+
     # Mock AsyncOpenAI client
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
-    
+
     # Mock completion response
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = json.dumps(sample_llm_response)
     mock_response.usage.prompt_tokens = 500
     mock_response.usage.completion_tokens = 300
-    
+
     # Use AsyncMock for the async create method
     mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
-    
+
     # Make request
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
-    
+
     assert response.status_code == 201
     data = response.json()
-    
+
     assert "draft" in data
+    assert "draft_id" in data and data["draft_id"]
     assert "generated_at" in data
     assert "model_used" in data
     assert data["draft"]["name"] == "Unbound 200 Preparation Mission"
@@ -283,35 +289,35 @@ def test_draft_endpoint_success(mock_getenv, mock_openai, client, test_user,
 
 @patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
-def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client, 
-                                                    test_user, sample_questionnaire, 
+def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client,
+                                                    test_user, sample_questionnaire,
                                                     sample_llm_response):
     """Test that malformed JSON triggers retry with temperature=0."""
     mock_getenv.return_value = "fake-api-key"
-    
+
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
-    
+
     # First response: malformed JSON (text prefix before JSON)
     mock_response_1 = MagicMock()
     mock_response_1.choices = [MagicMock()]
     mock_response_1.choices[0].message.content = "Here's your mission: " + json.dumps(sample_llm_response)
     mock_response_1.usage.prompt_tokens = 500
     mock_response_1.usage.completion_tokens = 300
-    
+
     # Second response: valid JSON
     mock_response_2 = MagicMock()
     mock_response_2.choices = [MagicMock()]
     mock_response_2.choices[0].message.content = json.dumps(sample_llm_response)
     mock_response_2.usage.prompt_tokens = 520
     mock_response_2.usage.completion_tokens = 300
-    
+
     # Use AsyncMock for the async create method
     mock_client.chat.completions.create = AsyncMock(side_effect=[mock_response_1, mock_response_2])
-    
+
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
-    
+
     # Should succeed on retry
     assert response.status_code == 201
     assert mock_client.chat.completions.create.call_count == 2
@@ -319,23 +325,23 @@ def test_draft_endpoint_malformed_json_retry(mock_getenv, mock_openai, client,
 
 @patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
-def test_draft_endpoint_llm_failure(mock_getenv, mock_openai, client, test_user, 
+def test_draft_endpoint_llm_failure(mock_getenv, mock_openai, client, test_user,
                                          sample_questionnaire):
     """Test error handling when LLM fails."""
     mock_getenv.return_value = "fake-api-key"
-    
+
     mock_client = MagicMock()
     mock_openai.return_value = mock_client
-    
+
     # Mock API failure - use AsyncMock for async method
     mock_client.chat.completions.create = AsyncMock(side_effect=Exception("API Error"))
-    
+
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
-    
+
     # Should return 502 Bad Gateway
     assert response.status_code == 502
-    assert "Failed to generate mission draft" in response.json()["detail"]
+    assert "LLM" in response.json()["detail"]
 
 
 def test_draft_endpoint_unauthorized(client, sample_questionnaire):
@@ -351,21 +357,49 @@ def test_draft_endpoint_invalid_questionnaire(client, test_user):
         "event_name": "Test",
         # Missing required fields
     }
-    
+
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=invalid_data, headers=headers)
     assert response.status_code == 422  # Validation error
 
 
 @patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
-def test_draft_endpoint_missing_api_key(mock_getenv, client, test_user, 
+def test_draft_endpoint_missing_api_key(mock_getenv, client, test_user,
                                                sample_questionnaire):
     """Test error handling when OpenAI API key is not set."""
     mock_getenv.return_value = None
-    
+
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
-    
+
     # Should return 502 with generic error (doesn't expose API key details)
     assert response.status_code == 502
-    assert "upstream service error" in response.json()["detail"]
+    assert "LLM service is not configured" in response.json()["detail"]
+
+
+@patch('lanterne_rouge.backend.services.mission_builder.openai.AsyncOpenAI')
+@patch('lanterne_rouge.backend.services.mission_builder.os.getenv')
+def test_confirm_draft_creates_mission(mock_getenv, mock_openai, client, test_user,
+                                       sample_questionnaire, sample_llm_response):
+    """Ensure stored draft can be confirmed into a mission."""
+    mock_getenv.return_value = "fake-api-key"
+    mock_client = MagicMock()
+    mock_openai.return_value = mock_client
+
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = json.dumps(sample_llm_response)
+    mock_response.usage.prompt_tokens = 500
+    mock_response.usage.completion_tokens = 300
+    mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
+
+    headers = {"Authorization": f"Bearer {test_user['token']}"}
+    draft_resp = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
+    assert draft_resp.status_code == 201
+    draft_id = draft_resp.json()["draft_id"]
+
+    confirm_resp = client.post(f"/missions/draft/{draft_id}/confirm", headers=headers)
+    assert confirm_resp.status_code == 201
+    mission = confirm_resp.json()
+    assert mission["name"] == sample_llm_response["name"]
+    assert mission["mission_type"] == sample_llm_response["mission_type"]

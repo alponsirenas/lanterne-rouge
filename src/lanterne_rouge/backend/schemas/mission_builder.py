@@ -21,9 +21,23 @@ class WeeklyHours(BaseModel):
 
 class NotificationPreferences(BaseModel):
     """Notification preferences for mission communications."""
+    channel: str = Field(
+        default="app",
+        description="Preferred channel for updates (app, email, sms)"
+    )
     morning_briefing: bool = Field(default=True, description="Receive morning briefings")
     evening_summary: bool = Field(default=True, description="Receive evening summaries")
     weekly_review: bool = Field(default=True, description="Receive weekly reviews")
+
+    @field_validator('channel')
+    @classmethod
+    def validate_channel(cls, v):
+        """Restrict channel to known options while allowing future additions."""
+        if not v:
+            return "app"
+        v_lower = v.lower()
+        allowed = {'app', 'email', 'sms'}
+        return v_lower if v_lower in allowed else v_lower
 
 
 class MissionBuilderQuestionnaire(BaseModel):
@@ -139,6 +153,7 @@ class MissionDraftResponse(BaseModel):
     """Response containing the draft mission and metadata."""
     model_config = {"protected_namespaces": ()}
     
+    draft_id: Optional[str] = Field(None, description="Identifier for the stored draft")
     draft: MissionDraft = Field(..., description="Generated mission draft")
     generated_at: str = Field(..., description="Timestamp of generation")
     model_used: str = Field(..., description="LLM model used for generation")

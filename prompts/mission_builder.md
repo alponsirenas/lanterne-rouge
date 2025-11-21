@@ -14,7 +14,7 @@ You will receive a questionnaire with the following information:
 - Preferred training days
 - Constraints (injuries, time windows, recovery needs)
 - Desired riding style for the event (gc/steady pace, breakaway/aggressive, or mixed)
-- Communication preferences (email, SMS frequency)
+- Communication preferences (channel + briefing preferences)
 
 ## Output Format
 You MUST respond with valid JSON matching this exact structure:
@@ -41,6 +41,7 @@ You MUST respond with valid JSON matching this exact structure:
     "max_weekly_hours": "number - from questionnaire max"
   },
   "notification_preferences": {
+    "channel": "string - app, email, or sms",
     "morning_briefing": "boolean",
     "evening_summary": "boolean",
     "weekly_review": "boolean"
@@ -143,6 +144,7 @@ You might respond:
     "max_weekly_hours": 12
   },
   "notification_preferences": {
+    "channel": "app",
     "morning_briefing": true,
     "evening_summary": true,
     "weekly_review": true

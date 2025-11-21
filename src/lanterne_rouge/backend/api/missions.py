@@ -1,13 +1,15 @@
 """Mission API endpoints."""
 import logging
+from datetime import datetime, timezone
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from lanterne_rouge.backend.api.dependencies import get_current_user
 from lanterne_rouge.backend.db.session import get_db
-from lanterne_rouge.backend.models.mission import Mission
+from lanterne_rouge.backend.models.mission import Mission, MissionDraftRecord
 from lanterne_rouge.backend.models.user import AuditLog, User
 from lanterne_rouge.backend.schemas.mission import (
     MissionCreate,
@@ -17,10 +19,11 @@ from lanterne_rouge.backend.schemas.mission import (
 )
 from lanterne_rouge.backend.schemas.mission_builder import (
     MissionBuilderQuestionnaire,
+    MissionDraft,
     MissionDraftResponse,
 )
-from lanterne_rouge.backend.services.mission_lifecycle import MissionLifecycleService
 from lanterne_rouge.backend.services.mission_builder import generate_mission_draft
+from lanterne_rouge.backend.services.mission_lifecycle import MissionLifecycleService
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/missions", tags=["missions"])
@@ -338,6 +341,7 @@ def transition_mission(
 async def create_mission_draft(
     questionnaire: MissionBuilderQuestionnaire,
     current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """
     Generate a mission draft using LLM based on questionnaire responses.
@@ -364,12 +368,33 @@ async def create_mission_draft(
         if error:
             # Log the actual error details for debugging
             logger.error(f"Failed to generate mission draft: {error}")
+            
+            if "json" in error.lower():
+                detail = "LLM could not produce valid JSON after a retry. Please tweak your answers and try again."
+            elif "OPENAI_API_KEY" in error or "api key" in error.lower():
+                detail = "LLM service is not configured. Please contact support."
+            else:
+                detail = "LLM generation failed due to an upstream service error. Please try again."
+
             # Return generic error message to client to avoid leaking system internals
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="Failed to generate mission draft due to an upstream service error"
+                detail=detail
             )
         
+        # Persist draft for later confirmation
+        draft_record = MissionDraftRecord(
+            user_id=current_user.id,
+            questionnaire=questionnaire.model_dump(mode="json"),
+            draft=draft_response.draft.model_dump(mode="json"),
+            model_used=draft_response.model_used,
+            status="created"
+        )
+        db.add(draft_record)
+        db.commit()
+        db.refresh(draft_record)
+
+        draft_response.draft_id = draft_record.id
         return draft_response
         
     except HTTPException:
@@ -382,3 +407,77 @@ async def create_mission_draft(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred while generating the mission draft"
         )
+
+
+@router.post("/draft/{draft_id}/confirm", response_model=MissionResponse, status_code=status.HTTP_201_CREATED)
+def confirm_mission_draft(
+    draft_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Confirm a stored mission draft and create a persisted mission.
+    """
+    draft_record = db.query(MissionDraftRecord).filter(MissionDraftRecord.id == draft_id).first()
+    if not draft_record:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Draft not found"
+        )
+
+    if draft_record.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to confirm this draft"
+        )
+
+    # If already confirmed and mission exists, return it
+    if draft_record.mission_id:
+        mission = db.query(Mission).filter(Mission.id == draft_record.mission_id).first()
+        if mission:
+            return mission
+
+    try:
+        draft = MissionDraft(**draft_record.draft)
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Stored draft is invalid: {str(e)}"
+        )
+
+    # Create mission from draft
+    mission = Mission(
+        user_id=current_user.id,
+        name=draft.name,
+        mission_type=draft.mission_type,
+        event_start_date=draft.event_start,
+        event_end_date=draft.event_end,
+        prep_start_date=draft.prep_start,
+        prep_end_date=None,
+        points_schema=draft.points_schema.model_dump(),
+        timezone="UTC",
+        constraints=draft.constraints.model_dump(),
+        notification_preferences=draft.notification_preferences.model_dump(),
+    )
+    db.add(mission)
+
+    audit_log = AuditLog(
+        user_id=current_user.id,
+        action="create",
+        resource="mission",
+        resource_id=str(mission.id),
+        details=f"Created mission from draft: {mission.name}",
+    )
+    db.add(audit_log)
+
+    db.commit()
+    db.refresh(mission)
+
+    # Update draft record metadata
+    draft_record.status = "confirmed"
+    draft_record.mission_id = mission.id
+    draft_record.confirmed_at = datetime.now(timezone.utc)
+    db.add(draft_record)
+    db.commit()
+
+    return mission
