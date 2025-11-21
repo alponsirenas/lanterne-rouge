@@ -150,7 +150,7 @@ Get new tokens using a refresh token.
 
 **POST** `/missions/draft`
 
-Generate a personalized mission configuration using AI based on a questionnaire. This endpoint uses OpenAI GPT-4o-mini in JSON mode to create a draft mission that is NOT saved to the database. The draft is returned for review and confirmation.
+Generate a personalized mission configuration using AI based on a questionnaire. This endpoint uses OpenAI GPT-4o-mini in JSON mode to create a draft mission that is saved to the database as a `MissionDraftRecord` for temporary review and confirmation, but is not yet converted to a full Mission object. The draft is returned for review and confirmation.
 
 **Authentication:** Required (Bearer token)
 
@@ -216,7 +216,8 @@ Generate a personalized mission configuration using AI based on a questionnaire.
     "notification_preferences": {
       "morning_briefing": true,
       "evening_summary": true,
-      "weekly_review": true
+      "weekly_review": true,
+      "channel": "app"
     },
     "notes": "14-week preparation focusing on progressive volume build..."
   },
@@ -274,7 +275,12 @@ response = requests.post(
 )
 
 draft = response.json()["draft"]
-# Review and create actual mission using POST /missions
+# Confirm the mission draft using POST /missions/draft/{draft_id}/confirm
+confirm_response = requests.post(
+    f"http://localhost:8000/missions/draft/{draft['id']}/confirm",
+    headers=headers
+)
+mission = confirm_response.json()["mission"]
 ```
 
 ## Configuration

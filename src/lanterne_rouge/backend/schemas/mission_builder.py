@@ -36,8 +36,8 @@ class NotificationPreferences(BaseModel):
         if not v:
             return "app"
         v_lower = v.lower()
-        allowed = {'app', 'email', 'sms'}
-        return v_lower if v_lower in allowed else v_lower
+        # Accept any channel value (normalized to lowercase) for future extensibility.
+        return v_lower
 
 
 class MissionBuilderQuestionnaire(BaseModel):

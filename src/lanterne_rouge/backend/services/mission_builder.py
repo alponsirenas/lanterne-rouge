@@ -355,7 +355,6 @@ async def _call_llm_with_retry(
         logger.error(error_msg)
         return None, error_msg
 
-
 def _log_to_file(
     questionnaire: MissionBuilderQuestionnaire,
     response: MissionDraftResponse,
@@ -368,7 +367,7 @@ def _log_to_file(
         log_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate log filename with timestamp
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
         log_file = log_dir / f"draft_{timestamp}.json"
 
         # Prepare log data

@@ -347,8 +347,9 @@ async def create_mission_draft(
     Generate a mission draft using LLM based on questionnaire responses.
     
     This endpoint uses OpenAI GPT-4o-mini in JSON mode to create a personalized
-    mission configuration. The draft is NOT saved to the database - it's returned
-    for the user to review and confirm.
+    mission configuration. The draft is saved to the database as a MissionDraftRecord
+    for later confirmation, but is NOT yet converted to a full Mission. The draft is
+    returned for the user to review and confirm.
     
     Args:
         questionnaire: User's questionnaire responses
@@ -440,9 +441,10 @@ def confirm_mission_draft(
     try:
         draft = MissionDraft(**draft_record.draft)
     except ValidationError as e:
+        logger.error(f"Mission draft validation failed for draft_id={draft_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Stored draft is invalid: {str(e)}"
+            detail="Stored draft is invalid"
         )
 
     # Create mission from draft
