@@ -237,7 +237,7 @@ Generate a personalized mission configuration using AI based on a questionnaire.
 **Retry Logic:**
 1. First attempt: LLM call with temperature=0.7
 2. If malformed JSON: Retry with temperature=0 and clarification prompt
-3. If second attempt fails: Return 502 error with details
+3. If second attempt fails: Return 502 error with a generic message; error details are logged server-side.
 
 **Privacy & Logging:**
 - All prompts and responses are logged to `logs/mission_builder/` (excluded from git)
