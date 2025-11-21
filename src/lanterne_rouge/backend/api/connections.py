@@ -390,6 +390,13 @@ async def refresh_data(
             detail=f"{request.connection_type.title()} is not connected"
         )
     
+    # Check if manual refresh is supported
+    if request.connection_type == "apple_health":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Manual refresh not supported for Apple Health. Please upload a new export."
+        )
+    
     try:
         # Call appropriate service to refresh data
         if request.connection_type == "strava":
@@ -401,7 +408,7 @@ async def refresh_data(
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Manual refresh not supported for Apple Health"
+                detail="Invalid connection type"
             )
         
         # Update connection status
@@ -416,6 +423,8 @@ async def refresh_data(
             last_refresh_at=conn.last_refresh_at
         )
     
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Data refresh failed for {request.connection_type}: {str(e)}")
         
