@@ -101,6 +101,48 @@ class Mission(Base):
     )
 
 
+class MissionDraftRecord(Base):
+    """Temporary storage for generated mission drafts awaiting confirmation."""
+    __tablename__ = "mission_drafts"
+
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid4()),
+        nullable=False
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
+    )
+
+    mission_id: Mapped[Optional[str]] = mapped_column(
+        String(36),
+        ForeignKey("missions.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True
+    )
+
+    model_used: Mapped[str] = mapped_column(String(100), default="gpt-4o-mini", nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="created", nullable=False)
+
+    questionnaire: Mapped[dict] = mapped_column(JSON, nullable=False)
+    draft: Mapped[dict] = mapped_column(JSON, nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
+    confirmed_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
+
 class MissionRun(Base):
     """Mission run tracking individual workout/ride sessions."""
     __tablename__ = "mission_runs"

@@ -23,9 +23,11 @@ site/
 # Temporary/test files
 *_new.md
 *_backup.md
-test_*.py
 fix_*.py
 generate_*.py
+
+# Mission builder logs (contain potentially sensitive data)
+logs/mission_builder/
 
 # Duplicate documentation files (should be in docs/ not root)
 LINTING_SUMMARY.md

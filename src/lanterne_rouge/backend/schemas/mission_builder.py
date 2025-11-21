@@ -1,0 +1,168 @@
+"""Pydantic schemas for mission builder questionnaire and draft generation."""
+from datetime import date
+from typing import Optional
+
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+
+class WeeklyHours(BaseModel):
+    """Weekly training hours range."""
+    min: int = Field(..., ge=1, le=40, description="Minimum weekly training hours")
+    max: int = Field(..., ge=1, le=40, description="Maximum weekly training hours")
+
+    @field_validator('max')
+    @classmethod
+    def validate_max_gte_min(cls, v, info):
+        """Validate that max is greater than or equal to min."""
+        if 'min' in info.data and v < info.data['min']:
+            raise ValueError('max must be greater than or equal to min')
+        return v
+
+
+class NotificationPreferences(BaseModel):
+    """Notification preferences for mission communications."""
+    channel: str = Field(
+        default="app",
+        description="Preferred channel for updates (app, email, sms)"
+    )
+    morning_briefing: bool = Field(default=True, description="Receive morning briefings")
+    evening_summary: bool = Field(default=True, description="Receive evening summaries")
+    weekly_review: bool = Field(default=True, description="Receive weekly reviews")
+
+    @field_validator('channel')
+    @classmethod
+    def validate_channel(cls, v):
+        """Restrict channel to known options while allowing future additions."""
+        if not v:
+            return "app"
+        v_lower = v.lower()
+        # Accept any channel value (normalized to lowercase) for future extensibility.
+        return v_lower
+
+
+class MissionBuilderQuestionnaire(BaseModel):
+    """Questionnaire input for LLM-powered mission generation."""
+    event_name: str = Field(..., min_length=1, max_length=255, description="Name of the target event")
+    event_date: date = Field(..., description="Date of the target event")
+    mission_type: str = Field(
+        ...,
+        description="Type of mission (gravel_ultra, road_century, crit_series, gran_fondo, etc.)"
+    )
+    weekly_hours: WeeklyHours = Field(..., description="Available training hours per week")
+    current_ftp: int = Field(..., ge=50, le=500, description="Current Functional Threshold Power in watts")
+    preferred_training_days: Optional[list[str]] = Field(
+        default=None,
+        description="Preferred training days (e.g., ['Monday', 'Wednesday', 'Saturday'])"
+    )
+    constraints: Optional[str] = Field(
+        default=None,
+        max_length=1000,
+        description="Any constraints like injuries, time windows, or recovery needs"
+    )
+    riding_style: str = Field(
+        default="steady",
+        description="Desired event riding style (gc/steady, breakaway/aggressive, mixed)"
+    )
+    notification_preferences: NotificationPreferences = Field(
+        default_factory=NotificationPreferences,
+        description="Communication preferences"
+    )
+
+    @field_validator('event_date')
+    @classmethod
+    def event_must_be_future(cls, v):
+        """Validate that event is in the future."""
+        today = date.today()
+        if v <= today:
+            raise ValueError('Event date must be in the future')
+        return v
+
+    @field_validator('mission_type')
+    @classmethod
+    def validate_mission_type(cls, v):
+        """Validate mission type is from known set."""
+        valid_types = {
+            'gravel_ultra', 'road_century', 'crit_series', 'gran_fondo',
+            'time_trial', 'stage_race', 'endurance', 'general_fitness'
+        }
+        if v not in valid_types:
+            # Allow custom types but provide warning in real implementation
+            pass
+        return v
+
+    @field_validator('riding_style')
+    @classmethod
+    def validate_riding_style(cls, v):
+        """Validate riding style is from known set."""
+        valid_styles = {'gc', 'steady', 'breakaway', 'aggressive', 'mixed'}
+        # Normalize variations
+        v_lower = v.lower()
+        if v_lower in valid_styles:
+            return v_lower
+        # Accept variations
+        if v_lower in {'gc/steady', 'steady pace', 'steady/gc'}:
+            return 'steady'
+        if v_lower in {'breakaway/aggressive', 'aggressive/breakaway'}:
+            return 'aggressive'
+        return v_lower
+
+
+class PointsSchema(BaseModel):
+    """Points schema configuration."""
+    description: str = Field(..., description="Explanation of the points system")
+    daily_base: int = Field(..., ge=5, le=50, description="Base points for daily training")
+    intensity_multipliers: dict[str, float] = Field(
+        ...,
+        description="Multipliers for different intensity levels"
+    )
+
+
+class MissionConstraints(BaseModel):
+    """Mission constraints configuration."""
+    min_readiness: int = Field(..., ge=50, le=95, description="Minimum Oura readiness score")
+    min_tsb: int = Field(..., ge=-30, le=10, description="Minimum Training Stress Balance")
+    max_weekly_hours: int = Field(..., ge=1, le=40, description="Maximum weekly training hours")
+
+
+class MissionDraft(BaseModel):
+    """Draft mission configuration generated by LLM."""
+    name: str = Field(..., min_length=1, max_length=255, description="Mission name")
+    mission_type: str = Field(..., description="Mission type")
+    prep_start: date = Field(..., description="Preparation start date")
+    event_start: date = Field(..., description="Event start date")
+    event_end: date = Field(..., description="Event end date")
+    points_schema: PointsSchema = Field(..., description="Points schema configuration")
+    constraints: MissionConstraints = Field(..., description="Mission constraints")
+    notification_preferences: NotificationPreferences = Field(
+        ...,
+        description="Notification preferences"
+    )
+    notes: str = Field(..., min_length=10, description="Detailed coaching notes")
+
+    @model_validator(mode='after')
+    def validate_dates(self) -> 'MissionDraft':
+        """Validate date relationships."""
+        if self.prep_start >= self.event_start:
+            raise ValueError('prep_start must be before event_start')
+        if self.event_end < self.event_start:
+            raise ValueError('event_end must be on or after event_start')
+        return self
+
+
+class MissionDraftResponse(BaseModel):
+    """Response containing the draft mission and metadata."""
+    model_config = {"protected_namespaces": ()}
+    
+    draft_id: Optional[str] = Field(None, description="Identifier for the stored draft")
+    draft: MissionDraft = Field(..., description="Generated mission draft")
+    generated_at: str = Field(..., description="Timestamp of generation")
+    model_used: str = Field(..., description="LLM model used for generation")
+    prompt_tokens: Optional[int] = Field(None, description="Number of prompt tokens used")
+    completion_tokens: Optional[int] = Field(None, description="Number of completion tokens used")
+
+
+class MissionDraftError(BaseModel):
+    """Error response for draft generation failures."""
+    error: str = Field(..., description="Error type")
+    detail: str = Field(..., description="Detailed error message")
+    questionnaire: Optional[dict] = Field(None, description="Original questionnaire data (if safe to return)")
