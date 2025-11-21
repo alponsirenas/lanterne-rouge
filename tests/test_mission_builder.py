@@ -366,6 +366,6 @@ def test_draft_endpoint_missing_api_key(mock_getenv, client, test_user,
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.post("/missions/draft", json=sample_questionnaire, headers=headers)
     
-    # Should return 502 due to configuration issue
+    # Should return 502 with generic error (doesn't expose API key details)
     assert response.status_code == 502
-    assert "OPENAI_API_KEY" in response.json()["detail"]
+    assert "upstream service error" in response.json()["detail"]

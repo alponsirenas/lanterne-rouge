@@ -362,10 +362,12 @@ async def create_mission_draft(
         draft_response, error = await generate_mission_draft(questionnaire)
         
         if error:
-            # Return 502 Bad Gateway for LLM failures
+            # Log the actual error details for debugging
+            logger.error(f"Failed to generate mission draft: {error}")
+            # Return generic error message to client to avoid leaking system internals
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"Failed to generate mission draft: {error}"
+                detail="Failed to generate mission draft due to an upstream service error"
             )
         
         return draft_response
