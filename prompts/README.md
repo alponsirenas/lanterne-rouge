@@ -122,7 +122,7 @@ The service handles several error scenarios:
 
 - **Malformed JSON**: Automatic retry with clarification
 - **Missing API Key**: 502 error with descriptive message
-- **API Failures**: 502 error with exception details
+- **API Failures**: 502 error with generic message (exception details are logged server-side for debugging)
 - **Validation Errors**: 400/422 with field-specific feedback
 
 ## Testing
