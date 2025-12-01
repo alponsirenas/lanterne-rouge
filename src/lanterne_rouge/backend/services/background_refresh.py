@@ -3,7 +3,6 @@ import asyncio
 import logging
 from datetime import datetime, timezone
 
-
 from sqlalchemy.orm import Session
 
 from lanterne_rouge.backend.db.session import SessionLocal
@@ -39,8 +38,8 @@ class BackgroundRefreshScheduler:
         self.is_running = True
         self.task = asyncio.create_task(self._run_scheduler())
         logger.info(
-            f"Background refresh scheduler started (interval: {
-                self.interval_minutes} minutes)")
+            f"Background refresh scheduler started (interval: {self.interval_minutes} minutes)"
+        )
 
     async def stop(self):
         """Stop the background refresh scheduler."""
@@ -53,6 +52,7 @@ class BackgroundRefreshScheduler:
             try:
                 await self.task
             except asyncio.CancelledError:
+                # Task cancellation is expected when stopping the scheduler
                 pass
 
         logger.info("Background refresh scheduler stopped")
@@ -94,10 +94,9 @@ class BackgroundRefreshScheduler:
                 except Exception as e:
                     error_count += 1
                     logger.error(
-                        f"Failed to refresh {
-                            conn.connection_type} for user {
-                            conn.user_id}: {
-                            str(e)}")
+                        f"Failed to refresh {conn.connection_type} "
+                        f"for user {conn.user_id}: {str(e)}"
+                    )
 
                     # Update connection with error (but don't log sensitive data)
                     conn.error_message = f"Refresh failed: {type(e).__name__}"

@@ -34,8 +34,8 @@ from lanterne_rouge.backend.services.data_connections import (
 router = APIRouter(prefix="/connections", tags=["connections"])
 logger = logging.getLogger(__name__)
 
-# Never log secrets
-logging.getLogger('lanterne_rouge.backend.services').setLevel(logging.WARNING)
+# Valid connection types - defined once for consistency
+VALID_CONNECTION_TYPES = {"strava", "oura", "apple_health"}
 
 
 @router.get("/status", response_model=AllConnectionsStatus)
@@ -325,7 +325,7 @@ async def disconnect_source(
 
     Removes stored credentials and updates connection status.
     """
-    if request.connection_type not in ["strava", "oura", "apple_health"]:
+    if request.connection_type not in VALID_CONNECTION_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid connection type"
@@ -368,7 +368,7 @@ async def refresh_data(
 
     Fetches latest data and updates the database.
     """
-    if request.connection_type not in ["strava", "oura", "apple_health"]:
+    if request.connection_type not in VALID_CONNECTION_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid connection type"

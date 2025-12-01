@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import (
-    DateTime, ForeignKey, Integer, String, Text
+    DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -13,6 +13,9 @@ from lanterne_rouge.backend.models.user import Base
 class DataConnection(Base):
     """Data connection model for tracking user's connected services."""
     __tablename__ = "data_connections"
+    __table_args__ = (
+        UniqueConstraint('user_id', 'connection_type', name='uq_user_connection'),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(

@@ -234,7 +234,7 @@ class OuraService:
             response = requests.get(url, headers=headers, timeout=10)
             return response.status_code == 200
         except Exception as e:
-            logger.error(f"Oura token validation failed: {str(e)}")
+            logger.error(f"Oura token validation failed: {str(e)}", exc_info=True)
             return False
 
     def refresh_readiness_data(self, user_id: int, connection: DataConnection, db: Session) -> int:
@@ -384,9 +384,9 @@ class AppleHealthService:
     def _extract_xml_from_zip(self, zip_content: bytes) -> bytes:
         """Extract export.xml from ZIP file."""
         with zipfile.ZipFile(BytesIO(zip_content)) as zf:
-            # Look for export.xml or Export.xml
+            # Look for export.xml (case-insensitive, excluding macOS metadata)
             for name in zf.namelist():
-                if name.lower().endswith('export.xml'):
+                if name.lower().endswith('export.xml') and not name.startswith('__MACOSX'):
                     return zf.read(name)
 
         raise ValueError("No export.xml found in ZIP file")
@@ -404,6 +404,8 @@ class AppleHealthService:
             # Parse date
             try:
                 date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                if date.tzinfo is None:
+                    date = date.replace(tzinfo=timezone.utc)
             except Exception:
                 continue
 
@@ -450,7 +452,8 @@ class AppleHealthService:
                 elif 'SleepAnalysis' in record_type:
                     # This is simplified - real implementation would need more logic
                     pass
-            except (ValueError, TypeError):
+            except (ValueError, TypeError) as e:
+                logger.debug(f"Failed to convert {record_type} value '{value}': {e}")
                 continue
 
         return daily_data

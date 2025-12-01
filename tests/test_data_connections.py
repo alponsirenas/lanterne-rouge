@@ -1,9 +1,7 @@
 """Tests for data connections API."""
 import json
 from datetime import datetime, timezone
-from io import BytesIO
 from unittest.mock import MagicMock, patch
-from zipfile import ZipFile
 
 import pytest
 from fastapi.testclient import TestClient
@@ -64,7 +62,7 @@ def test_connections_status_empty(auth_headers):
     """Test getting connection status when no connections exist."""
     client = TestClient(app)
     response = client.get("/connections/status", headers=auth_headers)
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["strava"] is None
@@ -75,14 +73,14 @@ def test_connections_status_empty(auth_headers):
 def test_strava_authorize(auth_headers):
     """Test initiating Strava OAuth flow."""
     client = TestClient(app)
-    
+
     with patch.dict('os.environ', {'STRAVA_CLIENT_ID': '12345'}):
         response = client.post(
             "/connections/strava/authorize",
             json={"redirect_uri": "http://localhost:3000/callback"},
             headers=auth_headers
         )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert "authorization_url" in data
@@ -100,7 +98,7 @@ def test_strava_callback_success(mock_post, auth_headers, test_user, test_db):
         "expires_at": 1234567890,
         "athlete": {"id": 12345}
     }
-    
+
     client = TestClient(app)
     response = client.post(
         "/connections/strava/callback",
@@ -110,13 +108,13 @@ def test_strava_callback_success(mock_post, auth_headers, test_user, test_db):
         },
         headers=auth_headers
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Strava connected successfully"
     assert data["status"]["connection_type"] == "strava"
     assert data["status"]["status"] == "connected"
-    
+
     # Verify connection was stored in database
     conn = test_db.query(DataConnection).filter(
         DataConnection.user_id == test_user.id,
@@ -130,11 +128,11 @@ def test_strava_callback_success(mock_post, auth_headers, test_user, test_db):
 def test_strava_callback_invalid_code(auth_headers):
     """Test Strava callback with invalid authorization code."""
     client = TestClient(app)
-    
+
     with patch('lanterne_rouge.backend.services.data_connections.requests.post') as mock_post:
         mock_post.return_value.status_code = 400
         mock_post.return_value.raise_for_status.side_effect = Exception("Invalid code")
-        
+
         response = client.post(
             "/connections/strava/callback",
             json={
@@ -143,7 +141,7 @@ def test_strava_callback_invalid_code(auth_headers):
             },
             headers=auth_headers
         )
-    
+
     assert response.status_code == 400
 
 
@@ -152,20 +150,20 @@ def test_oura_connect_success(mock_get, auth_headers, test_user, test_db):
     """Test successful Oura connection with PAT."""
     # Mock token validation
     mock_get.return_value.status_code = 200
-    
+
     client = TestClient(app)
     response = client.post(
         "/connections/oura/connect",
         json={"personal_access_token": "test_oura_token"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Oura connected successfully"
     assert data["status"]["connection_type"] == "oura"
     assert data["status"]["status"] == "connected"
-    
+
     # Verify connection was stored in database
     conn = test_db.query(DataConnection).filter(
         DataConnection.user_id == test_user.id,
@@ -173,7 +171,7 @@ def test_oura_connect_success(mock_get, auth_headers, test_user, test_db):
     ).first()
     assert conn is not None
     assert conn.status == "connected"
-    
+
     # Verify credentials are encrypted
     encryption_service = get_encryption_service()
     decrypted = encryption_service.decrypt_credentials(conn.encrypted_credentials)
@@ -185,14 +183,14 @@ def test_oura_connect_invalid_token(mock_get, auth_headers):
     """Test Oura connection with invalid PAT."""
     # Mock token validation failure
     mock_get.return_value.status_code = 401
-    
+
     client = TestClient(app)
     response = client.post(
         "/connections/oura/connect",
         json={"personal_access_token": "invalid_token"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 400
     assert "Invalid Oura Personal Access Token" in response.json()["detail"]
 
@@ -200,16 +198,16 @@ def test_oura_connect_invalid_token(mock_get, auth_headers):
 def test_apple_health_upload_invalid_file(auth_headers):
     """Test Apple Health upload with invalid file type."""
     client = TestClient(app)
-    
+
     # Create a fake file with wrong extension
     file_content = b"This is not a valid file"
-    
+
     response = client.post(
         "/connections/apple-health/upload",
         files={"file": ("test.txt", file_content, "text/plain")},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 400
     assert "ZIP or XML export" in response.json()["detail"]
 
@@ -217,21 +215,23 @@ def test_apple_health_upload_invalid_file(auth_headers):
 def test_apple_health_upload_xml_success(auth_headers, test_user, test_db):
     """Test successful Apple Health XML upload."""
     client = TestClient(app)
-    
+
     # Create a minimal valid Health export XML
     xml_content = b"""<?xml version="1.0" encoding="UTF-8"?>
     <HealthData locale="en_US">
-        <Record type="HKQuantityTypeIdentifierStepCount" value="5000" startDate="2025-01-01 12:00:00 +0000" />
-        <Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" value="3500.5" startDate="2025-01-01 12:00:00 +0000" />
+        <Record type="HKQuantityTypeIdentifierStepCount"
+                value="5000" startDate="2025-01-01 12:00:00 +0000" />
+        <Record type="HKQuantityTypeIdentifierDistanceWalkingRunning"
+                value="3500.5" startDate="2025-01-01 12:00:00 +0000" />
     </HealthData>
     """
-    
+
     response = client.post(
         "/connections/apple-health/upload",
         files={"file": ("export.xml", xml_content, "application/xml")},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Apple Health data uploaded successfully"
@@ -244,7 +244,7 @@ def test_disconnect_success(auth_headers, test_user, test_db):
     # First create a connection
     encryption_service = get_encryption_service()
     encrypted = encryption_service.encrypt_credentials({"token": "test"})
-    
+
     conn = DataConnection(
         user_id=test_user.id,
         connection_type="strava",
@@ -253,7 +253,7 @@ def test_disconnect_success(auth_headers, test_user, test_db):
     )
     test_db.add(conn)
     test_db.commit()
-    
+
     # Now disconnect
     client = TestClient(app)
     response = client.post(
@@ -261,11 +261,11 @@ def test_disconnect_success(auth_headers, test_user, test_db):
         json={"connection_type": "strava"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert "disconnected successfully" in data["message"].lower()
-    
+
     # Verify connection was updated
     test_db.refresh(conn)
     assert conn.status == "disconnected"
@@ -280,7 +280,7 @@ def test_disconnect_not_found(auth_headers):
         json={"connection_type": "strava"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 404
 
 
@@ -292,7 +292,7 @@ def test_disconnect_invalid_type(auth_headers):
         json={"connection_type": "invalid"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 400
 
 
@@ -308,7 +308,7 @@ def test_refresh_strava_success(mock_get, auth_headers, test_user, test_db):
         "athlete_id": 12345
     }
     encrypted = encryption_service.encrypt_credentials(credentials)
-    
+
     conn = DataConnection(
         user_id=test_user.id,
         connection_type="strava",
@@ -317,7 +317,7 @@ def test_refresh_strava_success(mock_get, auth_headers, test_user, test_db):
     )
     test_db.add(conn)
     test_db.commit()
-    
+
     # Mock Strava API response
     mock_get.return_value.status_code = 200
     mock_get.return_value.json.return_value = [
@@ -332,14 +332,14 @@ def test_refresh_strava_success(mock_get, auth_headers, test_user, test_db):
         }
     ]
     mock_get.return_value.raise_for_status = MagicMock()
-    
+
     client = TestClient(app)
     response = client.post(
         "/connections/refresh",
         json={"connection_type": "strava"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert "Successfully refreshed" in data["message"]
@@ -354,7 +354,7 @@ def test_refresh_not_connected(auth_headers):
         json={"connection_type": "strava"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 400
 
 
@@ -368,32 +368,32 @@ def test_refresh_apple_health_not_supported(auth_headers, test_user, test_db):
     )
     test_db.add(conn)
     test_db.commit()
-    
+
     client = TestClient(app)
     response = client.post(
         "/connections/refresh",
         json={"connection_type": "apple_health"},
         headers=auth_headers
     )
-    
+
     assert response.status_code == 400
 
 
 def test_encryption_service():
     """Test encryption service encrypts and decrypts correctly."""
     encryption_service = get_encryption_service()
-    
+
     original = {
         "access_token": "secret_token_123",
         "refresh_token": "refresh_secret_456",
         "user_id": 789
     }
-    
+
     # Encrypt
     encrypted = encryption_service.encrypt_credentials(original)
     assert encrypted != json.dumps(original)
     assert isinstance(encrypted, str)
-    
+
     # Decrypt
     decrypted = encryption_service.decrypt_credentials(encrypted)
     assert decrypted == original
@@ -402,20 +402,25 @@ def test_encryption_service():
 def test_encryption_service_redaction():
     """Test that encryption service properly redacts sensitive fields."""
     encryption_service = get_encryption_service()
-    
+
     credentials = {
         "access_token": "very_secret_access_token",
         "refresh_token": "very_secret_refresh_token",
         "user_id": 123,
         "athlete_id": 456
     }
-    
+
     redacted = encryption_service.redact_for_logging(credentials)
-    
-    # Sensitive fields should be redacted
+
+    # Sensitive fields should be redacted with expected format
     assert "very_secret_access_token" not in str(redacted["access_token"])
     assert "very_secret_refresh_token" not in str(redacted["refresh_token"])
-    
+    # Verify redaction format: first 4 chars...last 4 chars
+    assert redacted["access_token"].startswith("very")
+    assert redacted["access_token"].endswith("oken")
+    assert "..." in redacted["access_token"]
+    assert len(redacted["access_token"]) < len(credentials["access_token"])
+
     # Non-sensitive fields should remain
     assert redacted["user_id"] == 123
     assert redacted["athlete_id"] == 456
@@ -425,7 +430,7 @@ def test_connections_status_with_data(auth_headers, test_user, test_db):
     """Test getting connection status when connections exist."""
     # Create connections
     encryption_service = get_encryption_service()
-    
+
     strava_conn = DataConnection(
         user_id=test_user.id,
         connection_type="strava",
@@ -434,7 +439,7 @@ def test_connections_status_with_data(auth_headers, test_user, test_db):
         last_refresh_at=datetime.now(timezone.utc),
         last_refresh_status="Success: 5 activities"
     )
-    
+
     oura_conn = DataConnection(
         user_id=test_user.id,
         connection_type="oura",
@@ -443,24 +448,24 @@ def test_connections_status_with_data(auth_headers, test_user, test_db):
         last_refresh_at=datetime.now(timezone.utc),
         last_refresh_status="Success: 10 records"
     )
-    
+
     test_db.add_all([strava_conn, oura_conn])
     test_db.commit()
-    
+
     client = TestClient(app)
     response = client.get("/connections/status", headers=auth_headers)
-    
+
     assert response.status_code == 200
     data = response.json()
-    
+
     assert data["strava"] is not None
     assert data["strava"]["status"] == "connected"
     assert data["strava"]["last_refresh_status"] == "Success: 5 activities"
-    
+
     assert data["oura"] is not None
     assert data["oura"]["status"] == "connected"
     assert data["oura"]["last_refresh_status"] == "Success: 10 records"
-    
+
     assert data["apple_health"] is None
 
 
