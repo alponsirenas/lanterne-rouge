@@ -74,7 +74,9 @@ def test_strava_authorize(auth_headers):
     """Test initiating Strava OAuth flow."""
     client = TestClient(app)
 
-    with patch.dict('os.environ', {'STRAVA_CLIENT_ID': '12345'}):
+    # Patch the module-level constants that were loaded at import time
+    with patch('lanterne_rouge.backend.services.data_connections.STRAVA_CLIENT_ID', '12345'), \
+         patch('lanterne_rouge.backend.services.data_connections.STRAVA_CLIENT_SECRET', 'test_secret'):
         response = client.post(
             "/connections/strava/authorize",
             json={"redirect_uri": "http://localhost:3000/callback"},

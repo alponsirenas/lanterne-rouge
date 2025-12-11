@@ -7,9 +7,9 @@ import zipfile
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from typing import Tuple
-from xml.etree import ElementTree as ET
 
 import requests
+from defusedxml import ElementTree as ET
 from sqlalchemy.orm import Session
 
 from lanterne_rouge.backend.models.connection import (
@@ -22,6 +22,19 @@ logger = logging.getLogger(__name__)
 # Strava API configuration
 STRAVA_CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
+
+# Validate Strava credentials are set (they're optional in development but required for Strava functionality)
+if STRAVA_CLIENT_ID and not STRAVA_CLIENT_SECRET:
+    logger.warning(
+        "STRAVA_CLIENT_ID is set but STRAVA_CLIENT_SECRET is missing. "
+        "Strava OAuth will not work without both credentials."
+    )
+elif STRAVA_CLIENT_SECRET and not STRAVA_CLIENT_ID:
+    logger.warning(
+        "STRAVA_CLIENT_SECRET is set but STRAVA_CLIENT_ID is missing. "
+        "Strava OAuth will not work without both credentials."
+    )
+
 STRAVA_AUTHORIZE_URL = "https://www.strava.com/oauth/authorize"
 STRAVA_TOKEN_URL = "https://www.strava.com/oauth/token"
 STRAVA_API_BASE = "https://www.strava.com/api/v3"
@@ -43,7 +56,15 @@ class StravaService:
 
         Returns:
             Authorization URL string
+        
+        Raises:
+            RuntimeError: If Strava credentials are not configured
         """
+        if not STRAVA_CLIENT_ID or not STRAVA_CLIENT_SECRET:
+            raise RuntimeError(
+                "Strava API credentials are not configured. "
+                "Please set STRAVA_CLIENT_ID and STRAVA_CLIENT_SECRET environment variables."
+            )
         params = {
             "client_id": STRAVA_CLIENT_ID,
             "redirect_uri": redirect_uri,
@@ -403,10 +424,19 @@ class AppleHealthService:
 
             # Parse date
             try:
+                # Try ISO format first (with Z or +00:00)
                 date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
                 if date.tzinfo is None:
                     date = date.replace(tzinfo=timezone.utc)
+            except ValueError:
+                # Try Apple Health format: "YYYY-MM-DD HH:MM:SS +0000"
+                try:
+                    date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z")
+                except Exception:
+                    logger.warning(f"Could not parse date: {start_date}")
+                    continue
             except Exception:
+                logger.warning(f"Could not parse date: {start_date}")
                 continue
 
             records.append({
