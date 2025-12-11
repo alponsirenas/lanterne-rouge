@@ -99,7 +99,9 @@ class BackgroundRefreshScheduler:
                     )
 
                     # Update connection with error (but don't log sensitive data)
-                    conn.error_message = f"Refresh failed: {type(e).__name__}"
+                    conn.error_message = (
+                        f"Refresh failed for {conn.connection_type} (user {conn.user_id}): {type(e).__name__}"
+                    )
                     conn.updated_at = datetime.now(timezone.utc)
                     db.commit()
 
