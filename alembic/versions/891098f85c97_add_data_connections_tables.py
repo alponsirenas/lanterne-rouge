@@ -47,7 +47,8 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'connection_type', name='uq_user_connection')
     )
     op.create_index(op.f('ix_data_connections_connection_type'), 'data_connections', ['connection_type'], unique=False)
     op.create_index(op.f('ix_data_connections_id'), 'data_connections', ['id'], unique=False)
