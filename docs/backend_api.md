@@ -144,6 +144,208 @@ Get new tokens using a refresh token.
 }
 ```
 
+### Data Connections
+
+Secure data connections for Strava, Oura, and Apple Health with OAuth2, encrypted storage, and background refresh capabilities.
+
+#### Get Connection Status
+
+**GET** `/connections/status`
+
+Get status of all data connections for the authenticated user.
+
+**Authentication:** Required (Bearer token)
+
+**Response:**
+```json
+{
+  "strava": {
+    "connection_type": "strava",
+    "status": "connected",
+    "last_refresh_at": "2025-11-21T12:00:00Z",
+    "last_refresh_status": "Success: 5 activities",
+    "error_message": null
+  },
+  "oura": {
+    "connection_type": "oura",
+    "status": "connected",
+    "last_refresh_at": "2025-11-21T11:30:00Z",
+    "last_refresh_status": "Success: 10 records",
+    "error_message": null
+  },
+  "apple_health": null
+}
+```
+
+#### Strava OAuth2 Flow
+
+##### Initiate Authorization
+
+**POST** `/connections/strava/authorize`
+
+Initiate Strava OAuth2 flow and get authorization URL.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "redirect_uri": "http://localhost:3000/callback"
+}
+```
+
+**Response:**
+```json
+{
+  "authorization_url": "https://www.strava.com/oauth/authorize?client_id=...&redirect_uri=...&response_type=code&scope=read,activity:read_all"
+}
+```
+
+##### Complete Authorization
+
+**POST** `/connections/strava/callback`
+
+Exchange authorization code for tokens and store connection.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "code": "authorization_code_from_strava",
+  "scope": "read,activity:read_all"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Strava connected successfully",
+  "status": {
+    "connection_type": "strava",
+    "status": "connected",
+    "last_refresh_at": null,
+    "last_refresh_status": null,
+    "error_message": null
+  }
+}
+```
+
+#### Oura Personal Access Token
+
+**POST** `/connections/oura/connect`
+
+Connect Oura account using Personal Access Token.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "personal_access_token": "YOUR_OURA_PAT"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Oura connected successfully",
+  "status": {
+    "connection_type": "oura",
+    "status": "connected",
+    "last_refresh_at": null,
+    "last_refresh_status": null,
+    "error_message": null
+  }
+}
+```
+
+**Note:** Get your Oura Personal Access Token from https://cloud.ouraring.com/personal-access-tokens
+
+#### Apple Health Upload
+
+**POST** `/connections/apple-health/upload`
+
+Upload Apple Health export file (ZIP or XML).
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+- Content-Type: `multipart/form-data`
+- File field: `file` (must be `.zip` or `.xml`)
+
+**Response:**
+```json
+{
+  "message": "Apple Health data uploaded successfully",
+  "records_processed": 30,
+  "upload_batch_id": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+**How to Export from Apple Health:**
+1. Open Health app on iPhone
+2. Tap profile picture (top right)
+3. Tap "Export All Health Data"
+4. Share the exported ZIP file
+5. Upload to this endpoint
+
+#### Disconnect Data Source
+
+**POST** `/connections/disconnect`
+
+Disconnect a data source and remove stored credentials.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "connection_type": "strava"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Strava disconnected successfully"
+}
+```
+
+#### Manually Refresh Data
+
+**POST** `/connections/refresh`
+
+Manually trigger data refresh from a connected source.
+
+**Authentication:** Required (Bearer token)
+
+**Request:**
+```json
+{
+  "connection_type": "strava"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Successfully refreshed strava data",
+  "records_updated": 3,
+  "last_refresh_at": "2025-11-21T12:30:00Z"
+}
+```
+
+**Note:** Manual refresh is not supported for Apple Health (upload-only).
+
+#### Security Features
+
+- **Encrypted Storage**: All credentials are encrypted using Fernet symmetric encryption
+- **Token Refresh**: Strava tokens are automatically refreshed when expired
+- **No Plaintext Logging**: Credentials are never logged in plaintext
+- **Background Refresh**: Automatic hourly refresh for Strava and Oura data
+- **Per-User Isolation**: Each user's credentials are isolated and encrypted separately
+
 ### Mission Builder
 
 #### Create Mission Draft (LLM-Powered)

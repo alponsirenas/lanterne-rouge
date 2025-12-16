@@ -4,9 +4,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from lanterne_rouge.backend.api import auth, health, jobs, missions
+from lanterne_rouge.backend.api import auth, connections, health, jobs, missions
 from lanterne_rouge.backend.core.config import get_settings
 from lanterne_rouge.backend.services.mission_scheduler import MissionTransitionScheduler
+from lanterne_rouge.backend.services.background_refresh import get_refresh_scheduler
 
 settings = get_settings()
 
@@ -15,6 +16,9 @@ mission_scheduler = MissionTransitionScheduler(
     interval_minutes=settings.mission_transition_check_interval_minutes
 )
 
+# Background refresh scheduler for data connections
+refresh_scheduler = get_refresh_scheduler(interval_minutes=60)
+
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
@@ -22,12 +26,17 @@ async def lifespan(application: FastAPI):
     # Startup
     if settings.enable_mission_scheduler:
         await mission_scheduler.start()
+    
+    # Always start background refresh for data connections
+    await refresh_scheduler.start()
 
     yield
 
     # Shutdown
     if settings.enable_mission_scheduler:
         await mission_scheduler.stop()
+    
+    await refresh_scheduler.stop()
 
 
 # Create FastAPI application
@@ -52,6 +61,7 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(missions.router)
 app.include_router(jobs.router)
+app.include_router(connections.router)
 
 
 @app.get("/")

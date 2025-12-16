@@ -12,6 +12,7 @@ typing-extensions>=4.10
 markdown>=3.6.0      # For Fiction Mode HTML formatting
 beautifulsoup4>=4.12.0  # For web scraping race data
 lxml>=4.9.0          # XML/HTML parser for BeautifulSoup
+defusedxml>=0.7.0    # Secure XML parsing for Apple Health exports
 
 # Backend API dependencies
 fastapi==0.115.*     # FastAPI framework
