@@ -1,11 +1,14 @@
 """Encryption service for secure credential storage."""
 import json
+import logging
+import os
 
 from cryptography.fernet import Fernet
 
 from lanterne_rouge.backend.core.config import get_settings
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
 
 
 class EncryptionService:
@@ -13,9 +16,21 @@ class EncryptionService:
 
     def __init__(self):
         """Initialize encryption service with a key."""
-        # Use SECRET_KEY to derive an encryption key
-        # In production, this should be a separate encryption key
-        key = self._derive_key_from_secret(settings.secret_key)
+        # Check if a dedicated encryption key is configured
+        encryption_key = os.getenv("ENCRYPTION_KEY")
+
+        if encryption_key:
+            # Use dedicated encryption key
+            key = self._derive_key_from_secret(encryption_key)
+        else:
+            # Fall back to SECRET_KEY (not recommended for production)
+            logger.warning(
+                "ENCRYPTION_KEY not set - using SECRET_KEY for encryption. "
+                "For production, set ENCRYPTION_KEY environment variable to separate "
+                "JWT signing from data encryption."
+            )
+            key = self._derive_key_from_secret(settings.secret_key)
+
         self.cipher = Fernet(key)
 
     @staticmethod

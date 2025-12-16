@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 STRAVA_CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
 
-# Validate Strava credentials are set (they're optional in development but required for Strava functionality)
+# Validate Strava credentials are set (optional in dev, required for functionality)
 if STRAVA_CLIENT_ID and not STRAVA_CLIENT_SECRET:
     logger.warning(
         "STRAVA_CLIENT_ID is set but STRAVA_CLIENT_SECRET is missing. "
@@ -56,7 +56,7 @@ class StravaService:
 
         Returns:
             Authorization URL string
-        
+
         Raises:
             RuntimeError: If Strava credentials are not configured
         """
@@ -433,10 +433,12 @@ class AppleHealthService:
                 try:
                     date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z")
                 except Exception:
-                    logger.warning(f"Could not parse date: {start_date}")
+                    logger.warning(
+                        f"Could not parse date with Apple Health format: {start_date}"
+                    )
                     continue
             except Exception:
-                logger.warning(f"Could not parse date: {start_date}")
+                logger.warning(f"Could not parse date with ISO format: {start_date}")
                 continue
 
             records.append({
@@ -483,7 +485,9 @@ class AppleHealthService:
                     # This is simplified - real implementation would need more logic
                     pass
             except (ValueError, TypeError) as e:
-                logger.debug(f"Failed to convert {record_type} value '{value}': {e}")
+                logger.debug(
+                    f"Failed to convert {record_type} value (redacted): {type(e).__name__}"
+                )
                 continue
 
         return daily_data
