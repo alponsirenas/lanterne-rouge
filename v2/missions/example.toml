@@ -1,0 +1,20 @@
+# Example mission config — edit to match your goal event and athlete profile.
+#
+# Training phases are calculated automatically from goal_date:
+#   > 42 days out → Base
+#   > 21 days out → Build
+#   >  7 days out → Peak
+#   ≤  7 days out → Taper
+
+id         = "gran-fondo-2026"
+name       = "Gran Fondo 2026"
+start_date = 2026-01-01
+goal_date  = 2026-09-01
+
+[athlete]
+ftp       = 250   # Functional Threshold Power in watts
+weight_kg = 70.0  # Optional — not used in calculations yet
+
+[constraints]
+min_readiness = 70   # Below this → coach will push toward recovery
+min_tsb       = -15  # Below this → coach will push toward recovery
