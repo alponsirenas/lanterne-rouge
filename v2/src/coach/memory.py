@@ -8,7 +8,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-MEMORY_FILE = Path("memory/history.jsonl")
+MEMORY_FILE = Path(__file__).resolve().parents[2] / "memory" / "history.jsonl"
 
 
 def append(entry_type: str, data: dict) -> None:

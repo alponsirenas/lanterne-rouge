@@ -6,10 +6,11 @@
 #   >  7 days out → Peak
 #   ≤  7 days out → Taper
 
-id         = "gran-fondo-2026"
-name       = "Gran Fondo 2026"
-start_date = 2026-01-01
-goal_date  = 2026-09-01
+id               = "gran-fondo-2026"
+name             = "Gran Fondo 2026"
+start_date       = 2026-01-01
+goal_date        = 2026-09-01
+goal_description = "Complete a 120km Gran Fondo in under 4 hours"  # optional
 
 [athlete]
 ftp       = 250   # Functional Threshold Power in watts

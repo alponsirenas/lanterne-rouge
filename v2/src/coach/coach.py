@@ -69,7 +69,7 @@ Athlete metrics:
   ATL (fatigue)   : {atl}
   TSB (form)      : {tsb}
 
-Mission: {mission.name}
+Mission: {mission.name}{f" — {mission.goal_description}" if mission.goal_description else ""}
   Training phase  : {phase}{f" ({days_to_next}d until next phase)" if days_to_next else ""}
   Days to goal    : {days_to_goal}
   FTP             : {mission.athlete.ftp} W
@@ -98,4 +98,13 @@ Give me today's recommendation.\
             text = text[4:]
         text = text.rsplit("```", 1)[0].strip()
 
-    return json.loads(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return {
+            "action": "maintain",
+            "intensity": "moderate",
+            "reason": "Could not parse today's coaching recommendation. Check logs.",
+            "workout": "Easy 60 min zone 2 ride",
+            "flags": ["parse_error"],
+        }

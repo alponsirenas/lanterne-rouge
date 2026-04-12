@@ -25,6 +25,7 @@ class MissionConfig(BaseModel):
     name: str
     start_date: date
     goal_date: date
+    goal_description: Optional[str] = None
     athlete: AthleteConfig
     constraints: ConstraintsConfig = Field(default_factory=ConstraintsConfig)
 
