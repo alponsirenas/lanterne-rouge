@@ -5,8 +5,9 @@ permissions:
 
 on:
   schedule:
-    # 6am PT = 13:00 UTC, daily through July (the run on the 27th scores stage 21)
-    - cron: '0 13 * 7 *'
+    # 8am PT = 15:00 UTC, daily through July (the run on the 27th scores stage 21).
+    # Late enough to sync the Oura ring first, still before the day's workout.
+    - cron: '0 15 * 7 *'
   workflow_dispatch:
 
 jobs:
