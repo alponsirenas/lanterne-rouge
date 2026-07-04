@@ -1,31 +1,12 @@
-# Python cache files
+# Python
 __pycache__/
 *.pyc
 .pytest_cache/
+.venv
 
 # Secrets
 .env
-.venv
 tokens.json
 
-# SQLite database
-# (tracked by default)
-
-# MacOS system files
+# macOS
 .DS_Store
-
-# MkDocs build output
-site/
-
-# Temporary/test files
-*_new.md
-*_backup.md
-test_*.py
-fix_*.py
-generate_*.py
-
-# Duplicate documentation files (should be in docs/ not root)
-LINTING_SUMMARY.md
-RELEASE_NOTES_*.md
-TDF_CLASSIFICATION_FIX_SUMMARY.md
-*_SUMMARY.md
