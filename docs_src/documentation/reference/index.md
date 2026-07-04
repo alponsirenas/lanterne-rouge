@@ -1,3 +1,0 @@
-# Reference
-
-Technical reference documentation.

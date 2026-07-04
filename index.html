@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lanterne Rouge 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* night palette: the red lantern in the dark */
+    --night:#10151c;          /* page background */
+    --night-2:#141a22;        /* section variation */
+    --car:#1a2129;            /* card surface */
+    --car-edge:#2a3441;       /* card border */
+    --ivory:#e8e4da;          /* primary text */
+    --body-c:#b8bfc7;         /* body text on cards */
+    --dim:#97a1ac;            /* secondary text */
+    --lantern:#e0453a;        /* the red lamp */
+    --lantern-deep:#a1241d;
+    --glow:#ff6b5c;           /* lamp light */
+    --gold:#f0c53d;           /* maillot jaune */
+    /* stage terrain, solid chips with white text, all pass 4.5 */
+    --flat:#2b7a4b; --hills:#9c5a10; --mtn:#b3362c; --tt:#46617a;
+    /* coach calls, distinct family from terrain */
+    --push:#c73a30; --ease:#3a6ea8; --recover:#566068;
+    --line:rgba(232,228,218,0.12);
+    --line-soft:rgba(232,228,218,0.08);
+  }
+  *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--night);color:var(--ivory);font-family:"Inter",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px;}
+
+  .sample-banner{background:var(--gold);color:#2a2102;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:0.04em;padding:8px 16px;}
+  .sample-banner b{font-weight:500;}
+
+  .lr-hero{padding:48px 0 28px;border-bottom:1px solid var(--line);
+    background:radial-gradient(120% 85% at 85% -10%, rgba(224,69,58,0.16), transparent 60%),var(--night);}
+  .lr-mark{display:flex;align-items:center;gap:14px;}
+  .lr-mark svg{flex:none;filter:drop-shadow(0 0 16px rgba(255,107,92,0.55));}
+  .lr-word{font-family:"Saira Condensed",sans-serif;font-weight:800;font-size:clamp(32px,7.5vw,58px);letter-spacing:0.04em;line-height:0.9;text-transform:uppercase;margin:0;}
+  .lr-word span{color:var(--glow);}
+  .lr-sub{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin:14px 0 0;}
+  .lr-manifesto{max-width:46ch;margin:14px 0 0;font-size:16px;color:var(--body-c);}
+
+  /* readiness banner */
+  .lr-ready{margin-top:24px;padding:18px 20px;border:1px solid rgba(240,197,61,0.35);border-left:4px solid var(--gold);border-radius:6px;background:rgba(240,197,61,0.05);}
+  .lr-ready .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+  .lr-ready .line{font-size:16px;color:var(--ivory);margin-bottom:12px;}
+  .lr-ready .line a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(240,197,61,0.45);}
+  .rchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .rchip{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--body-c);background:rgba(232,228,218,0.06);border:1px solid var(--line);border-radius:20px;padding:4px 11px;}
+  .rchip b{color:var(--gold);font-weight:500;}
+  .lr-ready .verdict{display:flex;align-items:flex-start;gap:10px;}
+  .lr-ready .note{font-size:14.5px;color:var(--body-c);}
+  .stale{margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:#ff9d94;border-top:1px solid var(--line-soft);padding-top:10px;}
+
+  .rec-pill{flex:none;font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#fff;border-radius:4px;padding:3px 9px;white-space:nowrap;}
+  .rec-push{background:var(--push);}
+  .rec-ease{background:var(--ease);}
+  .rec-recover{background:var(--recover);}
+
+  .lr-progress{margin-top:26px;}
+  .lr-progress-head{display:flex;justify-content:space-between;align-items:baseline;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+  .lr-count b{color:#7fd8a4;font-weight:500;}
+  .lr-pips{display:grid;grid-template-columns:repeat(21,1fr);gap:5px;}
+  .pip{aspect-ratio:1;border-radius:50%;background:rgba(232,228,218,0.08);border:1px solid rgba(232,228,218,0.16);transition:background .4s ease,box-shadow .4s ease,border-color .4s ease;}
+  .pip.filled{background:var(--flat);border-color:#7fd8a4;box-shadow:0 0 10px rgba(67,168,105,0.65);}
+  .pip.missed{background:rgba(232,228,218,0.03);border-color:var(--lantern-deep);}
+  .pip.now{border-color:var(--gold);box-shadow:0 0 0 2px rgba(240,197,61,0.35);}
+
+  .lr-rules{padding:40px 0 8px;}
+  .lr-rules h2,.lr-stages-head h2{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);margin:0 0 20px;}
+  .rules-fold summary{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);cursor:pointer;list-style:none;display:flex;align-items:center;gap:9px;user-select:none;}
+  .rules-fold summary::-webkit-details-marker{display:none;}
+  .rules-fold summary::after{content:"+";font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--dim);}
+  .rules-fold[open] summary{margin-bottom:20px;}
+  .rules-fold[open] summary::after{content:"\2013";}
+  .rules-fold summary:hover{color:var(--ivory);}
+  .rules-fold summary:hover::after{color:var(--ivory);}
+  .rule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:6px;overflow:hidden;}
+  .rule{background:var(--night-2);padding:20px 22px;}
+  .rule h3{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:19px;margin:0 0 6px;color:var(--ivory);}
+  .rule p{margin:0;font-size:14.5px;color:var(--dim);}
+  .rule .k{color:var(--glow);font-weight:600;}
+
+  .lr-stages-head{padding:46px 0 0;}
+  .stage-list{display:flex;flex-direction:column;gap:14px;padding-bottom:8px;}
+
+  /* list and map view toggle */
+  .stages-head-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .view-toggle{display:flex;}
+  .vt{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:1px solid var(--line);padding:5px 13px;cursor:pointer;}
+  .vt:first-child{border-radius:20px 0 0 20px;}
+  .vt:last-child{border-radius:0 20px 20px 0;border-left:none;}
+  .vt:hover{color:var(--ivory);}
+  .vt.active{color:var(--gold);border-color:rgba(240,197,61,0.5);}
+
+  /* map view */
+  #mapView{border:1px solid var(--car-edge);border-radius:8px;background:var(--car);padding:12px;margin-bottom:8px;}
+  #mapView svg{display:block;width:100%;height:auto;}
+  .land-fr{fill:#242c37;stroke:rgba(232,228,218,0.16);stroke-width:1;}
+  .land-es{fill:#1f2731;stroke:rgba(232,228,218,0.12);stroke-width:1;}
+  .rt{stroke:#ddd7ca;stroke-width:2.6;fill:none;stroke-linecap:round;opacity:0.92;}
+  .tf{stroke:rgba(232,228,218,0.55);stroke-width:1.7;fill:none;stroke-dasharray:0.1 7;stroke-linecap:round;}
+  .mk{cursor:pointer;outline:none;}
+  .mk circle{fill:var(--car);stroke:var(--line);stroke-width:1.5;}
+  .mk text{fill:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:9.5px;pointer-events:none;}
+  .mk:hover circle{stroke:var(--ivory);}
+  .mk:focus-visible circle{stroke:var(--gold);stroke-width:2.5;}
+  .mk.finished circle{fill:var(--flat);stroke:#7fd8a4;filter:drop-shadow(0 0 5px rgba(67,168,105,0.7));}
+  .mk.finished text{fill:#fff;}
+  .mk.missed circle{fill:var(--night);stroke:var(--lantern-deep);}
+  .mk.missed text{fill:#ff8a7f;}
+  .mk.now circle{fill:var(--gold);stroke:#fff;stroke-width:2;}
+  .mk.now text{fill:#2a2102;font-weight:600;}
+  .map-label{fill:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;}
+  .town{fill:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:9px;}
+  .range{fill:rgba(232,228,218,0.45);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;}
+  .ridge{stroke:rgba(232,228,218,0.3);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .border{stroke:rgba(232,228,218,0.25);stroke-width:1;stroke-dasharray:5 4;fill:none;}
+  .repos-dot{fill:rgba(232,228,218,0.5);}
+  .repos-lbl{fill:rgba(232,228,218,0.45);font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;}
+  .key-box{fill:rgba(16,21,28,0.45);stroke:rgba(232,228,218,0.12);}
+
+  /* stage modal over the map */
+  .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal-back{position:absolute;inset:0;background:rgba(16,21,28,0.84);}
+  .modal-card{position:relative;max-width:680px;width:100%;max-height:86vh;overflow:auto;border-radius:8px;}
+  .modal-close{position:absolute;top:8px;right:6px;z-index:2;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);background:transparent;border:none;padding:6px 10px;cursor:pointer;}
+  .modal-close::after{content:" \2715";}
+  .modal-close:hover{color:var(--ivory);}
+  .modal-card .stage{margin-top:40px;}
+
+  .stage{position:relative;display:flex;background:var(--car);color:var(--ivory);border-radius:8px;overflow:hidden;border:1px solid var(--car-edge);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+  .stage:hover{transform:translateY(-2px);border-color:#3a4756;box-shadow:0 14px 34px rgba(0,0,0,0.45);}
+  .stage.today{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(0,0,0,0.4);}
+  .stage.missed{opacity:0.8;}
+
+  .bib{flex:none;width:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:14px 6px;background:var(--type-color,#555);color:#fff;}
+  .bib .n{font-family:"Saira Condensed",sans-serif;font-weight:800;font-size:40px;line-height:0.9;}
+  .bib .lbl{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;}
+
+  .body{flex:1;min-width:0;padding:16px 18px 16px;}
+  .stage-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .stage-meta .date{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);}
+  .stage-meta .route{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:22px;line-height:1.05;margin:3px 0 2px;color:var(--ivory);}
+  .stage-meta .note{font-size:13px;color:var(--body-c);margin:0;}
+  .stage-meta .km{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim);}
+
+  .top-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none;}
+  .badge{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:var(--type-color,#555);padding:5px 9px;border-radius:20px;}
+  .badge svg{display:block;}
+  .status{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px;white-space:nowrap;border:1px solid transparent;}
+  .status.finished{color:#7fd8a4;background:rgba(43,122,75,0.18);border-color:rgba(127,216,164,0.35);}
+  .status.missed{color:#ff8a7f;background:transparent;border-color:rgba(224,69,58,0.5);}
+  .status.today{color:#2a2102;background:var(--gold);}
+  .status.upcoming{color:var(--dim);background:transparent;border-color:var(--line);}
+
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+  .panel{background:rgba(232,228,218,0.035);border:1px solid var(--line-soft);border-radius:6px;padding:11px 12px;}
+  .panel .head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;}
+  .panel .mode{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ivory);}
+  .panel .mode small{color:var(--dim);font-weight:600;letter-spacing:0.06em;}
+  .panel .dur{flex:none;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:500;color:var(--ivory);background:rgba(232,228,218,0.1);border:1px solid var(--line);border-radius:12px;padding:3px 9px;white-space:nowrap;}
+  .panel .desc{font-size:13px;color:var(--body-c);margin:0;}
+  .panels.spent{opacity:0.55;}
+
+  .lore{margin-top:13px;padding-left:12px;border-left:2px solid var(--lantern);}
+  .lore-eye{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--glow);display:block;margin-bottom:3px;}
+  .lore p{margin:0;font-size:13px;color:var(--dim);font-style:italic;line-height:1.45;}
+
+  /* report block, expanded view of a spent stage */
+  .report{margin-top:14px;padding:13px 14px;border:1px solid var(--line-soft);border-radius:6px;background:rgba(232,228,218,0.03);}
+  /* collapsed card for spent stages */
+  .fold summary{list-style:none;cursor:pointer;}
+  .fold summary::-webkit-details-marker{display:none;}
+  .fold:not([open]) .note,.fold:not([open]) .km{display:none;}
+  .comp-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px;}
+  .comp{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--body-c);}
+  .fold-x{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--dim);}
+  .fold-x::after{content:"+";}
+  .fold[open] .fold-x::after{content:"\2013";}
+  .fold summary:hover .fold-x{color:var(--ivory);}
+  .tgt{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:12px;}
+  .tgt.on{color:#7fd8a4;background:rgba(43,122,75,0.18);border:1px solid rgba(127,216,164,0.35);}
+  .tgt.off{color:#ff9d94;background:rgba(224,69,58,0.12);border:1px solid rgba(255,157,148,0.4);}
+  .rep-stats{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--body-c);margin:0 0 9px;line-height:1.6;}
+  .rep-stats b{color:var(--ivory);font-weight:500;}
+  .tiz{margin:0 0 10px;}
+  .tiz .cap{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;}
+  .tiz .bar{display:flex;height:9px;border-radius:5px;overflow:hidden;border:1px solid var(--line-soft);margin-bottom:5px;}
+  .tiz .bar span{display:block;height:100%;}
+  .z1{background:#7c8791;}.z2{background:#4f8fd0;}.z3{background:#43a869;}.z4{background:#d99a3d;}.z5{background:#e0453a;}
+  .tiz-leg{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--dim);}
+  .tiz-leg i{display:inline-block;width:7px;height:7px;border-radius:2px;margin:0 4px 0 10px;vertical-align:baseline;font-style:normal;}
+  .tiz-leg i:first-child{margin-left:0;}
+  .rep-verdict{display:flex;align-items:flex-start;gap:9px;}
+  .rep-verdict .called{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);padding-top:4px;}
+  .rep-verdict .note{font-size:13.5px;color:var(--body-c);font-style:italic;}
+
+  .rest{display:flex;align-items:center;gap:16px;padding:14px 20px;border:1px dashed var(--line);border-radius:8px;color:var(--dim);background:rgba(232,228,218,0.02);}
+  .rest .tag{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);}
+  .rest .d{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;}
+  .rest .t{font-size:14px;color:var(--body-c);}
+
+  .lr-foot{padding:38px 0 60px;border-top:1px solid var(--line);margin-top:36px;color:var(--dim);font-size:13px;}
+  .lr-foot .upd{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.06em;}
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  @media (max-width:640px){
+    .panels{grid-template-columns:1fr;}
+    .rule-grid{grid-template-columns:1fr;}
+    .bib{width:60px;} .bib .n{font-size:32px;}
+    .stage-meta .route{font-size:19px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<div class="sample-banner" id="sampleBanner" hidden><b>Sample data.</b> No live status.json found.</div>
+
+<header class="lr-hero">
+  <div class="wrap">
+    <div class="lr-mark">
+      <svg width="34" height="46" viewBox="0 0 34 46" aria-hidden="true">
+        <rect x="11" y="1" width="12" height="4" rx="1.5" fill="#e0453a"/>
+        <path d="M9 6 h16 v3 h-2 v30 a7 7 0 0 1 -12 0 V9 H9 Z" fill="#a1241d"/>
+        <rect x="12" y="11" width="10" height="26" rx="3" fill="#ff6b5c"/>
+        <rect x="14.5" y="14" width="5" height="20" rx="2.5" fill="#ffe27a"/>
+        <rect x="11" y="38" width="12" height="4" rx="1.5" fill="#e0453a"/>
+      </svg>
+      <h1 class="lr-word">Lanterne<br><span>Rouge</span> 2026</h1>
+    </div>
+    <p class="lr-sub">Tour de France 2026 &middot; 4 to 26 July &middot; Barcelona to Paris</p>
+    <p class="lr-manifesto">The lanterne rouge is the last rider to finish. Not the winner, the one who keeps showing up.</p>
+
+    <div class="lr-ready" id="ready" hidden></div>
+
+    <div class="lr-progress">
+      <div class="lr-progress-head">
+        <span>The peloton</span>
+        <span class="lr-count" id="count"><b>0</b> / 21 stages finished</span>
+      </div>
+      <div class="lr-pips" id="pips" aria-hidden="true"></div>
+    </div>
+  </div>
+</header>
+
+<section class="lr-rules">
+  <div class="wrap">
+    <details class="rules-fold">
+      <summary>How you finish</summary>
+      <div class="rule-grid">
+        <div class="rule"><h3>Two ways to take a stage</h3><p>At home, <span class="k">ride it</span> on the Peloton. On the road, <span class="k">walk it</span> on the treadmill. Both count the same, both capped at one hour.</p></div>
+        <div class="rule"><h3>Rest days are earned</h3><p>The Tour rests on <span class="k">13</span> and <span class="k">20 July</span>. So do you. Full rest, or twenty easy minutes if you want to keep ticking.</p></div>
+        <div class="rule"><h3>Mechanicals are allowed</h3><p>Miss a stage here and there, riders crash and still finish. Letting a whole week pass with nothing is the only real <span class="k">DNF</span>.</p></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<main class="lr-stages-head">
+  <div class="wrap">
+    <div class="stages-head-row">
+      <h2>The 21 stages</h2>
+      <div class="view-toggle">
+        <button class="vt active" id="vList" type="button" aria-pressed="true">List</button>
+        <button class="vt" id="vMap" type="button" aria-pressed="false">Map</button>
+      </div>
+    </div>
+    <div id="mapView" hidden></div>
+    <div class="stage-list" id="stageList"></div>
+  </div>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-back" id="modalBack"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Stage detail">
+    <button class="modal-close" id="modalClose" type="button">Close</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer class="lr-foot">
+  <div class="wrap">
+    <p class="upd" id="updated"></p>
+  </div>
+</footer>
+
+<script>
+// Stage data and map geometry come from mission/stages.json, the shared source of truth
+// for the dashboard and the morning loop. Pure drawing data below stays here.
+let STAGES = [];
+let GEO = {};
+
+const TYPE = {
+  tt:{cvar:"var(--tt)",label:"Time trial",prof:"flat"},
+  flat:{cvar:"var(--flat)",label:"Flat",prof:"flat"},
+  hills:{cvar:"var(--hills)",label:"Hills",prof:"hills"},
+  mountains:{cvar:"var(--mtn)",label:"Mountains",prof:"mountains"}
+};
+const PROFILE = {
+  flat:"0,15 8,14 16,15 24,13 32,15 40,14 48,15 56,13 64,15",
+  hills:"0,17 8,11 16,16 24,9 32,15 40,8 48,14 56,7 64,16",
+  mountains:"0,18 10,16 20,12 30,14 40,8 50,11 60,3 64,2"
+};
+
+function XY(lat,lon){return [(lon+5.5)*54,(51.5-lat)*78];}
+// France, drawn with enough points to be recognized
+const FR_OUTLINE=[[51.05,2.5],[50.95,1.85],[50.6,1.58],[50.2,1.55],[49.9,1.1],[49.5,0.1],[49.35,-0.5],[49.4,-1.15],[49.72,-1.9],[49.3,-1.85],[48.65,-1.55],[48.62,-2.4],[48.78,-3.3],[48.55,-4.5],[48.35,-4.78],[48.0,-4.6],[47.75,-4.2],[47.45,-3.0],[47.2,-2.35],[46.8,-2.1],[46.25,-1.35],[45.6,-1.15],[44.65,-1.28],[43.55,-1.6],[43.37,-1.78],[43.0,-1.3],[42.85,-0.55],[42.8,0.1],[42.65,0.7],[42.5,1.35],[42.43,1.95],[42.35,2.55],[42.43,3.17],[42.9,3.05],[43.25,3.4],[43.3,4.1],[43.35,4.85],[43.28,5.4],[43.1,5.95],[43.4,6.7],[43.7,7.28],[43.78,7.5],[44.15,7.3],[44.7,6.95],[45.15,7.15],[45.6,7.1],[45.9,6.95],[46.15,6.8],[46.35,6.2],[46.75,6.35],[47.1,6.75],[47.5,7.55],[48.0,7.6],[48.6,7.85],[48.95,8.15],[49.2,6.7],[49.47,5.9],[49.55,5.45],[49.85,4.85],[50.1,4.95],[50.35,4.2],[50.55,3.85],[50.8,3.1],[51.0,2.65]];
+// the visible corner of Spain, so Catalonia sits in a country
+const ES_OUTLINE=[[43.37,-1.78],[43.35,-2.3],[43.3,-3.0],[42.0,-3.0],[41.0,-1.0],[41.0,0.85],[41.12,1.3],[41.38,2.2],[41.62,2.65],[41.9,3.2],[42.25,3.28],[42.43,3.17],[42.35,2.55],[42.43,1.95],[42.5,1.35],[42.65,0.7],[42.8,0.1],[42.85,-0.55],[43.0,-1.3]];
+// the France-Spain border along the Pyrenees crest
+const BORDER=[[43.35,-1.75],[42.95,-0.9],[42.8,-0.1],[42.65,0.65],[42.5,1.4],[42.4,1.95],[42.35,2.55],[42.43,3.17]];
+// town labels: name, lat, lon, dx, dy, text-anchor
+const TOWNS=[
+  ["Tarragona",41.12,1.25,-6,14,"end"],["Granollers",41.61,2.29,12,4,"start"],
+  ["Les Angles",42.57,2.07,14,4,"start"],["Foix",42.97,1.61,0,20,"middle"],
+  ["Carcassonne",43.21,2.35,10,-4,"start"],["Lannemezan",43.13,0.38,0,16,"middle"],
+  ["Pau",43.30,-0.37,-14,4,"end"],["Gavarnie",42.73,0.01,-18,16,"end"],
+  ["Hagetmau",43.66,-0.59,-13,4,"end"],["Bordeaux",44.84,-0.58,-14,4,"end"],
+  ["Périgueux",45.18,0.72,0,-8,"middle"],["Bergerac",44.85,0.48,0,18,"middle"],
+  ["Malemort",45.17,1.56,0,14,"middle"],["Ussel",45.55,2.31,0,-14,"middle"],
+  ["Aurillac",44.93,2.44,0,16,"middle"],["Le Lioran",45.08,2.75,14,13,"start"],
+  ["Vichy",46.13,3.42,10,4,"start"],["Nevers",46.99,3.16,0,-14,"middle"],
+  ["Châlon-sur-Saône",46.78,4.85,0,30,"middle"],["Dole",47.09,5.49,0,-10,"middle"],
+  ["Belfort",47.64,6.85,0,18,"middle"],["Mulhouse",47.75,7.34,8,14,"start"],
+  ["Le Markstein",47.92,7.03,0,-16,"middle"],["Champagnole",46.75,5.91,-10,-10,"end"],
+  ["Solaison",46.03,6.35,-14,4,"end"],["Thonon · Évian",46.37,6.48,0,-28,"middle"],
+  ["Chambéry",45.56,5.92,-13,-6,"end"],["Voiron",45.37,5.59,-15,-2,"end"],
+  ["Alpe d'Huez",45.09,6.07,-24,-8,"end"],["Orcières",44.70,6.33,14,4,"start"],
+  ["Gap",44.56,6.08,0,16,"middle"],["Thoiry",48.87,1.80,-12,4,"end"]
+];
+// range and country labels with ridge marks
+const RANGES=[["Pyrénées",42.0,0.75],["Massif Central",45.35,4.15],["Alpes",45.85,7.25],["Vosges",48.42,6.25],["Espagne",41.5,-1.6]];
+const RIDGES=[[42.78,-0.9],[42.72,-0.15],[42.68,0.6],[42.6,1.35],[42.62,2.3],[46.0,6.75],[45.55,6.85],[45.05,6.75],[44.55,6.55],[45.35,3.35],[45.05,3.6],[44.75,3.25],[48.28,6.45],[48.6,7.1]];
+
+// Fallback used only when no live status.json is served, so the page previews fully populated.
+const SAMPLE_STATE = {
+  "updated":"2026-07-11T07:05:00-07:00",
+  "today":{"date":"2026-07-11","stage":8,"readiness":{"score":84,"sleep_score":80,"resting_hr":51,"hrv":70,"sleep_hours":7.6},"recommendation":"push","note":"Readiness is strong and you slept well. Take stage 8 as written, and chase the surges if the legs answer."},
+  "stages":{
+    "s1":{"status":"finished","completed_via":"ride","strava":{"duration_min":30,"distance_km":12.9,"avg_hr":150,"max_hr":167,"avg_watts":101,"relative_effort":84,"time_in_zone":{"z1":3,"z2":13,"z3":7,"z4":5,"z5":2}},"oura":{"readiness":81,"sleep_score":78,"resting_hr":53,"hrv":63,"sleep_hours":7.4},"verdict":{"call":"push","hit_target":true,"note":"You held the three Z5 ramps to the line. Stage one, taken clean."}},
+    "s2":{"status":"finished","completed_via":"ride","strava":{"duration_min":40,"distance_km":16.1,"avg_hr":156,"max_hr":172,"avg_watts":108,"relative_effort":121,"time_in_zone":{"z1":3,"z2":15,"z3":7,"z4":8,"z5":7}},"oura":{"readiness":77,"sleep_score":75,"resting_hr":54,"hrv":59,"sleep_hours":7.1},"verdict":{"call":"push","hit_target":true,"note":"Three trips up the castle, three Z5 blocks. That was a real fight."}},
+    "s3":{"status":"finished","completed_via":"walk","strava":{"duration_min":50,"distance_km":5.2,"avg_hr":138,"max_hr":159,"avg_watts":null,"relative_effort":74,"time_in_zone":{"z1":8,"z2":20,"z3":14,"z4":7,"z5":1}},"oura":{"readiness":74,"sleep_score":72,"resting_hr":55,"hrv":57,"sleep_hours":6.9},"verdict":{"call":"ease","hit_target":true,"note":"On the road, you walked the mountain. Incline held to 8% at the top. It counts, fully."}},
+    "s4":{"status":"finished","completed_via":"ride","strava":{"duration_min":40,"distance_km":16.8,"avg_hr":149,"max_hr":165,"avg_watts":104,"relative_effort":92,"time_in_zone":{"z1":4,"z2":17,"z3":6,"z4":11,"z5":2}},"oura":{"readiness":79,"sleep_score":80,"resting_hr":52,"hrv":66,"sleep_hours":7.5},"verdict":{"call":"push","hit_target":true,"note":"Five clean Z4 efforts, then the easy run down. Right on the card."}},
+    "s5":{"status":"finished","completed_via":"ride","strava":{"duration_min":30,"distance_km":13.1,"avg_hr":131,"max_hr":148,"avg_watts":92,"relative_effort":41,"time_in_zone":{"z1":7,"z2":19,"z3":4,"z4":0,"z5":0}},"oura":{"readiness":83,"sleep_score":82,"resting_hr":51,"hrv":69,"sleep_hours":7.8},"verdict":{"call":"ease","hit_target":true,"note":"A flat day ridden easy. Exactly what a sprinters' stage should feel like for you."}},
+    "s6":{"status":"missed","completed_via":null,"strava":null,"oura":{"readiness":68,"sleep_score":64,"resting_hr":57,"hrv":52,"sleep_hours":6.2},"verdict":{"call":"recover","hit_target":false,"note":"No stage logged, and readiness was low after short sleep. Call it a mechanical. The Tour goes on tomorrow."}},
+    "s7":{"status":"finished","completed_via":"ride","strava":{"duration_min":30,"distance_km":12.7,"avg_hr":134,"max_hr":151,"avg_watts":95,"relative_effort":46,"time_in_zone":{"z1":6,"z2":20,"z3":4,"z4":0,"z5":0}},"oura":{"readiness":82,"sleep_score":81,"resting_hr":51,"hrv":68,"sleep_hours":7.7},"verdict":{"call":"ease","hit_target":true,"note":"Back on the bike, easy and smooth. A good way to answer a missed day."}},
+    "s8":{"status":"upcoming"}
+  }
+};
+
+let STATE = null;
+let IS_SAMPLE = false;
+
+function badgeSvg(prof){
+  return '<svg width="30" height="14" viewBox="0 0 64 20" aria-hidden="true"><polyline points="'+PROFILE[prof]+'" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+function recPill(call){
+  const c={push:"rec-push",ease:"rec-ease",recover:"rec-recover"}[call]||"rec-ease";
+  const t={push:"Push",ease:"Ease",recover:"Recover"}[call]||call;
+  return '<span class="rec-pill '+c+'">'+t+'</span>';
+}
+function tizBar(z){
+  const order=["z1","z2","z3","z4","z5"];
+  const total=order.reduce((a,k)=>a+(z[k]||0),0)||1;
+  let segs="", leg="";
+  order.forEach(k=>{
+    const m=z[k]||0;
+    if(m>0){
+      segs+='<span class="'+k+'" style="width:'+(m/total*100)+'%"></span>';
+      leg+='<i class="'+k+'"></i>'+k.toUpperCase()+' '+m;
+    }
+  });
+  return '<div class="tiz"><div class="cap">Time in zone, minutes</div><div class="bar">'+segs+'</div><div class="tiz-leg">'+leg+'</div></div>';
+}
+function deviceISO(){
+  const n=new Date();
+  return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+}
+function niceDate(iso){
+  const d=new Date(iso+"T12:00:00");
+  return d.toLocaleDateString([], {weekday:"short", day:"numeric", month:"short"});
+}
+
+function readyBanner(){
+  const box=document.getElementById("ready");
+  const t=STATE&&STATE.today;
+  if(!IS_SAMPLE && new Date()>new Date("2026-07-26T23:59:59")){
+    box.hidden=false;
+    box.innerHTML='<div class="eyebrow">The Tour is done</div><div class="line">Whatever you finished, you finished. Chapeau.</div>';
+    return;
+  }
+  if(t&&t.readiness){
+    const r=t.readiness;
+    const st=STAGES.find(s=>s.n===t.stage);
+    const routeLink=st?(st.route+'. <a href="#'+st.id+'">See the plan</a>.'):"Rest day.";
+    // staleness guard: the brief must be from today, otherwise say so
+    let stale="";
+    if(!IS_SAMPLE && t.date!==deviceISO()){
+      stale='<div class="stale">This brief is from '+niceDate(t.date)+'. This morning\u2019s update has not come in yet.</div>';
+    }
+    box.hidden=false;
+    box.innerHTML=
+      '<div class="eyebrow">'+(t.date===deviceISO()||IS_SAMPLE?'Today, ':'')+(st?('stage '+t.stage):'rest day')+'</div>'+
+      '<div class="line">'+routeLink+'</div>'+
+      '<div class="rchips">'+
+        '<span class="rchip">Readiness <b>'+r.score+'</b></span>'+
+        '<span class="rchip">Slept <b>'+r.sleep_hours+' h</b></span>'+
+        '<span class="rchip">Resting HR <b>'+r.resting_hr+'</b></span>'+
+        '<span class="rchip">HRV <b>'+r.hrv+'</b></span>'+
+      '</div>'+
+      '<div class="verdict">'+recPill(t.recommendation)+'<span class="note">'+t.note+'</span></div>'+
+      stale;
+  }else{
+    const now=new Date(), start=new Date("2026-07-04T00:00:00");
+    if(now<start){
+      const days=Math.ceil((start-now)/86400000);
+      box.hidden=false;
+      box.innerHTML='<div class="eyebrow">Grand Départ</div><div class="line">'+days+' day'+(days===1?"":"s")+' until stage 1 in Barcelona. Time to set the legs.</div>';
+    }
+  }
+}
+
+function reportBlock(rep){
+  if(!rep||rep.status==="upcoming") return "";
+  if(rep.status==="missed"){
+    return '<div class="report"><div class="rep-verdict"><span class="called">Called</span>'+recPill(rep.verdict.call)+'<span class="note">'+rep.verdict.note+'</span></div></div>';
+  }
+  const s=rep.strava, o=rep.oura, v=rep.verdict;
+  let stats="<b>"+s.duration_min+" min</b> &middot; HR "+s.avg_hr+" avg / "+s.max_hr+" max";
+  if(s.avg_watts!=null) stats+=" &middot; "+s.avg_watts+" W avg";
+  stats+=" &middot; effort "+s.relative_effort;
+  let oura = o?('<div class="rep-stats">Oura: readiness <b>'+o.readiness+'</b> &middot; slept '+o.sleep_hours+' h &middot; HRV '+o.hrv+'</div>'):"";
+  return '<div class="report">'+
+    '<div class="rep-stats">'+stats+'</div>'+
+    (s.time_in_zone?tizBar(s.time_in_zone):"")+
+    oura+
+    '<div class="rep-verdict"><span class="called">Called</span>'+recPill(v.call)+'<span class="note">'+v.note+'</span></div>'+
+  '</div>';
+}
+
+// one line that summarizes a spent stage in the collapsed card
+function compLine(rep){
+  let bits;
+  if(rep.status==="missed"){
+    bits="No workout logged";
+  }else{
+    bits=(rep.completed_via==="ride"?"Taken by bike":"Taken on foot");
+    if(rep.strava) bits+=" &middot; "+rep.strava.duration_min+" min &middot; effort "+rep.strava.relative_effort;
+  }
+  const v=rep.verdict||{};
+  const tgt=(rep.status==="finished"&&typeof v.hit_target==="boolean")
+    ? '<span class="tgt '+(v.hit_target?'on':'off')+'">'+(v.hit_target?'On target':'Off target')+'</span>' : '';
+  return '<div class="comp-row"><span class="comp">'+bits+'</span>'+tgt+'<span class="fold-x" aria-hidden="true"></span></div>';
+}
+
+function statusOf(s){
+  const todayStage = STATE&&STATE.today ? STATE.today.stage : null;
+  const rep = STATE&&STATE.stages?STATE.stages[s.id]:null;
+  let status = rep?rep.status:"upcoming";
+  const isToday = (s.n===todayStage);
+  if(isToday && status==="upcoming") status="today";
+  return {rep,status,isToday};
+}
+
+function buildStage(s){
+  const t=TYPE[s.type];
+  const {rep,status,isToday}=statusOf(s);
+  const statusLabel={finished:"Finished",missed:"Missed",today:"Today",upcoming:"Upcoming"}[status];
+  const spent = (status==="finished"||status==="missed");
+
+  const panelsHtml =
+    '<div class="panels'+(spent?' spent':'')+'">'+
+      '<div class="panel"><div class="head"><span class="mode">Ride <small>Peloton</small></span><span class="dur">'+s.rideMin+' min</span></div><p class="desc">'+s.ride+'</p></div>'+
+      '<div class="panel"><div class="head"><span class="mode">Walk <small>treadmill</small></span><span class="dur">'+s.walkMin+' min</span></div><p class="desc">'+s.walk+'</p></div>'+
+    '</div>';
+  const repHtml = reportBlock(rep);
+
+  const el=document.createElement("article");
+  el.className="stage"+(status==="missed"?" missed":"")+(isToday?" today":"");
+  el.id=s.id;
+  el.style.setProperty("--type-color",t.cvar);
+  const stageTop=
+    '<div class="stage-top">'+
+      '<div class="stage-meta">'+
+        '<div class="date">'+s.day+'</div>'+
+        '<h3 class="route">'+s.route+'</h3>'+
+        '<p class="note">'+s.note+'</p>'+
+        '<span class="km">'+s.km+'</span>'+
+      '</div>'+
+      '<div class="top-right">'+
+        '<span class="status '+status+'">'+statusLabel+'</span>'+
+        '<span class="badge">'+badgeSvg(t.prof)+t.label+'</span>'+
+      '</div>'+
+    '</div>';
+  const loreHtml='<div class="lore"><span class="lore-eye">On this road</span><p>'+s.history+'</p></div>';
+  // spent stages collapse to a summary, upcoming stages show the plan
+  const inner = spent
+    ? '<details class="fold"><summary>'+stageTop+compLine(rep)+'</summary>'+repHtml+panelsHtml+loreHtml+'</details>'
+    : stageTop+panelsHtml+loreHtml;
+  el.innerHTML=
+    '<div class="bib"><span class="n">'+s.n+'</span><span class="lbl">stage</span></div>'+
+    '<div class="body">'+inner+'</div>';
+  return el;
+}
+
+function render(){
+  const list=document.getElementById("stageList");
+  list.innerHTML="";
+  const todayStage = STATE&&STATE.today ? STATE.today.stage : null;
+  STAGES.forEach(s=>{
+    if(s.rest){
+      const r=document.createElement("div");
+      r.className="rest";
+      r.innerHTML='<span class="tag">Repos</span><span class="d">'+s.day+'</span><span class="t">'+s.t+'</span>';
+      list.appendChild(r); return;
+    }
+    list.appendChild(buildStage(s));
+  });
+  renderProgress(todayStage);
+  readyBanner();
+  if(!document.getElementById("mapView").hidden) buildMap();
+  const u=document.getElementById("updated");
+  if(STATE&&STATE.updated){
+    const d=new Date(STATE.updated);
+    u.textContent="Last updated "+d.toLocaleString([], {weekday:"short", day:"numeric", month:"short", hour:"numeric", minute:"2-digit"})+".";
+  }
+}
+
+function buildMap(){
+  let tf='', rt='', marks='', extra='';
+  const poly=a=>a.map(p=>XY(p[0],p[1]).map(v=>v.toFixed(1)).join(',')).join(' ');
+  const land='<polygon class="land-es" points="'+poly(ES_OUTLINE)+'"/>'+
+             '<polygon class="land-fr" points="'+poly(FR_OUTLINE)+'"/>';
+  // a gentle bow so stages read as roads, not chords
+  const curve=(x1,y1,x2,y2,k)=>{
+    const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy)||1;
+    const b=Math.min(16,L*0.22)*k;
+    const cx=(x1+x2)/2 - dy/L*b, cy=(y1+y2)/2 + dx/L*b;
+    return {d:'M'+x1.toFixed(1)+' '+y1.toFixed(1)+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+x2.toFixed(1)+' '+y2.toFixed(1),
+            mx:0.25*x1+0.5*cx+0.25*x2, my:0.25*y1+0.5*cy+0.25*y2};
+  };
+  let prevF=null, restPending=false, wig=1;
+  STAGES.forEach(s=>{
+    if(s.rest){restPending=true;return;}
+    const g=GEO[s.id];
+    const S=XY(g.s[0],g.s[1]), F=XY(g.f[0],g.f[1]);
+    if(prevF && (prevF[0].toFixed(0)!==S[0].toFixed(0)||prevF[1].toFixed(0)!==S[1].toFixed(0))){
+      const c=curve(prevF[0],prevF[1],S[0],S[1],0.5*wig);
+      tf+='<path class="tf" d="'+c.d+'"/>';
+      if(restPending){
+        extra+='<circle class="repos-dot" cx="'+c.mx.toFixed(1)+'" cy="'+c.my.toFixed(1)+'" r="3"/>'+
+               '<text class="repos-lbl" x="'+(c.mx+9).toFixed(1)+'" y="'+(c.my+3).toFixed(1)+'">Repos</text>';
+        restPending=false;
+      }
+    }
+    if(g.s[0]!==g.f[0]||g.s[1]!==g.f[1]){
+      rt+='<path class="rt" d="'+curve(S[0],S[1],F[0],F[1],wig).d+'"/>';
+    }
+    wig=-wig;
+    prevF=F;
+    const {status,isToday}=statusOf(s);
+    const o=g.o||[0,0];
+    const mx=F[0]+o[0], my=F[1]+o[1];
+    const lbl={finished:"finished",missed:"missed",today:"today",upcoming:"upcoming"}[status];
+    marks+='<g class="mk '+status+(isToday?' now':'')+'" data-id="'+s.id+'" tabindex="0" role="button" aria-label="Stage '+s.n+', '+lbl+'">'+
+      '<circle cx="'+mx+'" cy="'+my+'" r="10"/>'+
+      '<text x="'+mx+'" y="'+(my+3.4)+'" text-anchor="middle">'+s.n+'</text></g>';
+  });
+  // geography under the route: border, ridges, range names, towns
+  const bpts=BORDER.map(p=>XY(p[0],p[1]).map(v=>v.toFixed(1)).join(',')).join(' ');
+  let geo='<polyline class="border" points="'+bpts+'"/>';
+  RIDGES.forEach(p=>{
+    const [x,y]=XY(p[0],p[1]);
+    geo+='<polyline class="ridge" points="'+(x-5)+','+(y+3)+' '+x+','+(y-3.5)+' '+(x+5)+','+(y+3)+'"/>';
+  });
+  RANGES.forEach(r=>{
+    const [x,y]=XY(r[1],r[2]);
+    geo+='<text class="range" x="'+x+'" y="'+y+'" text-anchor="middle">'+r[0]+'</text>';
+  });
+  TOWNS.forEach(t=>{
+    const [x,y]=XY(t[1],t[2]);
+    geo+='<text class="town" x="'+(x+t[3])+'" y="'+(y+t[4])+'" text-anchor="'+t[5]+'">'+t[0]+'</text>';
+  });
+  const bcn=XY(41.39,2.17), par=XY(48.86,2.35);
+  extra+='<text class="map-label" x="'+(bcn[0]+18)+'" y="'+(bcn[1]+22)+'">Barcelona</text>';
+  extra+='<text class="map-label" x="'+(par[0]+16)+'" y="'+(par[1]-8)+'">Paris</text>';
+  // the key, in the open Atlantic corner
+  let key='<rect class="key-box" x="40" y="318" width="160" height="216" rx="8"/>';
+  key+='<text class="map-label" x="54" y="343">The key</text>';
+  const dot=(cy,fill,stroke,sw)=>'<circle cx="62" cy="'+cy+'" r="7" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'"/>';
+  let ky=368;
+  key+=dot(ky-3,'#2b7a4b','#7fd8a4',1.5)+'<text class="town" x="78" y="'+ky+'">Finished</text>'; ky+=26;
+  key+=dot(ky-3,'#10151c','#a1241d',1.5)+'<text class="town" x="78" y="'+ky+'">Missed</text>'; ky+=26;
+  key+=dot(ky-3,'#f0c53d','#ffffff',2)+'<text class="town" x="78" y="'+ky+'">Today</text>'; ky+=26;
+  key+=dot(ky-3,'#1a2129','rgba(232,228,218,0.3)',1.5)+'<text class="town" x="78" y="'+ky+'">Upcoming</text>'; ky+=26;
+  key+='<path class="rt" d="M54 '+(ky-3)+' L86 '+(ky-3)+'"/><text class="town" x="94" y="'+ky+'">Stage</text>'; ky+=26;
+  key+='<path class="tf" d="M54 '+(ky-3)+' L86 '+(ky-3)+'"/><text class="town" x="94" y="'+ky+'">Transfer</text>'; ky+=26;
+  key+='<circle class="repos-dot" cx="62" cy="'+(ky-3)+'" r="3"/><text class="town" x="78" y="'+ky+'">Rest day</text>';
+  extra+=key;
+  document.getElementById("mapView").innerHTML=
+    '<svg viewBox="0 0 760 840" role="img" aria-label="Route map, Barcelona to Paris">'+land+geo+tf+rt+marks+extra+'</svg>';
+  document.querySelectorAll("#mapView .mk").forEach(g=>{
+    g.addEventListener("click",()=>openStage(g.dataset.id,false));
+    g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openStage(g.dataset.id,true);}});
+  });
+}
+
+let lastFocus=null;
+function openStage(id,byKeyboard){
+  const s=STAGES.find(x=>x.id===id);
+  if(!s) return;
+  lastFocus=byKeyboard?document.activeElement:null;
+  const el=buildStage(s);
+  const fold=el.querySelector(".fold");
+  if(fold) fold.setAttribute("open","");
+  const mb=document.getElementById("modalBody");
+  mb.innerHTML=""; mb.appendChild(el);
+  document.getElementById("modal").hidden=false;
+  document.body.style.overflow="hidden";
+  document.getElementById("modalClose").focus();
+}
+function closeModal(){
+  document.getElementById("modal").hidden=true;
+  document.body.style.overflow="";
+  if(lastFocus&&lastFocus.focus) lastFocus.focus();
+}
+function setView(v){
+  document.getElementById("vList").classList.toggle("active",v==="list");
+  document.getElementById("vList").setAttribute("aria-pressed",v==="list");
+  document.getElementById("vMap").classList.toggle("active",v==="map");
+  document.getElementById("vMap").setAttribute("aria-pressed",v==="map");
+  document.getElementById("stageList").hidden=(v==="map");
+  document.getElementById("mapView").hidden=(v!=="map");
+  if(v==="map") buildMap();
+}
+
+function renderProgress(todayStage){
+  const pips=document.getElementById("pips");
+  pips.innerHTML="";
+  let finished=0;
+  STAGES.filter(s=>!s.rest).forEach(s=>{
+    const rep=STATE&&STATE.stages?STATE.stages[s.id]:null;
+    const st=rep?rep.status:"upcoming";
+    const p=document.createElement("div");
+    p.className="pip";
+    if(st==="finished"){p.classList.add("filled");finished++;}
+    if(st==="missed")p.classList.add("missed");
+    if(s.n===todayStage)p.classList.add("now");
+    pips.appendChild(p);
+  });
+  document.querySelector("#count b").textContent=finished;
+}
+
+async function boot(){
+  try{
+    const m=await fetch("./mission/stages.json",{cache:"no-store"});
+    if(m.ok){
+      const mj=await m.json();
+      STAGES=mj.stages||[];
+      STAGES.forEach(s=>{if(s.geo)GEO[s.id]=s.geo;});
+    }
+  }catch(e){}
+  if(!STAGES.length){
+    document.getElementById("stageList").innerHTML='<p style="color:var(--dim);font-family:\'IBM Plex Mono\',monospace;font-size:13px;">Could not load mission/stages.json. Serve this page over HTTP from the repo root.</p>';
+    return;
+  }
+  let state=null, sample=false;
+  try{
+    const r=await fetch("./status.json",{cache:"no-store"});
+    if(r.ok) state=await r.json();
+  }catch(e){}
+  if(!state){ state=SAMPLE_STATE; sample=true; }
+  STATE=state; IS_SAMPLE=sample;
+  document.getElementById("sampleBanner").hidden=!sample;
+  document.getElementById("vList").addEventListener("click",()=>setView("list"));
+  document.getElementById("vMap").addEventListener("click",()=>setView("map"));
+  document.getElementById("modalClose").addEventListener("click",closeModal);
+  document.getElementById("modalBack").addEventListener("click",closeModal);
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"&&!document.getElementById("modal").hidden) closeModal();
+  });
+  render();
+}
+boot();
+</script>
+</body>
+</html>

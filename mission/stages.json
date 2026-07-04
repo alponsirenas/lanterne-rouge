@@ -1,0 +1,226 @@
+{
+  "name": "Lanterne Rouge 2026",
+  "tour": "Tour de France 2026, Barcelona to Paris, 4 to 26 July",
+  "start_date": "2026-07-04",
+  "end_date": "2026-07-26",
+  "stages": [
+    {
+      "n": 1, "id": "s1", "date": "2026-07-04", "day": "Sat 4 Jul",
+      "route": "Barcelona to Barcelona", "km": "19.6 km", "type": "tt",
+      "note": "Team time trial. Flat, then the Montjuïc ramp.",
+      "rideMin": 30, "ride": "Warm up 10 min Z2. Then 3 x 3 min Z5 with 2 min Z2 between. Spin easy to close.",
+      "walkMin": 25, "walk": "Brisk 8 min at 1-2%. Then 3 x 3 min at 5-6% with 1 min flat between. Last 2 min at 7%.",
+      "targets": [{"zone": "z5", "minutes": 9}],
+      "geo": {"s": [41.39, 2.17], "f": [41.39, 2.17], "o": [-9, -13]},
+      "history": "The Tour opens with a team time trial for the first time since 1971, and Barcelona hosts a Grand Départ for the first time ever. The finish climbs Montjuïc, the Olympic hill of the 1992 Games."
+    },
+    {
+      "n": 2, "id": "s2", "date": "2026-07-05", "day": "Sun 5 Jul",
+      "route": "Tarragona to Barcelona", "km": "168.5 km", "type": "hills",
+      "note": "The Montjuïc castle climb, three times, 1.6 km at 9.3%.",
+      "rideMin": 40, "ride": "Base 10 min Z2. Then 3 x 4 min Z5 with 5 min Z2 between, the three castle climbs. Easy to close.",
+      "walkMin": 40, "walk": "Warm up 8 min. Then 3 x 5 min at 6-7% with 4 min flat between.",
+      "targets": [{"zone": "z5", "minutes": 12}],
+      "geo": {"s": [41.12, 1.25], "f": [41.39, 2.17], "o": [9, 3]},
+      "history": "Montjuïc looms over Barcelona and its castle road kicks up toward 9 percent. The riders climb it three times, turning a sprinters' route into a puncheur's playground."
+    },
+    {
+      "n": 3, "id": "s3", "date": "2026-07-06", "day": "Mon 6 Jul",
+      "route": "Granollers to Les Angles", "km": "195.9 km", "type": "mountains",
+      "note": "Into France. A Cat 1, then a Cat 3 uphill finish, 3,850 m.",
+      "rideMin": 55, "ride": "Long climb 20 min Z3. Recover 8 min Z2. Then build 20 min Z3 to Z4 to a summit finish.",
+      "walkMin": 50, "walk": "Warm 8 min. 15 min at 5%. Recover 7 min flat. Then 15 min building 6 to 8% to the summit.",
+      "targets": [{"zone": "z3", "minutes": 40}],
+      "geo": {"s": [41.61, 2.29], "f": [42.57, 2.07]},
+      "history": "The first mountain day crosses from Spain into France over the Pyrenees and finishes uphill at the ski station of Les Angles. An early test that can already crack the favorites."
+    },
+    {
+      "n": 4, "id": "s4", "date": "2026-07-07", "day": "Tue 7 Jul",
+      "route": "Carcassonne to Foix", "km": "181.9 km", "type": "hills",
+      "note": "Pyrenean foothills, then 35 km downhill to the line.",
+      "rideMin": 40, "ride": "Warm 8 min. Then 5 x 3 min Z4 with 3 min Z2 between. Easy spin to finish, the long descent.",
+      "walkMin": 35, "walk": "Warm 6 min. Rolling, 5 x 3 min at 4-5% with 2 min flat between. Then 4 min easy, the run down.",
+      "targets": [{"zone": "z4", "minutes": 15}],
+      "geo": {"s": [43.21, 2.35], "f": [42.97, 1.61]},
+      "history": "Carcassonne's medieval walls and the ancient county of Foix bookend a lumpy Pyrenean day. The long downhill finish tempts a breakaway to hold on to the line."
+    },
+    {
+      "n": 5, "id": "s5", "date": "2026-07-08", "day": "Wed 8 Jul",
+      "route": "Lannemezan to Pau", "km": "158.3 km", "type": "flat",
+      "note": "A clear day for the sprinters.",
+      "rideMin": 30, "ride": "30 min steady Z2 to Z3 endurance, smooth high cadence.",
+      "walkMin": 30, "walk": "30 min brisk and steady at 1-2%.",
+      "targets": [{"zone": "z2", "minutes": 25}],
+      "geo": {"s": [43.13, 0.38], "f": [43.30, -0.37]},
+      "history": "Pau is one of the Tour's most loyal hosts, a gateway to the Pyrenees that has welcomed the race more than seventy times. Today the fast men get their moment."
+    },
+    {
+      "n": 6, "id": "s6", "date": "2026-07-09", "day": "Thu 9 Jul",
+      "route": "Pau to Gavarnie-Gèdre", "km": "186.2 km", "type": "mountains",
+      "note": "Col d'Aspin, then the Tourmalet, then a new summit finish.",
+      "rideMin": 60, "ride": "Three climbs. 15 min Z3 for Aspin, 18 min Z3 to Z4 for the Tourmalet, recover, then 12 min Z4 to the summit.",
+      "walkMin": 55, "walk": "Aspin 12 min at 5%. Tourmalet 15 min at 6-7%. Recover, then 12 min at 7-8% to Gavarnie.",
+      "targets": [{"zone": "z3", "minutes": 45}],
+      "geo": {"s": [43.30, -0.37], "f": [42.73, 0.01], "o": [-4, 10]},
+      "history": "The Col du Tourmalet is the most climbed pass in Tour history. When it was first crossed in 1910, an exhausted Octave Lapize spat 'assassins' at the organizers. The day ends at the Cirque de Gavarnie, a UNESCO site."
+    },
+    {
+      "n": 7, "id": "s7", "date": "2026-07-10", "day": "Fri 10 Jul",
+      "route": "Hagetmau to Bordeaux", "km": "175.1 km", "type": "flat",
+      "note": "Through the Landes forest to a bunch sprint.",
+      "rideMin": 30, "ride": "30 min relaxed Z2 to Z3 endurance.",
+      "walkMin": 30, "walk": "30 min brisk and steady at 1-2%.",
+      "targets": [{"zone": "z2", "minutes": 25}],
+      "geo": {"s": [43.66, -0.59], "f": [44.84, -0.58]},
+      "history": "Bordeaux has staged some of the Tour's most famous bunch sprints over the decades. Through the flat pine forests of the Landes, the fast men will not let this one escape."
+    },
+    {
+      "n": 8, "id": "s8", "date": "2026-07-11", "day": "Sat 11 Jul",
+      "route": "Périgueux to Bergerac", "km": "180.4 km", "type": "flat",
+      "note": "Another day for the sprinters.",
+      "rideMin": 30, "ride": "30 min Z2 to Z3 endurance, add a few surges if the legs feel good.",
+      "walkMin": 30, "walk": "30 min brisk at 1-2%, with a couple of faster surges.",
+      "targets": [{"zone": "z2", "minutes": 25}],
+      "geo": {"s": [45.18, 0.72], "f": [44.85, 0.48]},
+      "history": "Bergerac sits in the Dordogne, forever tied to the long-nosed swordsman Cyrano. Another flat day through wine country, another likely sprint."
+    },
+    {
+      "n": 9, "id": "s9", "date": "2026-07-12", "day": "Sun 12 Jul",
+      "route": "Malemort to Ussel", "km": "185.5 km", "type": "hills",
+      "note": "Rolling roads into the Massif Central.",
+      "rideMin": 40, "ride": "Warm 7 min. Then 6 x 3 min Z4 with 2 min Z2 between. Easy to close.",
+      "walkMin": 35, "walk": "Warm 6 min. Rolling, 5 x 4 min at 4% with 1 min flat between.",
+      "targets": [{"zone": "z4", "minutes": 18}],
+      "geo": {"s": [45.17, 1.56], "f": [45.55, 2.31]},
+      "history": "The race climbs into the rugged, sparsely peopled Massif Central. Days like this reward the breakaway riders hunting a stage before the first rest day."
+    },
+    {
+      "rest": true, "date": "2026-07-13", "day": "Mon 13 Jul",
+      "t": "Rest day. Full rest, or 20 easy minutes and some mobility."
+    },
+    {
+      "n": 10, "id": "s10", "date": "2026-07-14", "day": "Tue 14 Jul",
+      "route": "Aurillac to Le Lioran", "km": "166.6 km", "type": "hills",
+      "note": "Bastille Day. Seven climbs including the Puy Mary. The hardest of the rolling days.",
+      "rideMin": 60, "ride": "Warm 8 min. Then 7 x 4 min Z4 with 3 min Z2 between, one for each climb. Treat it like a mountain.",
+      "walkMin": 55, "walk": "Warm 7 min. Then 7 x 4 min at 5-6% with 2 min flat between. Make it count.",
+      "targets": [{"zone": "z4", "minutes": 28}],
+      "geo": {"s": [44.93, 2.44], "f": [45.08, 2.75]},
+      "history": "Stage 10 falls on Bastille Day, when French riders attack for national glory. Seven categorized climbs in the volcanic Cantal, crowned by the Puy Mary, make this the toughest rolling day of the race."
+    },
+    {
+      "n": 11, "id": "s11", "date": "2026-07-15", "day": "Wed 15 Jul",
+      "route": "Vichy to Nevers", "km": "161.3 km", "type": "flat",
+      "note": "A sprinters' day heading north.",
+      "rideMin": 30, "ride": "30 min Z2 to Z3 endurance.",
+      "walkMin": 30, "walk": "30 min brisk and steady at 1-2%.",
+      "targets": [{"zone": "z2", "minutes": 25}],
+      "geo": {"s": [46.13, 3.42], "f": [46.99, 3.16]},
+      "history": "Vichy, the old spa town, sends the race north across gentle country toward Nevers. A breather between the mountains, and a gift for the sprinters."
+    },
+    {
+      "n": 12, "id": "s12", "date": "2026-07-16", "day": "Thu 16 Jul",
+      "route": "Magny-Cours to Châlon-sur-Saône", "km": "179.1 km", "type": "flat",
+      "note": "Flat roads from the old racing circuit.",
+      "rideMin": 30, "ride": "30 min Z2 to Z3 endurance.",
+      "walkMin": 30, "walk": "30 min brisk at 1-2%.",
+      "targets": [{"zone": "z2", "minutes": 25}],
+      "geo": {"s": [46.88, 3.16], "f": [46.78, 4.85], "o": [4, 10]},
+      "history": "The stage starts at the Magny-Cours circuit, home of the French Formula 1 Grand Prix for nearly two decades. Flat, fast roads carry the race to Châlon-sur-Saône."
+    },
+    {
+      "n": 13, "id": "s13", "date": "2026-07-17", "day": "Fri 17 Jul",
+      "route": "Dole to Belfort", "km": "205.8 km", "type": "hills",
+      "note": "Lumpy roads on the edge of the Jura.",
+      "rideMin": 40, "ride": "Warm 8 min. Then 4 x 5 min Z4 with 3 min Z2 between.",
+      "walkMin": 35, "walk": "Warm 6 min. Rolling, 4 x 5 min at 4-5% with 2 min flat between.",
+      "targets": [{"zone": "z4", "minutes": 20}],
+      "geo": {"s": [47.09, 5.49], "f": [47.64, 6.85]},
+      "history": "The road tilts up into the Jura on the way to Belfort, guarded by its great stone lion. The climbs are not the highest, but they soften the legs for the Vosges to come."
+    },
+    {
+      "n": 14, "id": "s14", "date": "2026-07-18", "day": "Sat 18 Jul",
+      "route": "Mulhouse to Le Markstein", "km": "155.3 km", "type": "mountains",
+      "note": "A Vosges summit finish.",
+      "rideMin": 55, "ride": "20 min Z3 climb. Recover 8 min Z2. Then 15 min building Z4 to the summit.",
+      "walkMin": 50, "walk": "Warm 8 min. 15 min at 5-6%. Recover 7 min. Then 12 min at 7% to the line.",
+      "targets": [{"zone": "z3", "minutes": 35}, {"zone": "z4", "minutes": 15}],
+      "geo": {"s": [47.75, 7.34], "f": [47.92, 7.03]},
+      "history": "Le Markstein sits high in the Vosges and has become a regular Tour summit finish, including for the women's Tour. Its short, steep ramps have a habit of producing fireworks."
+    },
+    {
+      "n": 15, "id": "s15", "date": "2026-07-19", "day": "Sun 19 Jul",
+      "route": "Champagnole to Plateau de Solaison", "km": "183.9 km", "type": "mountains",
+      "note": "A first-time summit finish to close week two.",
+      "rideMin": 55, "ride": "20 min Z3 block. 8 min easy Z2. Then 15 min Z4 climb to the line.",
+      "walkMin": 50, "walk": "Warm 8 min, climb steadily, then build to a sustained 15 min at 7-8% finish.",
+      "targets": [{"zone": "z3", "minutes": 35}, {"zone": "z4", "minutes": 15}],
+      "geo": {"s": [46.75, 5.91], "f": [46.03, 6.35]},
+      "history": "The Plateau de Solaison hosts a Tour finish for the first time, a steep and little-known balcony above Lake Geneva. New roads often catch riders out and reshuffle the standings."
+    },
+    {
+      "rest": true, "date": "2026-07-20", "day": "Mon 20 Jul",
+      "t": "Rest day. Full rest, or 20 easy minutes and some mobility."
+    },
+    {
+      "n": 16, "id": "s16", "date": "2026-07-21", "day": "Tue 21 Jul",
+      "route": "Évian-les-Bains to Thonon-les-Bains", "km": "26.1 km", "type": "tt",
+      "note": "Lone time trial. Climbs early, then runs flat.",
+      "rideMin": 35, "ride": "10 min Z2. Then 12 min sustained Z4, the early climb. Then 13 min Z3 to the line.",
+      "walkMin": 30, "walk": "10 min steady at 4-5%, the Côte de Larringes. Then 20 min brisk flat to the finish.",
+      "targets": [{"zone": "z3", "minutes": 25}, {"zone": "z4", "minutes": 12}],
+      "geo": {"s": [46.40, 6.59], "f": [46.37, 6.48], "o": [8, -8]},
+      "history": "The race's only individual time trial runs between the spa towns of Évian and Thonon on the shore of Lake Geneva. It climbs early before flattening, a course where tired legs cost as much as raw power."
+    },
+    {
+      "n": 17, "id": "s17", "date": "2026-07-22", "day": "Wed 22 Jul",
+      "route": "Chambéry to Voiron", "km": "174.7 km", "type": "flat",
+      "note": "Flat on paper, with the Col des Prés and Col de Couz early.",
+      "rideMin": 40, "ride": "Z2 to Z3 endurance with 2 x 5 min Z4 bumps for the early climbs.",
+      "walkMin": 35, "walk": "Brisk at 1-2%, with 2 x 5 min at 4% bumps.",
+      "targets": [{"zone": "z2", "minutes": 30}, {"zone": "z4", "minutes": 10}],
+      "geo": {"s": [45.56, 5.92], "f": [45.37, 5.59]},
+      "history": "Flat on the profile, but the Col des Prés and Col de Couz make it a trap early on. Voiron is the historic home of green Chartreuse, distilled by monks for centuries."
+    },
+    {
+      "n": 18, "id": "s18", "date": "2026-07-23", "day": "Thu 23 Jul",
+      "route": "Voiron to Orcières-Merlette", "km": "185.2 km", "type": "mountains",
+      "note": "The Alps open with a ski-resort summit finish.",
+      "rideMin": 55, "ride": "20 min Z3. Recover 8 min Z2. Then 15 min Z4 to the summit.",
+      "walkMin": 50, "walk": "Warm 8 min, climb steadily, then build to a sustained 15 min at 7% finish.",
+      "targets": [{"zone": "z3", "minutes": 35}, {"zone": "z4", "minutes": 15}],
+      "geo": {"s": [45.37, 5.59], "f": [44.70, 6.33], "o": [10, 4]},
+      "history": "Orcières-Merlette is Tour legend. In 1971 Luis Ocaña rode away from Eddy Merckx here for nearly nine minutes, one of the great solo rides. The Alps begin in earnest."
+    },
+    {
+      "n": 19, "id": "s19", "date": "2026-07-24", "day": "Fri 24 Jul",
+      "route": "Gap to Alpe d'Huez", "km": "127.9 km", "type": "mountains",
+      "note": "Short and brutal. The 21 hairpins.",
+      "rideMin": 45, "ride": "10 min Z2. Then 30 min sustained, building Z3 to Z4 to the top.",
+      "walkMin": 45, "walk": "10 min at 4%. Then 30 min sustained, building 6 to 9%. The 21 bends.",
+      "targets": [{"zone": "z3", "minutes": 30}],
+      "geo": {"s": [44.56, 6.08], "f": [45.09, 6.07], "o": [-10, -8]},
+      "history": "Alpe d'Huez and its 21 numbered hairpins have decided Tours since Fausto Coppi won the first finish here in 1952. Each bend carries the name of a past winner, and the Dutch crowds at corner seven turn it into a carnival."
+    },
+    {
+      "n": 20, "id": "s20", "date": "2026-07-25", "day": "Sat 25 Jul",
+      "route": "Bourg d'Oisans to Alpe d'Huez", "km": "170.9 km", "type": "mountains",
+      "note": "The queen stage. Croix de Fer, Galibier, Col de Sarenne, then Alpe d'Huez again.",
+      "rideMin": 60, "ride": "The hardest day. Four blocks: 12 min Z3, 12 min Z3 to Z4, 12 min Z4, then 12 min Z4 to Z5 to the top.",
+      "walkMin": 60, "walk": "Four climbs: 12 min at 5%, 12 min at 6%, 10 min at 7%, then a final 12 min at 8-9%.",
+      "targets": [{"zone": "z3", "minutes": 48}, {"zone": "z4", "minutes": 24}],
+      "geo": {"s": [45.05, 6.03], "f": [45.09, 6.07], "o": [11, 7]},
+      "history": "The queen stage crosses the Croix de Fer and the Galibier, at 2,642 metres the roof of this Tour, the Col de Sarenne, and finishes on Alpe d'Huez for the second day running, the first back-to-back Alpe finishes in Tour history."
+    },
+    {
+      "n": 21, "id": "s21", "date": "2026-07-26", "day": "Sun 26 Jul",
+      "route": "Thoiry to Paris", "km": "133.0 km", "type": "flat",
+      "note": "The Champs-Élysées, with Montmartre and the Rue Lepic three times.",
+      "rideMin": 35, "ride": "Easy Z2. Then 3 x 1 min punchy Z5 for the Montmartre climbs. Spin to the line.",
+      "walkMin": 30, "walk": "Brisk flat, then 3 x 1 min at 6-7% for Montmartre. Easy finish. You finished the Tour.",
+      "targets": [{"zone": "z2", "minutes": 20}, {"zone": "z5", "minutes": 3}],
+      "geo": {"s": [48.87, 1.80], "f": [48.86, 2.35]},
+      "history": "The Tour has finished on the Champs-Élysées since 1975. Borrowing from the 2024 Paris Olympics, the route now climbs the cobbled Rue Lepic in Montmartre three times before the final run to the line."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "updated": "2026-07-04T12:59:36-07:00",
+  "today": {
+    "date": "2026-07-04",
+    "stage": 1,
+    "readiness": {
+      "score": 93,
+      "sleep_score": 89,
+      "resting_hr": 57,
+      "hrv": 21,
+      "sleep_hours": 8.9
+    },
+    "recommendation": "push",
+    "note": "Grand Depart, and the numbers back you up: 93 readiness, HRV 21, slept nearly 9 hours. Take the three Z5 efforts as written and enjoy the ramp up Montjuïc."
+  },
+  "stages": {}
+}
