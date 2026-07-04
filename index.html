@@ -209,6 +209,22 @@
 
   .lr-foot{padding:38px 0 60px;border-top:1px solid var(--line);margin-top:36px;color:var(--dim);font-size:13px;}
   .lr-foot .upd{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.06em;}
+  .lr-foot .links{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;}
+  .lr-foot .links a,.lr-foot .links button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--dim);background:none;border:none;border-bottom:1px dotted var(--dim);padding:0 0 1px;cursor:pointer;text-decoration:none;}
+  .lr-foot .links a:hover,.lr-foot .links button:hover{color:var(--ivory);border-color:var(--ivory);}
+
+  /* about the project */
+  .about-open{display:inline-block;margin:16px 0 0;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);background:none;border:none;border-bottom:1px dotted var(--dim);padding:0 0 1px;cursor:pointer;}
+  .about-open:hover{color:var(--ivory);border-color:var(--ivory);}
+  .about{margin-top:40px;padding:24px 26px 26px;background:var(--car);border:1px solid var(--car-edge);border-radius:8px;}
+  .about .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--glow);margin-bottom:4px;}
+  .about h2{font-family:"Saira Condensed",sans-serif;font-weight:800;font-size:30px;letter-spacing:0.03em;line-height:1;text-transform:uppercase;color:var(--ivory);margin:0 0 16px;}
+  .about h3{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ivory);margin:20px 0 6px;}
+  .about p{margin:0 0 10px;font-size:14.5px;color:var(--body-c);line-height:1.55;}
+  .about a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(240,197,61,0.45);}
+  .about-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft);}
+  .about-links a{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(240,197,61,0.4);border-radius:20px;padding:5px 13px;text-decoration:none;}
+  .about-links a:hover{color:#ffe27a;border-color:rgba(240,197,61,0.8);}
 
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 
@@ -239,6 +255,7 @@
     </div>
     <p class="lr-sub">Tour de France 2026 &middot; 4 to 26 July &middot; Barcelona to Paris</p>
     <p class="lr-manifesto">The lanterne rouge is the last rider to finish. Not the winner, the one who keeps showing up.</p>
+    <button class="about-open" id="aboutBtn" type="button">About this project</button>
 
     <div class="lr-ready" id="ready" hidden></div>
 
@@ -289,6 +306,11 @@
 
 <footer class="lr-foot">
   <div class="wrap">
+    <div class="links">
+      <button id="aboutBtn2" type="button">About</button>
+      <a href="https://github.com/alponsirenas/lanterne-rouge" target="_blank" rel="noopener">GitHub</a>
+      <a href="http://analuisa.info" target="_blank" rel="noopener">analuisa.info</a>
+    </div>
     <p class="upd" id="updated"></p>
   </div>
 </footer>
@@ -614,7 +636,34 @@ function buildMap(){
   });
 }
 
+const ABOUT_HTML=
+  '<div class="about">'+
+    '<div class="eyebrow">The project</div>'+
+    '<h2>About Lanterne Rouge</h2>'+
+    '<p>In the Tour de France, the lanterne rouge is the last rider to finish. Not the champion. The finisher, the one who persists when others drop. That is the spirit of this project. The goal is not a podium, it is showing up for all 21 stages.</p>'+
+    '<h3>The rider</h3>'+
+    '<p>I am Ana Lu\u00edsa Ponsirenas. I design human-AI collaboration systems that help teams and organizations get better together. My focus is augmentation over automation, helping people exercise judgment, coordination, and expertise with AI as a collaborator.</p>'+
+    '<p>I was not a kid who liked sports. I started working out later in life and kept at it because it proved important for my mental health. I love a personal record, but I focus on showing up, training smart, staying healthy, and learning along the way. Lanterne Rouge is my work at personal scale, an AI collaborator for a single rider.</p>'+
+    '<h3>The first Tour, 2025</h3>'+
+    '<p>Last summer I rode every stage of the Tour de France 2025 route indoors on my Peloton, guided by an AI coaching system I built with help from GPT, GitHub Copilot, and Claude. Every morning at six it pulled my data from Oura, Strava, and Peloton, decided whether I should push, ease off, or recover, and emailed me a briefing. There was a points system with GC and breakaway modes, a classification bug we caught mid-race, and a fiction mode that wrote me into each day\u2019s racing. I fixed the system between stages and kept riding. The experiment worked.</p>'+
+    '<h3>This Tour, 2026</h3>'+
+    '<p>This year is simpler on purpose. Every stage of the Tour de France 2026 route, Barcelona to Paris, taken as a ride on the Peloton at home or as a walk on the treadmill when I am on the road, both capped at one hour. No points, no modes. Finishing is the whole game. The coach is back too, rebuilt with Claude and kept deliberately small. Each morning it reads my Strava and Oura data, scores yesterday\u2019s stage, calls the day as push, ease, or recover, and writes the verdict in plain language. The brief arrives by email, and this dashboard is where it all shows up.</p>'+
+    '<div class="about-links">'+
+      '<a href="https://github.com/alponsirenas/lanterne-rouge" target="_blank" rel="noopener">The system on GitHub</a>'+
+      '<a href="http://analuisa.info" target="_blank" rel="noopener">analuisa.info</a>'+
+      '<a href="https://medium.com/@alponsirenas/lanterne-rouge-a-personal-experiment-in-ai-endurance-and-finishing-what-i-start-51f3facf06ac" target="_blank" rel="noopener">The 2025 story on Medium</a>'+
+    '</div>'+
+  '</div>';
+
 let lastFocus=null;
+function openAbout(){
+  lastFocus=document.activeElement;
+  document.getElementById("modalBody").innerHTML=ABOUT_HTML;
+  document.querySelector(".modal-card").setAttribute("aria-label","About Lanterne Rouge");
+  document.getElementById("modal").hidden=false;
+  document.body.style.overflow="hidden";
+  document.getElementById("modalClose").focus();
+}
 function openStage(id,byKeyboard){
   const s=STAGES.find(x=>x.id===id);
   if(!s) return;
@@ -624,6 +673,7 @@ function openStage(id,byKeyboard){
   if(fold) fold.setAttribute("open","");
   const mb=document.getElementById("modalBody");
   mb.innerHTML=""; mb.appendChild(el);
+  document.querySelector(".modal-card").setAttribute("aria-label","Stage detail");
   document.getElementById("modal").hidden=false;
   document.body.style.overflow="hidden";
   document.getElementById("modalClose").focus();
@@ -683,6 +733,8 @@ async function boot(){
   document.getElementById("sampleBanner").hidden=!sample;
   document.getElementById("vList").addEventListener("click",()=>setView("list"));
   document.getElementById("vMap").addEventListener("click",()=>setView("map"));
+  document.getElementById("aboutBtn").addEventListener("click",openAbout);
+  document.getElementById("aboutBtn2").addEventListener("click",openAbout);
   document.getElementById("modalClose").addEventListener("click",closeModal);
   document.getElementById("modalBack").addEventListener("click",closeModal);
   document.addEventListener("keydown",e=>{
