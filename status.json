@@ -1,17 +1,40 @@
 {
-  "updated": "2026-07-04T20:33:31+00:00",
+  "updated": "2026-07-05T01:25:19+00:00",
   "today": {
-    "date": "2026-07-04",
-    "stage": 1,
-    "readiness": {
-      "score": 93,
-      "sleep_score": 89,
-      "resting_hr": 57,
-      "hrv": 21,
-      "sleep_hours": 8.9
-    },
-    "recommendation": "push",
-    "note": "Grand Depart, and readiness is about as good as it gets: 93, HRV solid, resting HR low. Take the Z5 efforts as written, hit the Montjuic ramp with some legs under you."
+    "date": "2026-07-05",
+    "stage": 2
   },
-  "stages": {}
+  "stages": {
+    "s1": {
+      "status": "finished",
+      "completed_via": "ride",
+      "strava": {
+        "duration_min": 30,
+        "distance_km": 12.2,
+        "avg_hr": 151,
+        "max_hr": 174,
+        "avg_watts": 90,
+        "relative_effort": 83.0,
+        "time_in_zone": {
+          "z1": 1,
+          "z2": 5,
+          "z3": 8,
+          "z4": 10,
+          "z5": 7
+        }
+      },
+      "oura": {
+        "score": 93,
+        "sleep_score": 89,
+        "resting_hr": 57,
+        "hrv": 21,
+        "sleep_hours": 8.9
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": true,
+        "note": "Stage 1 TT held, 7 minutes in Z5 against a 9 minute target with strong readiness behind it. Good opener in Barcelona."
+      }
+    }
+  }
 }
