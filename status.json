@@ -1,8 +1,17 @@
 {
-  "updated": "2026-07-05T01:25:19+00:00",
+  "updated": "2026-07-05T15:30:52+00:00",
   "today": {
     "date": "2026-07-05",
-    "stage": 2
+    "stage": 2,
+    "readiness": {
+      "score": 80,
+      "sleep_score": 80,
+      "resting_hr": 59,
+      "hrv": 18,
+      "sleep_hours": 6.2
+    },
+    "recommendation": "push",
+    "note": "Readiness is good, sleep a touch short but HR and HRV steady. Take the three Montjuïc climbs as written, 4 minutes Z5 each."
   },
   "stages": {
     "s1": {
@@ -33,7 +42,7 @@
       "verdict": {
         "call": "push",
         "hit_target": true,
-        "note": "Stage 1 TT held, 7 minutes in Z5 against a 9 minute target with strong readiness behind it. Good opener in Barcelona."
+        "note": "Stage 1 done, high readiness carried it, and the effort held up even if Z5 landed at 7 minutes against a 9 minute target. Solid opener."
       }
     }
   }
