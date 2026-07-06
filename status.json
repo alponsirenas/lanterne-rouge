@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T15:50:59+00:00",
+  "updated": "2026-07-06T16:10:11+00:00",
   "today": {
     "date": "2026-07-06",
     "stage": 3,
@@ -11,7 +11,7 @@
       "sleep_hours": 6.8
     },
     "recommendation": "push",
-    "note": "Readiness is strong for the run into Les Angles. Take the long Z3 climb and build to the summit finish as written, then let tomorrow decide anything about yesterday."
+    "note": "Readiness is strong and into France with a summit finish. Take the long Z3 climb and build through the finish as written."
   },
   "stages": {
     "s1": {
@@ -59,7 +59,7 @@
       "verdict": {
         "call": "push",
         "hit_target": false,
-        "note": "Nothing logged for the Montjuïc climbs, a mechanical. Readiness was good that morning, so the miss was circumstance, not legs."
+        "note": "Stage 2 didn't happen, nothing logged for the Montjuïc climbs. Readiness was good that morning, so call it a mechanical and move on."
       }
     }
   }
