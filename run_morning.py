@@ -205,7 +205,7 @@ def main():
     if y_stage:
         y_detail, y_via = monitor.activity_for(yesterday)
         if y_detail:
-            y_tiz = monitor.time_in_zone(y_detail["id"], monitor.hr_zones())
+            y_tiz = monitor.time_in_zone(y_detail["id"], y_via)
         y_oura = monitor.readiness_for(yesterday)
         y_hit = reason.hit_target(y_stage["targets"], y_tiz) if y_detail else False
         print(f"Stage {y_stage['n']} yesterday: "
