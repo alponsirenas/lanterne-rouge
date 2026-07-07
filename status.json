@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-06T16:10:11+00:00",
+  "updated": "2026-07-07T01:32:26+00:00",
   "today": {
-    "date": "2026-07-06",
-    "stage": 3,
-    "readiness": {
-      "score": 86,
-      "sleep_score": 83,
-      "resting_hr": 59,
-      "hrv": 15,
-      "sleep_hours": 6.8
-    },
-    "recommendation": "push",
-    "note": "Readiness is strong and into France with a summit finish. Take the long Z3 climb and build through the finish as written."
+    "date": "2026-07-07",
+    "stage": 4
   },
   "stages": {
     "s1": {
@@ -60,6 +51,37 @@
         "call": "push",
         "hit_target": false,
         "note": "Stage 2 didn't happen, nothing logged for the Montjuïc climbs. Readiness was good that morning, so call it a mechanical and move on."
+      }
+    },
+    "s3": {
+      "status": "finished",
+      "completed_via": "ride",
+      "strava": {
+        "duration_min": 45,
+        "distance_km": 19.3,
+        "avg_hr": 157,
+        "max_hr": 174,
+        "avg_watts": 97,
+        "relative_effort": 151.0,
+        "time_in_zone": {
+          "z1": 1,
+          "z2": 4,
+          "z3": 4,
+          "z4": 22,
+          "z5": 14
+        }
+      },
+      "oura": {
+        "score": 86,
+        "sleep_score": 83,
+        "resting_hr": 59,
+        "hrv": 15,
+        "sleep_hours": 6.8
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": true,
+        "note": "Readiness was strong and it showed, the climb landed mostly in Z4 and Z5 rather than the prescribed Z3, and the summit finish got answered. Effort held even at 45 of the 55 minutes."
       }
     }
   }
