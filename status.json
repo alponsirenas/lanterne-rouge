@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T01:32:26+00:00",
+  "updated": "2026-07-07T15:56:13+00:00",
   "today": {
     "date": "2026-07-07",
     "stage": 4
@@ -64,11 +64,11 @@
         "avg_watts": 97,
         "relative_effort": 151.0,
         "time_in_zone": {
-          "z1": 1,
-          "z2": 4,
-          "z3": 4,
-          "z4": 22,
-          "z5": 14
+          "z1": 7,
+          "z2": 8,
+          "z3": 27,
+          "z4": 3,
+          "z5": 0
         }
       },
       "oura": {
@@ -81,7 +81,7 @@
       "verdict": {
         "call": "push",
         "hit_target": true,
-        "note": "Readiness was strong and it showed, the climb landed mostly in Z4 and Z5 rather than the prescribed Z3, and the summit finish got answered. Effort held even at 45 of the 55 minutes."
+        "note": "Strong readiness carried the day, 27 of 45 minutes landed in Z3 and the target was hit. Summit finish into Les Angles answered, even a touch short of the full 55."
       }
     }
   }
