@@ -99,45 +99,55 @@ def activity_for(day: date):
     return strava_get(f"activities/{best['id']}"), via
 
 
-def hr_zones() -> list[dict] | None:
-    """The athlete's Strava heart-rate zones, a list of {min, max} dicts.
-    Returns None when the token lacks the profile:read_all scope, the stage
-    then finishes without zone context rather than crashing the morning run."""
-    try:
-        return strava_get("athlete/zones")["heart_rate"]["zones"]
-    except requests.RequestException as exc:
-        print(f"Could not fetch athlete zones (needs profile:read_all scope): {exc}")
-        return None
+def time_in_zone(activity_id: int, via: str) -> dict | None:
+    """Minutes per zone from the activity streams, or None without usable data.
 
-
-def time_in_zone(activity_id: int, zones: list[dict] | None) -> dict | None:
-    """Minutes per HR zone from the activity streams, or None without HR data."""
-    if not zones:
-        return None
+    The ride prescriptions are power blocks, so a ride is scored against the
+    athlete's Strava power zones over the watts stream. A walk has no power,
+    its zones are heart-rate based. A ride missing power zones or a watts
+    stream falls back to heart rate rather than finishing without context.
+    """
     try:
+        athlete_zones = strava_get("athlete/zones")
         streams = strava_get(f"activities/{activity_id}/streams", {
-            "keys": "time,heartrate",
+            "keys": "time,heartrate,watts",
             "key_by_type": "true",
         })
     except requests.RequestException as exc:
-        print(f"Could not fetch streams for activity {activity_id}: {exc}")
+        print(f"Could not fetch zones or streams for activity {activity_id} "
+              f"(zones need the profile:read_all scope): {exc}")
         return None
-    if "time" not in streams or "heartrate" not in streams:
+    if "time" not in streams:
         return None
-    times = streams["time"]["data"]
-    hrs = streams["heartrate"]["data"]
-    seconds = [0.0] * len(zones)
+    plans = [("power", "watts"), ("heart_rate", "heartrate")] if via == "ride" \
+        else [("heart_rate", "heartrate")]
+    for kind, stream_key in plans:
+        zones = (athlete_zones.get(kind) or {}).get("zones")
+        if zones and stream_key in streams:
+            if (kind, stream_key) != plans[0]:
+                print(f"Activity {activity_id}: no power zones or watts stream, "
+                      "scoring against heart rate instead.")
+            return minutes_in_zone(streams["time"]["data"], streams[stream_key]["data"], zones)
+    return None
+
+
+def minutes_in_zone(times: list, values: list, zones: list[dict]) -> dict:
+    """Bucket a stream into the contract's z1-z5 minutes. Strava power zones can
+    run past five (Coggan has seven), everything above z5 folds into z5."""
+    seconds = [0.0] * 5
     for i in range(1, len(times)):
         dt = times[i] - times[i - 1]
         if dt <= 0 or dt > 60:  # skip pauses
             continue
-        hr = hrs[i]
+        val = values[i]
+        if val is None:
+            continue
         for z, zone in enumerate(zones):
             zmax = zone.get("max", -1)
-            if hr <= zmax or zmax == -1:
-                seconds[z] += dt
+            if val <= zmax or z == len(zones) - 1:  # last zone is open-ended
+                seconds[min(z, 4)] += dt
                 break
-    return {ZONE_KEYS[i]: round(seconds[i] / 60) for i in range(min(len(zones), 5))}
+    return {ZONE_KEYS[i]: round(seconds[i] / 60) for i in range(5)}
 
 
 def strava_summary(detail: dict, tiz: dict | None, via: str) -> dict:
