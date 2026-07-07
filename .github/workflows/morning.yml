@@ -9,6 +9,10 @@ on:
     # Late enough to sync the Oura ring first, still before the day's workout.
     - cron: '0 15 * 7 *'
   workflow_dispatch:
+    inputs:
+      date:
+        description: "Backfill: run as if today were YYYY-MM-DD (rescores the previous day's stage, skips the email)"
+        required: false
 
 jobs:
   morning:
@@ -38,7 +42,13 @@ jobs:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
           DASHBOARD_URL: https://alponsirenas.github.io/lanterne-rouge/
-        run: python run_morning.py
+          BACKFILL_DATE: ${{ inputs.date }}
+        run: |
+          if [ -n "$BACKFILL_DATE" ]; then
+            python run_morning.py --date "$BACKFILL_DATE" --no-email
+          else
+            python run_morning.py
+          fi
 
       - name: Persist rotated Strava token
         if: always()
