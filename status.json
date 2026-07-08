@@ -1,8 +1,17 @@
 {
-  "updated": "2026-07-07T15:56:13+00:00",
+  "updated": "2026-07-08T15:49:22+00:00",
   "today": {
-    "date": "2026-07-07",
-    "stage": 4
+    "date": "2026-07-08",
+    "stage": 5,
+    "readiness": {
+      "score": 76,
+      "sleep_score": 66,
+      "resting_hr": 61,
+      "hrv": 17,
+      "sleep_hours": 5.2
+    },
+    "recommendation": "ease",
+    "note": "Pau is a flat day built for recovery legs, which suits you. Sleep was short and HRV is down, so keep it Z2, no need to chase the Z3 top end."
   },
   "stages": {
     "s1": {
@@ -82,6 +91,30 @@
         "call": "push",
         "hit_target": true,
         "note": "Strong readiness carried the day, 27 of 45 minutes landed in Z3 and the target was hit. Summit finish into Les Angles answered, even a touch short of the full 55."
+      }
+    },
+    "s4": {
+      "status": "finished",
+      "completed_via": "ride",
+      "strava": {
+        "duration_min": 45,
+        "distance_km": 14.0,
+        "avg_hr": null,
+        "max_hr": null,
+        "avg_watts": 49,
+        "relative_effort": null,
+        "time_in_zone": {
+          "z1": 44,
+          "z2": 1,
+          "z3": 0,
+          "z4": 0,
+          "z5": 0
+        }
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "The intervals didn't land, 45 minutes all in Z1 with no time in Z4. Looks like an easy spin got logged instead of the Foix repeats, so call it a soft miss rather than a hit."
       }
     }
   }
