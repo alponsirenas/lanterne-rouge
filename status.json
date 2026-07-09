@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-08T15:49:22+00:00",
+  "updated": "2026-07-09T16:03:06+00:00",
   "today": {
-    "date": "2026-07-08",
-    "stage": 5,
+    "date": "2026-07-09",
+    "stage": 6,
     "readiness": {
-      "score": 76,
-      "sleep_score": 66,
-      "resting_hr": 61,
-      "hrv": 17,
-      "sleep_hours": 5.2
+      "score": 77,
+      "sleep_score": 68,
+      "resting_hr": 59,
+      "hrv": 22,
+      "sleep_hours": 4.9
     },
     "recommendation": "ease",
-    "note": "Pau is a flat day built for recovery legs, which suits you. Sleep was short and HRV is down, so keep it Z2, no need to chase the Z3 top end."
+    "note": "Aspin, the Tourmalet, and a new summit is a lot to ask on 4.9 hours of sleep and a dipped HRV. Ride the climbs but keep the Z4 blocks honest rather than heroic, the summit will still be there."
   },
   "stages": {
     "s1": {
@@ -115,6 +115,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "The intervals didn't land, 45 minutes all in Z1 with no time in Z4. Looks like an easy spin got logged instead of the Foix repeats, so call it a soft miss rather than a hit."
+      }
+    },
+    "s5": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 76,
+        "sleep_score": 66,
+        "resting_hr": 61,
+        "hrv": 17,
+        "sleep_hours": 5.2
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Nothing logged for the flat stage into Pau, call it a mechanical. Sleep was short that morning too, so an easy day lost is no real setback."
       }
     }
   }
