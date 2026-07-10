@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-09T16:03:06+00:00",
+  "updated": "2026-07-10T15:50:33+00:00",
   "today": {
-    "date": "2026-07-09",
-    "stage": 6,
+    "date": "2026-07-10",
+    "stage": 7,
     "readiness": {
-      "score": 77,
-      "sleep_score": 68,
-      "resting_hr": 59,
-      "hrv": 22,
-      "sleep_hours": 4.9
+      "score": 75,
+      "sleep_score": 59,
+      "resting_hr": 58,
+      "hrv": 14,
+      "sleep_hours": 6.0
     },
     "recommendation": "ease",
-    "note": "Aspin, the Tourmalet, and a new summit is a lot to ask on 4.9 hours of sleep and a dipped HRV. Ride the climbs but keep the Z4 blocks honest rather than heroic, the summit will still be there."
+    "note": "Readiness is decent but sleep is still light. Take the Landes stage easy, 30 relaxed minutes on the bike or a brisk walk, and let today be about showing up after a missed mountain stage."
   },
   "stages": {
     "s1": {
@@ -132,6 +132,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "Nothing logged for the flat stage into Pau, call it a mechanical. Sleep was short that morning too, so an easy day lost is no real setback."
+      }
+    },
+    "s6": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 77,
+        "sleep_score": 68,
+        "resting_hr": 59,
+        "hrv": 22,
+        "sleep_hours": 4.9
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "The Tourmalet stage went unlogged, another mechanical. Sleep was short that morning, so easing was the right call even though it didn't happen at all."
       }
     }
   }
