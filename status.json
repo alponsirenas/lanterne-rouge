@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-10T15:50:33+00:00",
+  "updated": "2026-07-11T15:24:34+00:00",
   "today": {
-    "date": "2026-07-10",
-    "stage": 7,
-    "readiness": {
-      "score": 75,
-      "sleep_score": 59,
-      "resting_hr": 58,
-      "hrv": 14,
-      "sleep_hours": 6.0
-    },
-    "recommendation": "ease",
-    "note": "Readiness is decent but sleep is still light. Take the Landes stage easy, 30 relaxed minutes on the bike or a brisk walk, and let today be about showing up after a missed mountain stage."
+    "date": "2026-07-11",
+    "stage": 8
   },
   "stages": {
     "s1": {
@@ -149,6 +140,37 @@
         "call": "ease",
         "hit_target": false,
         "note": "The Tourmalet stage went unlogged, another mechanical. Sleep was short that morning, so easing was the right call even though it didn't happen at all."
+      }
+    },
+    "s7": {
+      "status": "finished",
+      "completed_via": "ride",
+      "strava": {
+        "duration_min": 32,
+        "distance_km": 0.0,
+        "avg_hr": 0,
+        "max_hr": 86,
+        "avg_watts": null,
+        "relative_effort": 0.0,
+        "time_in_zone": {
+          "z1": 32,
+          "z2": 0,
+          "z3": 0,
+          "z4": 0,
+          "z5": 0
+        }
+      },
+      "oura": {
+        "score": 75,
+        "sleep_score": 59,
+        "resting_hr": 58,
+        "hrv": 14,
+        "sleep_hours": 6.0
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "32 minutes logged, but all in Z1 with none of the prescribed Z2 time. Time on the bike counts, call it a soft miss and move on."
       }
     }
   }
