@@ -1,8 +1,17 @@
 {
-  "updated": "2026-07-11T15:24:34+00:00",
+  "updated": "2026-07-12T15:25:20+00:00",
   "today": {
-    "date": "2026-07-11",
-    "stage": 8
+    "date": "2026-07-12",
+    "stage": 9,
+    "readiness": {
+      "score": 86,
+      "sleep_score": 89,
+      "resting_hr": 60,
+      "hrv": 12,
+      "sleep_hours": 9.9
+    },
+    "recommendation": "push",
+    "note": "Readiness is strong, sleep near ten hours, so take the Ussel intervals as written. Six times three minutes at Z4, hold the two minute recoveries easy."
   },
   "stages": {
     "s1": {
@@ -171,6 +180,16 @@
         "call": "ease",
         "hit_target": false,
         "note": "32 minutes logged, but all in Z1 with none of the prescribed Z2 time. Time on the bike counts, call it a soft miss and move on."
+      }
+    },
+    "s8": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Nothing logged for Bergerac, call it a mechanical. Readiness wasn't reported either, so no read on why."
       }
     }
   }
