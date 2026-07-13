@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-12T15:25:20+00:00",
+  "updated": "2026-07-13T15:56:19+00:00",
   "today": {
-    "date": "2026-07-12",
-    "stage": 9,
-    "readiness": {
-      "score": 86,
-      "sleep_score": 89,
-      "resting_hr": 60,
-      "hrv": 12,
-      "sleep_hours": 9.9
-    },
-    "recommendation": "push",
-    "note": "Readiness is strong, sleep near ten hours, so take the Ussel intervals as written. Six times three minutes at Z4, hold the two minute recoveries easy."
+    "date": "2026-07-13",
+    "stage": null
   },
   "stages": {
     "s1": {
@@ -190,6 +181,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "Nothing logged for Bergerac, call it a mechanical. Readiness wasn't reported either, so no read on why."
+      }
+    },
+    "s9": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 86,
+        "sleep_score": 89,
+        "resting_hr": 60,
+        "hrv": 12,
+        "sleep_hours": 9.9
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Readiness was strong that morning but nothing got logged for Ussel, another mechanical. Good sleep and HRV lost to a day off the bike, not the body's fault."
       }
     }
   }
