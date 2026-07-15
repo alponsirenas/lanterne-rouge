@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-14T15:34:10+00:00",
+  "updated": "2026-07-15T15:35:25+00:00",
   "today": {
-    "date": "2026-07-14",
-    "stage": 10,
+    "date": "2026-07-15",
+    "stage": 11,
     "readiness": {
-      "score": 84,
-      "sleep_score": 72,
-      "resting_hr": 57,
-      "hrv": 16,
-      "sleep_hours": 7.0
+      "score": 72,
+      "sleep_score": 63,
+      "resting_hr": 61,
+      "hrv": 11,
+      "sleep_hours": 5.1
     },
-    "recommendation": "push",
-    "note": "Readiness is strong and this is Bastille Day on the Puy Mary, a day worth showing up for. Take the seven efforts as written, one for each climb, and treat it like a mountain."
+    "recommendation": "ease",
+    "note": "Low HRV and short sleep after a missed mountain stage. Vichy to Nevers is flat, so just spin the 30 minutes easy in Z2 and let today be about showing up again."
   },
   "stages": {
     "s1": {
@@ -207,6 +207,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Readiness was strong that morning but nothing got logged for Ussel, another mechanical. Good sleep and HRV lost to a day off the bike, not the body's fault."
+      }
+    },
+    "s10": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 84,
+        "sleep_score": 72,
+        "resting_hr": 57,
+        "hrv": 16,
+        "sleep_hours": 7.0
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Puy Mary and six more climbs went unlogged, another mechanical. Readiness was strong that morning, so the fitness is there even if Bastille Day got away."
       }
     }
   }
