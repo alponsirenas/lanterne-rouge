@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-15T15:35:25+00:00",
+  "updated": "2026-07-16T15:35:30+00:00",
   "today": {
-    "date": "2026-07-15",
-    "stage": 11,
+    "date": "2026-07-16",
+    "stage": 12,
     "readiness": {
-      "score": 72,
-      "sleep_score": 63,
-      "resting_hr": 61,
-      "hrv": 11,
-      "sleep_hours": 5.1
+      "score": 84,
+      "sleep_score": 74,
+      "resting_hr": 60,
+      "hrv": 18,
+      "sleep_hours": 6.7
     },
-    "recommendation": "ease",
-    "note": "Low HRV and short sleep after a missed mountain stage. Vichy to Nevers is flat, so just spin the 30 minutes easy in Z2 and let today be about showing up again."
+    "recommendation": "push",
+    "note": "Readiness is strong and the roads out of Magny-Cours are flat. Take the 30 and 30 as written, ride or walk, and get back on the board."
   },
   "stages": {
     "s1": {
@@ -224,6 +224,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Puy Mary and six more climbs went unlogged, another mechanical. Readiness was strong that morning, so the fitness is there even if Bastille Day got away."
+      }
+    },
+    "s11": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 72,
+        "sleep_score": 63,
+        "resting_hr": 61,
+        "hrv": 11,
+        "sleep_hours": 5.1
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Nevers went unlogged, call it another mechanical. Readiness was soft that morning anyway, so an easy day lost is no great loss."
       }
     }
   }
