@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-16T15:35:30+00:00",
+  "updated": "2026-07-17T15:32:17+00:00",
   "today": {
-    "date": "2026-07-16",
-    "stage": 12,
-    "readiness": {
-      "score": 84,
-      "sleep_score": 74,
-      "resting_hr": 60,
-      "hrv": 18,
-      "sleep_hours": 6.7
-    },
-    "recommendation": "push",
-    "note": "Readiness is strong and the roads out of Magny-Cours are flat. Take the 30 and 30 as written, ride or walk, and get back on the board."
+    "date": "2026-07-17",
+    "stage": 13
   },
   "stages": {
     "s1": {
@@ -241,6 +232,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "Nevers went unlogged, call it another mechanical. Readiness was soft that morning anyway, so an easy day lost is no great loss."
+      }
+    },
+    "s12": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 84,
+        "sleep_score": 74,
+        "resting_hr": 60,
+        "hrv": 18,
+        "sleep_hours": 6.7
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Châlon-sur-Saône went unlogged, another mechanical. Readiness was strong that morning, so the fitness was there even if the day wasn't."
       }
     }
   }
