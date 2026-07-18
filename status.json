@@ -1,8 +1,17 @@
 {
-  "updated": "2026-07-17T15:32:17+00:00",
+  "updated": "2026-07-18T15:23:56+00:00",
   "today": {
-    "date": "2026-07-17",
-    "stage": 13
+    "date": "2026-07-18",
+    "stage": 14,
+    "readiness": {
+      "score": 79,
+      "sleep_score": 81,
+      "resting_hr": 61,
+      "hrv": 12,
+      "sleep_hours": 7.6
+    },
+    "recommendation": "push",
+    "note": "Le Markstein is a summit finish and readiness is solid, good sleep and steady HR. Take the climb blocks as written and let the legs answer on the final push to the line."
   },
   "stages": {
     "s1": {
@@ -249,6 +258,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Châlon-sur-Saône went unlogged, another mechanical. Readiness was strong that morning, so the fitness was there even if the day wasn't."
+      }
+    },
+    "s13": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 75,
+        "sleep_score": 67,
+        "resting_hr": 59,
+        "hrv": 16,
+        "sleep_hours": 5.3
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Belfort went unlogged, another mechanical. Readiness was soft that morning with short sleep, so no real fitness lost."
       }
     }
   }
