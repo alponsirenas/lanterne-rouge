@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-19T15:24:37+00:00",
+  "updated": "2026-07-20T15:39:35+00:00",
   "today": {
-    "date": "2026-07-19",
-    "stage": 15,
+    "date": "2026-07-20",
+    "stage": null,
     "readiness": {
-      "score": 64,
-      "sleep_score": 40,
-      "resting_hr": 60,
-      "hrv": 24,
-      "sleep_hours": 3.4
+      "score": 79,
+      "sleep_score": 90,
+      "resting_hr": 64,
+      "hrv": 13,
+      "sleep_hours": 6.7
     },
-    "recommendation": "ease",
-    "note": "Sleep was short and HRV is low, so treat Solaison gently. Get the warm-up and steady climb in, and only build the final block if the legs agree, easing off is fine."
+    "recommendation": "push",
+    "note": "Rest day, and readiness backs it up with a strong score and good sleep. Let the legs recover fully, week three starts fresh tomorrow."
   },
   "stages": {
     "s1": {
@@ -292,6 +292,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Le Markstein went unlogged, another mechanical. Readiness was strong that morning, so the summit is still there for another day."
+      }
+    },
+    "s15": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 64,
+        "sleep_score": 40,
+        "resting_hr": 60,
+        "hrv": 24,
+        "sleep_hours": 3.4
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Plateau de Solaison went unlogged on 3.4 hours of sleep, call it a mechanical. The summit finish is still there waiting."
       }
     }
   }
