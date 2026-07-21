@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-20T15:39:35+00:00",
+  "updated": "2026-07-21T15:37:06+00:00",
   "today": {
-    "date": "2026-07-20",
-    "stage": null,
+    "date": "2026-07-21",
+    "stage": 16,
     "readiness": {
-      "score": 79,
-      "sleep_score": 90,
-      "resting_hr": 64,
-      "hrv": 13,
-      "sleep_hours": 6.7
+      "score": 73,
+      "sleep_score": 66,
+      "resting_hr": 61,
+      "hrv": 17,
+      "sleep_hours": 6.0
     },
-    "recommendation": "push",
-    "note": "Rest day, and readiness backs it up with a strong score and good sleep. Let the legs recover fully, week three starts fresh tomorrow."
+    "recommendation": "ease",
+    "note": "Readiness is decent but sleep is still short, so treat the TT as effort not a race. Hold the Z4 climb honestly, ease off if it strains, and let the flat finish carry you home."
   },
   "stages": {
     "s1": {
