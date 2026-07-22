@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-21T15:37:06+00:00",
+  "updated": "2026-07-22T15:35:24+00:00",
   "today": {
-    "date": "2026-07-21",
-    "stage": 16,
+    "date": "2026-07-22",
+    "stage": 17,
     "readiness": {
-      "score": 73,
-      "sleep_score": 66,
-      "resting_hr": 61,
-      "hrv": 17,
-      "sleep_hours": 6.0
+      "score": 75,
+      "sleep_score": 83,
+      "resting_hr": 60,
+      "hrv": 12,
+      "sleep_hours": 6.5
     },
-    "recommendation": "ease",
-    "note": "Readiness is decent but sleep is still short, so treat the TT as effort not a race. Hold the Z4 climb honestly, ease off if it strains, and let the flat finish carry you home."
+    "recommendation": "push",
+    "note": "Chambéry to Voiron on solid readiness. Take the early bumps for Prés and Couz as written, then settle into Z2 for the flat run home."
   },
   "stages": {
     "s1": {
@@ -309,6 +309,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "Plateau de Solaison went unlogged on 3.4 hours of sleep, call it a mechanical. The summit finish is still there waiting."
+      }
+    },
+    "s16": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 73,
+        "sleep_score": 66,
+        "resting_hr": 61,
+        "hrv": 17,
+        "sleep_hours": 6.0
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "Thonon time trial went unlogged, another mechanical. Readiness was middling that morning, so call it a rest rather than lost fitness."
       }
     }
   }
