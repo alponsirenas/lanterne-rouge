@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-22T15:35:24+00:00",
+  "updated": "2026-07-23T15:42:49+00:00",
   "today": {
-    "date": "2026-07-22",
-    "stage": 17,
+    "date": "2026-07-23",
+    "stage": 18,
     "readiness": {
-      "score": 75,
-      "sleep_score": 83,
-      "resting_hr": 60,
-      "hrv": 12,
-      "sleep_hours": 6.5
+      "score": 76,
+      "sleep_score": 79,
+      "resting_hr": 61,
+      "hrv": 16,
+      "sleep_hours": 5.9
     },
     "recommendation": "push",
-    "note": "Chambéry to Voiron on solid readiness. Take the early bumps for Prés and Couz as written, then settle into Z2 for the flat run home."
+    "note": "Orcières-Merlette is a real summit finish and readiness backs it, though HRV and sleep are a touch low. Hold the Z3 base, then commit to the 15 minute climb at the top."
   },
   "stages": {
     "s1": {
@@ -326,6 +326,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "Thonon time trial went unlogged, another mechanical. Readiness was middling that morning, so call it a rest rather than lost fitness."
+      }
+    },
+    "s17": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 75,
+        "sleep_score": 83,
+        "resting_hr": 60,
+        "hrv": 12,
+        "sleep_hours": 6.5
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Voiron went unlogged, another mechanical. Readiness was solid that morning, so the fitness is still there, just not banked."
       }
     }
   }
