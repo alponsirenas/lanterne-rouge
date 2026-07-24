@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-23T15:42:49+00:00",
+  "updated": "2026-07-24T15:32:51+00:00",
   "today": {
-    "date": "2026-07-23",
-    "stage": 18,
-    "readiness": {
-      "score": 76,
-      "sleep_score": 79,
-      "resting_hr": 61,
-      "hrv": 16,
-      "sleep_hours": 5.9
-    },
-    "recommendation": "push",
-    "note": "Orcières-Merlette is a real summit finish and readiness backs it, though HRV and sleep are a touch low. Hold the Z3 base, then commit to the 15 minute climb at the top."
+    "date": "2026-07-24",
+    "stage": 19
   },
   "stages": {
     "s1": {
@@ -343,6 +334,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Voiron went unlogged, another mechanical. Readiness was solid that morning, so the fitness is still there, just not banked."
+      }
+    },
+    "s18": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 76,
+        "sleep_score": 79,
+        "resting_hr": 61,
+        "hrv": 16,
+        "sleep_hours": 5.9
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Orcières-Merlette went unlogged, another mechanical. Readiness was solid that morning, so the fitness is still banked, just not spent."
       }
     }
   }
