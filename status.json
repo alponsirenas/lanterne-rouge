@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-24T15:32:51+00:00",
+  "updated": "2026-07-25T15:27:11+00:00",
   "today": {
-    "date": "2026-07-24",
-    "stage": 19
+    "date": "2026-07-25",
+    "stage": 20
   },
   "stages": {
     "s1": {
@@ -351,6 +351,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Orcières-Merlette went unlogged, another mechanical. Readiness was solid that morning, so the fitness is still banked, just not spent."
+      }
+    },
+    "s19": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 75,
+        "sleep_score": 75,
+        "resting_hr": 63,
+        "hrv": 13,
+        "sleep_hours": 6.6
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Alpe d'Huez and the 21 bends went unlogged, another mechanical. Readiness was decent that morning, so call it missed opportunity, not missed fitness."
       }
     }
   }
