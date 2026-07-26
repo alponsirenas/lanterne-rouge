@@ -1,8 +1,8 @@
 {
-  "updated": "2026-07-25T15:27:11+00:00",
+  "updated": "2026-07-26T15:27:30+00:00",
   "today": {
-    "date": "2026-07-25",
-    "stage": 20
+    "date": "2026-07-26",
+    "stage": 21
   },
   "stages": {
     "s1": {
@@ -368,6 +368,23 @@
         "call": "push",
         "hit_target": false,
         "note": "Alpe d'Huez and the 21 bends went unlogged, another mechanical. Readiness was decent that morning, so call it missed opportunity, not missed fitness."
+      }
+    },
+    "s20": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 61,
+        "sleep_score": 60,
+        "resting_hr": 61,
+        "hrv": 20,
+        "sleep_hours": 4.2
+      },
+      "verdict": {
+        "call": "ease",
+        "hit_target": false,
+        "note": "The queen stage went unlogged, another mechanical. Readiness was low that morning, short sleep and soft HRV, so this one was a rest the body likely needed."
       }
     }
   }
