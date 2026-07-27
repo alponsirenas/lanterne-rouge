@@ -1,8 +1,17 @@
 {
-  "updated": "2026-07-26T15:27:30+00:00",
+  "updated": "2026-07-27T15:54:47+00:00",
   "today": {
-    "date": "2026-07-26",
-    "stage": 21
+    "date": "2026-07-27",
+    "stage": null,
+    "readiness": {
+      "score": 76,
+      "sleep_score": 75,
+      "resting_hr": 59,
+      "hrv": 18,
+      "sleep_hours": 7.0
+    },
+    "recommendation": "ease",
+    "note": "No stage on the card, the 21 are done regardless of how the numbers landed. HRV is a touch soft, so let today be unstructured, an easy spin or a walk if you feel like moving, otherwise just rest. The Tour is finished, you showed up for it."
   },
   "stages": {
     "s1": {
@@ -385,6 +394,23 @@
         "call": "ease",
         "hit_target": false,
         "note": "The queen stage went unlogged, another mechanical. Readiness was low that morning, short sleep and soft HRV, so this one was a rest the body likely needed."
+      }
+    },
+    "s21": {
+      "status": "missed",
+      "completed_via": null,
+      "strava": null,
+      "oura": {
+        "score": 83,
+        "sleep_score": 83,
+        "resting_hr": 60,
+        "hrv": 12,
+        "sleep_hours": 9.7
+      },
+      "verdict": {
+        "call": "push",
+        "hit_target": false,
+        "note": "Paris went unlogged, the Champs-Élysées finish missed on paper. Readiness was strong that morning, so the legs were ready even if the ride wasn't logged, call it a mechanical on the final day, not a failure of the Tour."
       }
     }
   }
