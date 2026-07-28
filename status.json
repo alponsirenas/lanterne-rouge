@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-27T15:54:47+00:00",
+  "updated": "2026-07-28T15:49:47+00:00",
   "today": {
-    "date": "2026-07-27",
+    "date": "2026-07-28",
     "stage": null,
     "readiness": {
       "score": 76,
-      "sleep_score": 75,
-      "resting_hr": 59,
-      "hrv": 18,
-      "sleep_hours": 7.0
+      "sleep_score": 77,
+      "resting_hr": 61,
+      "hrv": 13,
+      "sleep_hours": 6.7
     },
     "recommendation": "ease",
-    "note": "No stage on the card, the 21 are done regardless of how the numbers landed. HRV is a touch soft, so let today be unstructured, an easy spin or a walk if you feel like moving, otherwise just rest. The Tour is finished, you showed up for it."
+    "note": "The Tour is finished, Paris and all, even with some mechanicals along the way. No stage on the card today, readiness is solid, so just move if you feel like it and let the legs settle."
   },
   "stages": {
     "s1": {
