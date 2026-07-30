@@ -1,17 +1,17 @@
 {
-  "updated": "2026-07-29T15:40:20+00:00",
+  "updated": "2026-07-30T15:41:49+00:00",
   "today": {
-    "date": "2026-07-29",
+    "date": "2026-07-30",
     "stage": null,
     "readiness": {
-      "score": 71,
-      "sleep_score": 73,
-      "resting_hr": 61,
-      "hrv": 17,
-      "sleep_hours": 6.0
+      "score": 70,
+      "sleep_score": 68,
+      "resting_hr": 65,
+      "hrv": 13,
+      "sleep_hours": 5.5
     },
-    "recommendation": "ease",
-    "note": "No stage on the card, the Tour has run its course through Paris. Readiness is decent but not sharp, so let today be easy, spin if anything, and let the legs settle."
+    "recommendation": "recover",
+    "note": "The Tour is done, Paris is behind you, and today carries no stage. Sleep was short and HRV soft, so let this be an easy, open day, no card to punch."
   },
   "stages": {
     "s1": {
