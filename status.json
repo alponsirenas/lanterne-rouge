@@ -1,17 +1,8 @@
 {
-  "updated": "2026-07-30T15:41:49+00:00",
+  "updated": "2026-07-31T15:45:26+00:00",
   "today": {
-    "date": "2026-07-30",
-    "stage": null,
-    "readiness": {
-      "score": 70,
-      "sleep_score": 68,
-      "resting_hr": 65,
-      "hrv": 13,
-      "sleep_hours": 5.5
-    },
-    "recommendation": "recover",
-    "note": "The Tour is done, Paris is behind you, and today carries no stage. Sleep was short and HRV soft, so let this be an easy, open day, no card to punch."
+    "date": "2026-07-31",
+    "stage": null
   },
   "stages": {
     "s1": {
